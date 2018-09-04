@@ -6,7 +6,7 @@
   <packaging>war</packaging>
    
   <dependencies>
-<!--bc 9/4 417-->
+<!--bc 9/4 434-->
 
 		<dependency>
 	    	<groupId>javax.faces</groupId>
