@@ -1,0 +1,36 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+ 
+<p:dialog header="" widgetVar="personDialog" width="900" height="500" resizable="false"> 
+ <ui:fragment><ui:include src="personDialog.xhtml" /></ui:fragment>
+</p:dialog>
+
+<h:form id="personListForm">
+<h:panelGroup >
+<h:panelGrid columns = "1" border = "0" cellpadding = "0" cellspacing = "3">
+  
+<p:commandButton value="New">
+		  <p:ajax listener="#{personBean.createNew}"  update=":eca:personEditForm"    oncomplete="PF('personDialog').show();"/>
+</p:commandButton>
+</h:panelGrid>
+
+<p:dataTable widgetVar="personTableWidgetVar" id="personTable" var="mt" value="#{personBean.personList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{personBean.person}" rowKey="#{mt.personNum}">  	
+  <p:ajax event="rowSelect" listener="#{personBean.selectPerson}" update=":eca:personEditForm"  oncomplete="PF('personDialog').show()" /> 
+  		<p:column headerText="Number" sortBy="#{mt.personNum}" filterBy="#{mt.personNum}" style="width:6%;"> <h:outputText value="#{mt.personNum}"/></p:column>
+ 		<p:column headerText="First Name" sortBy="#{mt.firstName}" filterBy="#{mt.firstName}" style="width:4%;"> <h:outputText value="#{mt.firstName}"/></p:column>
+ 		<p:column headerText="Middle Name" sortBy="#{mt.middleName}" filterBy="#{mt.middleName}" style="width:4%;" >  <h:outputText value="#{mt.middleName}"/> </p:column>
+ 		<p:column headerText="Last Name" sortBy="#{mt.lastName}" filterBy="#{mt.lastName}" style="width:10%;" >  <h:outputText value="#{mt.lastName}"/> </p:column>	
+    	<p:column headerText="Organization" sortBy="#{mt.organization.fullName}" filterBy="#{mt.organization.fullName}" style="width:30%;" >  <h:outputText value="#{mt.organization.fullName}"/> </p:column> 
+    	<p:column headerText="Citation" style="width:24%;" >  <h:outputText value="#{mt.citations}"/> </p:column>       
+</p:dataTable>	
+</h:panelGroup>
+
+</h:form>
+
+</ui:composition>
+ 

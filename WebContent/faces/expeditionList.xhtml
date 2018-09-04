@@ -1,0 +1,45 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+ 
+<p:dialog header="" widgetVar="expeditionDialog" width="900" height="500" resizable="false"> 
+ <ui:fragment><ui:include src="expeditionEdit.xhtml" /></ui:fragment>
+</p:dialog>
+
+ <h:form id="expeditionListForm">
+<h:panelGroup >
+
+ <h:panelGrid columns = "5" border = "0" cellpadding = "0" cellspacing = "3">
+ <p:outputLabel value="Expedition Code: "/> 
+      <p:inputText value="#{expeditionBean.search}" style = "width:120px;"/>
+       <p:commandButton value="Lookup" actionListener="#{expeditionBean.lookup}" update="expeditionListForm" />  		 	 
+ <p:commandButton value="Show All" actionListener="#{expeditionBean.showAll}" update="expeditionListForm" />  		 	 
+<p:commandButton value="New">
+		  <p:ajax listener="#{expeditionBean.createNew}"   update=":eca:expeditionEditForm"  oncomplete="PF('expeditionDialog').show()"/>
+</p:commandButton>
+</h:panelGrid>
+
+<p:dataTable widgetVar="dataTableWidgetVar" id="expeditionTable" var="ex" value="#{expeditionBean.expeditionList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{expeditionBean.expedition}" rowKey="#{ex.actionNum}">  
+  <p:ajax event="rowSelect" listener="#{expeditionBean.selectExpedition}" update=":eca:expeditionEditForm"  oncomplete="PF('expeditionDialog').show()" /> 
+  		<p:column headerText="Number" sortBy="#{ex.actionNum}" filterBy="#{ex.actionNum}" style="width:6%;"> <h:outputText value="#{ex.actionNum}"/></p:column>
+ 		<p:column headerText="Code" sortBy="#{ex.actionName}" filterBy="#{ex.actionName}" style="width:8%;"> <h:outputText value="#{ex.actionName}"/></p:column>
+		<p:column headerText="Name"  sortBy="#{ex.expeditionName}" filterBy="#{ex.expeditionName}" style="width:8%;" >  <h:outputText value="#{ex.expeditionName}"/> </p:column>	
+   		<p:column headerText="Leg"  sortBy="#{ex.cruiseLeg}" filterBy="#{ex.cruiseLeg}" style="width:6%;"> <h:outputText value="#{ex.cruiseLeg}"/></p:column>
+   		<p:column headerText="Alias"  sortBy="#{ex.expeditionAlias}" filterBy="#{ex.expeditionAlias}" style="width:8%;"> <h:outputText value="#{ex.expeditionAlias}"/></p:column>
+		<p:column headerText="Type" sortBy="#{ex.actionTypeName}" filterBy="#{ex.actionTypeName}" style="width:8%;" >  <h:outputText value="#{ex.actionTypeName}"/> </p:column>
+    	<p:column headerText="Equipment" sortBy="#{ex.equipmentName}" filterBy="#{ex.equipmentName}" style="width:12%;" >  <h:outputText value="#{ex.equipmentName}"/> </p:column>   
+    	<p:column headerText="Organization"  sortBy="#{ex.organizationName}" filterBy="#{ex.organizationName}" style="width:24%;"> <h:outputText value="#{ex.organizationName}"/></p:column>
+    	<p:column headerText="Begin Date"  sortBy="#{ex.beginDateTime}" style="width:11%;">  <h:outputText value="#{ex.beginDateTime}"/> </p:column>	
+    	<p:column headerText="End Date"  sortBy="#{ex.endDateTime}" style="width:11%;">  <h:outputText value="#{ex.endDateTime}"/> </p:column>	
+</p:dataTable>	
+
+</h:panelGroup>
+</h:form>
+
+</ui:composition>
+ 

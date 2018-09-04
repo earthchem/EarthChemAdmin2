@@ -1,0 +1,117 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+                
+<p:dialog header="" widgetVar="organizationDialog" width="900" height="500" resizable="false"> 
+ <ui:fragment><ui:include src="expeditionOrganization.xhtml" /></ui:fragment>
+</p:dialog> 
+
+<p:dialog header="" widgetVar="equipmentDialog" width="900" height="500" resizable="false"> 
+ <h2>New Equipment</h2>
+ 
+<h:form id="equipmentNewForm">
+
+ <p:messages for="equipmentNewMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+<h:panelGrid columns = "2" border = "0" cellpadding = "2" cellspacing = "2">
+      <p:outputLabel value="Equipment Code*: "/>  
+      <p:inputText value="#{expeditionBean.equipment.equipmentCode}"  required = "true" style = "width:300px;"/>
+   	  <p:outputLabel value="Equipment Name: "/>  
+      <p:inputText value="#{expeditionBean.equipment.equipmentName}"  style = "width:300px;"/>
+      <p:outputLabel value="Equipment Type*: "/>
+      <p:selectOneMenu value="#{expeditionBean.equipment.equipmentTypeNum}"  required = "#{not empty param[orgBean.newOrg.organizationTypeNum]}">    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItems value="#{optionBean.equipmentTypes}" /> 
+  	  </p:selectOneMenu>
+ 	  <p:outputLabel value="Equipment Description: "/>  
+      <p:inputText value="#{expeditionBean.equipment.equipmentDescription}"  style = "width:300px;"/>
+ 	</h:panelGrid> 
+	<h:panelGrid columns="2" style="margin-top:5px;" cellpadding="1" >  
+ 	 <p:commandButton value="Save organization" actionListener="#{expeditionBean.addNewEquipment}" update=":eca:expeditionEditForm" >		  
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+	<p:commandButton value="Cancel" actionListener="#{expeditionBean.cancleNewEquipment}" oncomplete="PF('equipmentDialog').hide()">
+			<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>	
+	</h:panelGrid> 
+	
+</h:form>
+</p:dialog>          
+    
+            
+<h:form id="expeditionEditForm">
+<p:messages for="expeditionEditMsg" showDetail="true"  closable="true" > 
+<p:autoUpdate/>
+</p:messages>
+<h:panelGrid columns = "2" border = "0" cellpadding = "0" cellspacing = "0">
+   <h:panelGroup style = "display:block; text-align:left">
+       <h2>Edit Expedition</h2>
+       <p:outputLabel  style="color:red" rendered="#{not empty expeditionBean.expedition.errorMsg}" value="#{expeditionBean.expedition.errorMsg}"/>
+   </h:panelGroup>
+  <h:panelGroup style = "display:block; width:400px; text-align:right">
+         <p:inputText value="#{expeditionBean.expedition.actionNum}" disabled="true" style = "width:40px;"/>
+   </h:panelGroup>
+</h:panelGrid>
+
+<h:panelGrid columns = "3" border = "0" cellpadding = "2" cellspacing = "2"> 	
+     <p:outputLabel value="Code*: "/> 
+      <p:inputText  value="#{expeditionBean.expedition.actionName}" style = "width:400px;"/><h:panelGroup/>  
+   
+     <p:outputLabel value="Expedition Name: "/> 
+      <p:inputText  value="#{expeditionBean.expedition.expeditionName}" style = "width:400px;"/><h:panelGroup/>  
+   <p:outputLabel value="Cruise Leg: "/> 
+      <p:inputText  value="#{expeditionBean.expedition.cruiseLeg}" style = "width:400px;"/><h:panelGroup/>   
+   <p:outputLabel value="Expedition Alias: "/> 
+      <p:inputText  value="#{expeditionBean.expedition.expeditionAlias}" style = "width:400px;"/><h:panelGroup/>  
+    <p:outputLabel value="Type*: "/> 
+	 <p:selectOneMenu value="#{expeditionBean.expedition.actionTypeNum}" style = "width:100px;">  
+		    <f:selectItem itemLabel="Select One" itemValue="#{null}" />
+		      <f:selectItem itemLabel="Cruise" itemValue="3" />
+		      <f:selectItem itemLabel="Expedition" itemValue="11" />
+		      <f:selectItem itemLabel="Field activity" itemValue="12" />
+		      <f:selectItem itemLabel="Submersible launch" itemValue="25" />
+		  </p:selectOneMenu> <h:panelGroup/>
+  <p:outputLabel value="Organization*: "/>   
+  <p:autoComplete value="#{expeditionBean.selectedOrganization}" completeMethod="#{expeditionBean.completeThemeOrg}"   scrollHeight="500"
+		var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme}"  converter="organizationConverter" forceSelection="true" rendered="#{expeditionBean.newOrg}">
+            <p:ajax event="itemSelect" listener="#{expeditionBean.onItemSelectOrg}" />
+	</p:autoComplete>  
+	 <p:inputText  value="#{expeditionBean.expedition.organizationName}" style = "width:400px;" rendered="#{not expeditionBean.newOrg}"/> 
+  <p:commandLink onclick="PF('organizationDialog').show();"  >
+        			<h:outputText  style="font-size:14px;" value="Add New Organization" actionListener="#{expeditionBean.createOrganization}"/>
+  </p:commandLink>
+  <p:outputLabel value="Begin Date: "/> 
+  <p:calendar value="#{expeditionBean.expedition.beginDateTime}" pattern="yyyy-MM-dd"/><p:outputLabel value=" (yyyy-mm-dd)"/> 
+  <p:outputLabel value="End Date: "/> <p:calendar value="#{expeditionBean.expedition.endDateTime}" pattern="yyyy-MM-dd"/> <p:outputLabel value=" (yyyy-mm-dd)"/>
+  <p:outputLabel value="Equipment: "/> 
+   <p:autoComplete value="#{expeditionBean.selectedEquipment}" completeMethod="#{expeditionBean.completeThemeEquip}"   scrollHeight="500"
+		var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme}"  converter="equipmentConverter" forceSelection="true" rendered="#{empty expeditionBean.expedition.equipmentCode}">
+            <p:ajax event="itemSelect" listener="#{expeditionBean.onItemSelectEquip}" />
+	</p:autoComplete>   
+  
+  <p:inputText  value="#{expeditionBean.expedition.equipmentCode}" style = "width:400px;" rendered="#{not empty expeditionBean.expedition.equipmentCode}"/>
+
+  <p:commandLink onclick="PF('equipmentDialog').show();"  >
+        			<h:outputText  style="font-size:14px;" value="Add New Equipment" actionListener="#{expeditionBean.createEquipment}"/>
+  </p:commandLink>
+
+  <p:outputLabel value="Description: "/> 
+  <p:inputText  value="#{expeditionBean.expedition.description}" style = "width:400px;"/><h:panelGroup/> 
+</h:panelGrid> 
+  
+<h:panelGrid columns = "4" border = "0" cellpadding = "2" cellspacing = "2">
+	<p:commandButton value="Save"  actionListener="#{expeditionBean.updateExpedition}"  update=":eca:expeditionEditForm"  oncomplete="PF('dataTableWidgetVar').filter()"> 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+	<p:commandButton value="Cancel"  actionListener="#{expeditionBean.cancelEditExpediton}" >
+		<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>	
+
+</h:panelGrid>	
+</h:form>	
+ 
+
+</ui:composition>
+ 

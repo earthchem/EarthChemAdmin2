@@ -1,0 +1,71 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<p:tab id='loading' title="Data Uploading" style="border:0;padding:0;" visible="false">
+<h:form id="excel_upload" enctype="multipart/form-data">
+
+
+
+
+<p:fileUpload update="excel_upload" sizeLimit="1000000"
+fileUploadListener="#{fileUploadView.handleFileUpload}" mode="advanced" multiple="true" 
+fileLimit="1" allowTypes="/(\.|\/)(xls|xlsx)$/" />
+<p:separator />
+<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+
+<p:dataTable id="incorrectVariables" style="width:500px;"  var="variable" value="#{fileUploadView.incorrectVariables}" rendered="#{not empty fileUploadView.incorrectVariables}">
+    <p:column headerText="Incorrect Variable">
+        <h:outputText value="#{variable.incorrect}" />
+    </p:column>   
+    <p:column headerText="Select Variable" >
+    <p:selectOneMenu id="variable" value="#{variable.correct}" style="width:200px">
+                <f:selectItem itemLabel="Select one" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{fileUploadView.variableOptions}"/>
+            </p:selectOneMenu>                  
+    </p:column>
+</p:dataTable>
+  
+<p:dataTable id="incorrectValues" style="width:500px;"  var="row" value="#{fileUploadView.incorrectValues}" rendered="#{not empty fileUploadView.incorrectValues}">
+    <p:column headerText="Location">
+        <h:outputText value="#{row.desc}" />
+    </p:column>  
+    <p:column headerText="Incorrect Value">
+        <h:outputText value="#{row.incorrect}" />
+    </p:column>   
+    <p:column headerText="Edit" >
+         <h:inputText value="#{row.correct}" />          
+    </p:column>
+</p:dataTable>
+<p:separator />
+ <p:commandButton id="UpdateSheet" value="Update" ajax="true" actionListener="#{fileUploadView.onValueChange}" update=":#{p:component('tbl')}" rendered="#{not empty fileUploadView.incorrectValues}"/>
+<p:commandButton id="downloadTable" value="Download Variable Table" ajax="false" actionListener="#{downloadVariable.download}" />
+<p:commandButton id="downloadExcel" value="Download Excel" ajax="false" actionListener="#{fileUploadView.downloadFile}" rendered="#{not empty fileUploadView.ds}" />
+<p:separator />
+
+<p:dataTable id = "tbl" value="#{ fileUploadView.ds}" var="row"  rendered="#{not empty fileUploadView.ds}" >
+  <p:columns value="#{fileUploadView.columns}" var="column" columnIndexVar="colIndex">
+   <f:facet name="header">
+            <h:outputText value="#{column.header}" />
+    </f:facet>
+            <h:outputText value="#{row[column.property]}" />      
+    </p:columns>
+</p:dataTable>
+
+<!--    
+rendered="#{not empty fileUploadView.ds}" update="tbl,incorrectValues,incorrectVariables" 
+ var="item" itemValue="#{item.value}" itemLabel="#{item.label}" itemDescription="#{item.description}"
+update=":#{p:component('tbl')}"
+<p:ajax listener="#{fileUploadView.onVariableChange}"  />
+ <h:commandLink  ajax="false">
+        <p:graphicImage value="/images/excel.png"/>
+        <p:dataExporter type="xls" target="tbl" fileName="bai_ex" pageOnly="true"/>
+ </h:commandLink>           
+-->  
+</h:form>   
+</p:tab>    
+</ui:composition>
+ 

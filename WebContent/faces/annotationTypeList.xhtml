@@ -1,0 +1,31 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<p:dialog header="" widgetVar="annotationTypeDialog" width="900" height="500" resizable="false"> 
+  <p:ajax event="close" update=":eca:annotationTypeListForm" listener="#{annotationTypeBean.dialogClose}" />
+ <ui:fragment><ui:include src="annotationTypeDialog.xhtml" /></ui:fragment>
+</p:dialog>
+
+
+<h:form id="annotationTypeListForm">
+
+<p:commandButton value="New" actionListener="#{annotationTypeBean.createNew}"  update=":eca:annotationTypeEditForm"    oncomplete="PF('annotationTypeDialog').show()"/>
+ 
+<p:dataTable widgetVar="annotationTypeTableWidgetVar" var="mt" value="#{annotationTypeBean.annotationTypeList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{annotationTypeBean.annotationType}" rowKey="#{mt.annotationTypeNum}">  	
+  <p:ajax event="rowSelect" listener="#{annotationTypeBean.selectAnnotationType}" update=":eca:annotationTypeEditForm"  oncomplete="PF('annotationTypeDialog').show()" /> 
+  		<p:column headerText="Number"  > <h:outputText value="#{mt.annotationTypeNum}"/></p:column>
+ 		<p:column headerText="Name"  >  <h:outputText value="#{mt.annotationTypeName}"/> </p:column>
+ 		<p:column headerText="Group" >  <h:outputText value="#{mt.groupNames}"/> </p:column>	
+    
+</p:dataTable>	
+
+
+</h:form>
+
+</ui:composition>
+ 

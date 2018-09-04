@@ -1,0 +1,37 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<p:dialog header="" widgetVar="methodDialogVar" width="900" height="500" resizable="false"> 
+ <ui:fragment><ui:include src="methodDialog.xhtml" /></ui:fragment>
+</p:dialog>
+<h:form id="methodListForm">
+<h:panelGroup >
+<h:panelGrid columns = "1" border = "0" cellpadding = "0" cellspacing = "3">
+  
+<p:commandButton value="New">
+		  <p:ajax listener="#{methodBean.createNew}"  update=":eca:methodEditForm"    oncomplete="PF('methodDialogVar').show()"/>
+</p:commandButton>
+
+</h:panelGrid>
+
+<p:dataTable widgetVar="methodTableWidgetVar" id="methodTable" var="mt" value="#{methodBean.methodList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{methodBean.method}" rowKey="#{mt.methodNum}">  	
+  <p:ajax event="rowSelect" listener="#{methodBean.selectMethod}" update=":eca:methodEditForm"  oncomplete="PF('methodDialogVar').show()" /> 
+  		<p:column headerText="Number" sortBy="#{mt.methodNum}" filterBy="#{mt.methodNum}" style="width:9%;"> <h:outputText value="#{mt.methodNum}"/></p:column>
+ 		<p:column headerText="Code" sortBy="#{mt.methodCode}" filterBy="#{mt.methodCode}" style="width:14%;"> <h:outputText value="#{mt.methodCode}"/></p:column>
+ 		<p:column headerText="Name" sortBy="#{mt.methodName}" filterBy="#{mt.methodName}" style="width:20%;" >  <h:outputText value="#{mt.methodName}"/> </p:column>
+ 		<p:column headerText="Type" sortBy="#{mt.methodTypeName}" filterBy="#{mt.methodTypeName}" style="width:15%;" >  <h:outputText value="#{mt.methodTypeName}"/> </p:column>	
+    	<p:column headerText="Description" sortBy="#{mt.methodDescription}" style="width:10%;" >  <h:outputText value="#{mt.methodDescription}"/> </p:column>
+    
+</p:dataTable>	
+
+</h:panelGroup>
+
+</h:form>
+
+</ui:composition>
+ 

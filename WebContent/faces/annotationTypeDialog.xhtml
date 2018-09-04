@@ -1,0 +1,58 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+                  
+
+<p:messages id="annotationTypeEditMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+
+
+<h:form id="annotationTypeEditForm">	
+<h:panelGrid columns = "2" border = "0" cellpadding = "0" cellspacing = "0">
+   <h:panelGroup style = "display:block; text-align:left">
+       <h2>Edit Annotation Type</h2>
+   </h:panelGroup>
+  <h:panelGroup style = "display:block; width:400px; text-align:right" rendered="#{not empty annotationTypeBean.annotationType.annotationTypeNum}">
+         <p:inputText value="#{annotationTypeBean.annotationType.annotationTypeNum}" disabled="true" style = "width:40px;"/>
+   </h:panelGroup>
+</h:panelGrid>
+<h:panelGrid columns = "2" border = "0" cellpadding = "2" cellspacing = "2"> 	
+     <p:outputLabel value="Name*: "/> 
+      <p:inputText  value="#{annotationTypeBean.annotationType.annotationTypeName}" style = "width:400px;"/>
+
+ <p:outputLabel value="Group: "/> 
+<p:dataTable id="gTable" var="g" value="#{annotationTypeBean.annotationType.groups}" style = "width:400px;" cellpadding = "0" cellspacing = "0">  
+  	<p:column headerText="Group">
+  	  <h:selectOneMenu value="#{g.groupNum}">
+                   	<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+                       <f:selectItems value="#{optionBean.annotationGroups}"/>
+                   </h:selectOneMenu>
+  	</p:column>
+  	<p:column><p:commandButton value="Delete" actionListener="#{annotationTypeBean.deleteGroup(g)}"  update="gTable" /> 
+	</p:column>   
+ </p:dataTable> 
+ <h:panelGroup/>	
+ <h:panelGroup>	
+ <h:selectOneMenu value="#{annotationTypeBean.group.groupNum}">
+                   	<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+                       <f:selectItems value="#{optionBean.annotationGroups}"/>
+                   </h:selectOneMenu> <p:spacer width="5" height="10" />
+                   												
+   <p:commandButton value="Add Group" actionListener="#{annotationTypeBean.addGroup}"  update="annotationTypeEditForm" />                 
+ </h:panelGroup>	
+</h:panelGrid>
+<br/>
+<p:commandButton value="Save"  actionListener="#{annotationTypeBean.save}" update=":eca:annotationTypeListForm"  > 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+	<p:commandButton value="Cancel"  actionListener="#{annotationTypeBean.cancel}" >
+		<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>	
+
+</h:form>
+
+
+</ui:composition>
+ 

@@ -1,0 +1,40 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<p:dialog header="" widgetVar="organizationDialog2" width="900" height="500" resizable="false"> 
+ <ui:fragment><ui:include src="organizationDialog.xhtml" /></ui:fragment>
+</p:dialog>
+<h:form id="organizationListForm">
+<h:panelGroup >
+<h:panelGrid columns = "5" border = "0" cellpadding = "0" cellspacing = "3"> 
+ <p:outputLabel value="Organization Name: "/> 
+      <p:inputText value="#{orgBean.search}" style = "width:120px;"/>
+       <p:commandButton value="Lookup" actionListener="#{orgBean.lookup}" update="organizationListForm" />  		 	 
+<p:commandButton value="Show All" actionListener="#{orgBean.showAll}" update="organizationListForm" />  		 	 
+<p:commandButton value="New">
+		  <p:ajax listener="#{orgBean.createNew}"  update=":eca:organizationEditForm"    oncomplete="PF('organizationDialog2').show()"/>
+</p:commandButton>
+</h:panelGrid>
+
+<p:dataTable widgetVar="organizationTableWidgetVar" id="organizationTable" var="mt" value="#{orgBean.organizationList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{orgBean.organization}" rowKey="#{mt.organizationNum}">  	
+  <p:ajax event="rowSelect" listener="#{orgBean.selectOrganization}" update=":eca:organizationEditForm"  oncomplete="PF('organizationDialog2').show()" /> 
+  		<p:column headerText="Number" sortBy="#{mt.organizationNum}" filterBy="#{mt.organizationNum}" style="width:7%;"> <h:outputText value="#{mt.organizationNum}"/></p:column>
+  		<p:column headerText="Type" sortBy="#{mt.orgTypeName}" filterBy="#{mt.orgTypeName}" style="width:11%;" >  <h:outputText value="#{mt.orgTypeName}"/> </p:column>	
+ 		<p:column headerText="Name" sortBy="#{mt.organizationName}" filterBy="#{mt.organizationName}" style="width:30%;" >  <h:outputText value="#{mt.organizationName}"/> </p:column>
+ 		<p:column headerText="Department" sortBy="#{mt.department}" filterBy="#{mt.department}" style="width:20%;"> <h:outputText value="#{mt.department}"/></p:column>
+    	<p:column headerText="City" sortBy="#{mt.city}" filterBy="#{mt.city}" style="width:12%;" >  <h:outputText value="#{mt.city}"/> </p:column>
+ 		<p:column headerText="State" sortBy="#{mt.stateName}" filterBy="#{mt.stateName}" style="width:8%;"> <h:outputText value="#{mt.stateName}"/></p:column>
+    	<p:column headerText="Country" sortBy="#{mt.countryName}" filterBy="#{mt.countryName}" style="width:12%;"> <h:outputText value="#{mt.countryName}"/></p:column>   
+</p:dataTable>	
+
+</h:panelGroup>
+
+</h:form>
+
+</ui:composition>
+ 

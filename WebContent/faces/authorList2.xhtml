@@ -1,0 +1,47 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+                
+<p:messages for="editAuthorListMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+<p:outputLabel  value="Authors: "/> 
+<p:inputTextarea  id="authors" value="#{citationBean2.citation.doiAuthors}" rows="3" style = "width:500px;"/>
+<h:panelGrid columns="2">      
+<p:dataTable id = "newAuthorList" var="nauthor" value="#{citationBean2.newAuthorList}" style = "width:500px;" cellpadding = "0" cellspacing = "0">
+	  		<p:column headerText="Author (new)" >	  			
+	  		<p:autoComplete value="#{citationBean2.newPerson}" completeMethod="#{citationBean2.completeTheme}" scrollHeight="500"
+				var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme}"  converter="themeConverter" forceSelection="true" >
+            <p:ajax event="itemSelect" listener="#{citationBean2.onItemSelect}" />
+			</p:autoComplete>		  			 			
+	  		</p:column>
+	  		
+	  		<p:column style = "width:50px;"><p:commandButton value="add"  actionListener="#{citationBean2.addAuthorList()}" update=":eca:citationEditForm:citationAL:authorList newAuthorList">
+	       	   <f:setPropertyActionListener value="#{nauthor}" target="#{citationBean2.addedAuthorList}"/>
+	       	</p:commandButton></p:column>
+	    
+		</p:dataTable>	
+		
+     <p:commandLink onclick="PF('personNew').show();"  actionListener="#{personNewBean.addNewPerson}" update=":eca:personNewForm" >
+        			<h:outputText  style="font-size:14px;" value="Add new person" />
+    		</p:commandLink>
+</h:panelGrid>
+			
+		<p:dataTable id = "authorList"  var="author" value="#{citationBean2.authorList}" rendered="#{not empty citationBean2.citation}" style = "width:500px;" rowKey="#{author.personNum}" cellpadding = "0" cellspacing = "0" draggableRows="true">
+  	  	  <p:ajax event="rowReorder" listener="#{citationBean2.onRowReorder}" />
+  		<p:column headerText="Author (current, drag and drop to change order)" style = "width:200px;"><p:outputLabel  value="#{author.fullName}"/></p:column>
+ 
+			<p:column style = "width:50px;">
+			<p:commandButton value="delete"><p:ajax listener="#{citationBean2.deleteAuthorList(author.authorListNum)}"  update=":eca:citationEditForm:citationAL:authorList" />
+	
+			<p:confirm header="Confirmation" message="Are you sure you want to delete this author?" icon="ui-icon-alert"/>		  
+			</p:commandButton></p:column>
+		</p:dataTable>
+		
+		
+		
+		
+		
+</ui:composition>
+ 

@@ -1,0 +1,48 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+                
+<!--  
+ private List<SamplingFeature> noParentAnalyzed; 
+	private List<SamplingFeature> noChileStation; 
+	private List<SamplingFeature> noParentSpecimen; 
+	private List<SamplingFeature> noChildSpecimen; 
+-->
+ 
+ <p:dataTable  var="ct" value="#{checkViewBean.noParentAnalyzed}"> 
+ 	<f:facet name="header">No Parent Analyzed</f:facet>
+    	    <p:column headerText="Number"> <h:outputText value="#{ct.samplingFeatureNum}"/></p:column>     
+    	    <p:column headerText="Type Number"> <h:outputText value="#{ct.samplingFeatureTypeNum}"/></p:column>     
+	       	<p:column headerText="Code">  <h:outputText value="#{ct.samplingFeatureCode}"/> </p:column>
+</p:dataTable>		
+<br/>
+
+<p:dataTable  var="ct" value="#{checkViewBean.noChildStation}"> 
+ 	<f:facet name="header">No Child Station</f:facet>
+    	    <p:column headerText="Number"> <h:outputText value="#{ct.samplingFeatureNum}"/></p:column>     
+    	    <p:column headerText="Type Number"> <h:outputText value="#{ct.samplingFeatureTypeNum}"/></p:column>     
+	       	<p:column headerText="Code">  <h:outputText value="#{ct.samplingFeatureCode}"/> </p:column>
+</p:dataTable>		
+<br/>
+
+<p:dataTable  var="ct" value="#{checkViewBean.noParentSpecimen}"> 
+ 	<f:facet name="header">No Parent Specimen</f:facet>
+    	    <p:column headerText="Number"> <h:outputText value="#{ct.samplingFeatureNum}"/></p:column>     
+    	    <p:column headerText="Type Number"> <h:outputText value="#{ct.samplingFeatureTypeNum}"/></p:column>     
+	       	<p:column headerText="Code">  <h:outputText value="#{ct.samplingFeatureCode}"/> </p:column>
+</p:dataTable>		
+<br/>
+
+<p:dataTable  var="ct" value="#{checkViewBean.noChildSpecimen}"> 
+ 	<f:facet name="header">No Child Specimen</f:facet>
+    	    <p:column headerText="Number"> <h:outputText value="#{ct.samplingFeatureNum}"/></p:column>     
+    	    <p:column headerText="Type Number"> <h:outputText value="#{ct.samplingFeatureTypeNum}"/></p:column>     
+	       	<p:column headerText="Code">  <h:outputText value="#{ct.samplingFeatureCode}"/> </p:column>
+</p:dataTable>		
+<br/>
+ 
+</ui:composition>
+ 

@@ -1,0 +1,47 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+ 
+<p:dialog header="" widgetVar="stationDialog" width="900" height="500" resizable="false"> 
+ <ui:fragment><ui:include src="stationDialog.xhtml" /></ui:fragment>
+</p:dialog>
+
+ <h:form id="stationListForm">
+ 
+<h:panelGrid columns = "2" border = "0" cellpadding = "0" cellspacing = "3" resizable = "true">
+<h:panelGroup >
+      <p:inputText value="#{stationBean.search}" style = "width:120px;"/>
+       <p:commandButton value="Lookup" actionListener="#{stationBean.lookup}" update="stationListForm :eca:stationEditForm"  oncomplete="PF('stationTableWidgetVar').filter()"/>  		 
+</h:panelGroup>
+    <p:commandButton value="New">
+		  <p:ajax listener="#{stationBean.createNew}"  update=":eca:stationEditForm"  oncomplete="PF('stationDialog').show()" />
+		  </p:commandButton>
+</h:panelGrid>
+
+<h:panelGroup id="stationTable">
+<p:dataTable  widgetVar="stationTableWidgetVar" var="ct" value="#{stationBean.stationList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{stationBean.station}" rowKey="#{ct.samplingFeatureNum}">  
+  <p:ajax event="rowSelect" listener="#{stationBean.selectStation}" update=":eca:stationEditForm"  oncomplete="PF('stationDialog').show()" /> 
+    	    <p:column headerText="Number" sortBy="#{ct.samplingFeatureNum}" filterBy="#{ct.samplingFeatureNum}" style="width:7%;"> <h:outputText value="#{ct.samplingFeatureNum}"/></p:column>     
+	       	<p:column headerText="Code" sortBy="#{ct.samplingFeatureCode}" filterBy="#{ct.samplingFeatureCode}" style="width:18%;" >  <h:outputText value="#{ct.samplingFeatureCode}"/> </p:column>
+	       	<p:column headerText="Geotype"  sortBy="#{ct.samplingFeatureGeotype}" filterBy="#{ct.samplingFeatureGeotype}" style="width:5%;"> <h:outputText value="#{ct.samplingFeatureGeotype}"/></p:column>
+	 	   <!--       	<p:column headerText="Geometry"  sortBy="#{ct.geometry}" style="width:25%;">  <h:outputText value="#{ct.geometry}"/> </p:column>	  -->   
+			<p:column headerText="Latitude 1"  sortBy="#{ct.lat1}" style="width:7%;">  <h:outputText value="#{ct.lat1}"/> </p:column>	
+			<p:column headerText="Longitude 1"  sortBy="#{ct.long1}" style="width:7%;">  <h:outputText value="#{ct.long1}"/> </p:column>	
+	 		<p:column headerText="Latitude 2"  sortBy="#{ct.lat2}" style="width:7%;">  <h:outputText value="#{ct.lat2}"/> </p:column>	
+			<p:column headerText="Longitude 2"  sortBy="#{ct.long2}" style="width:7%;">  <h:outputText value="#{ct.long2}"/> </p:column>		 
+     		<p:column headerText="Elevation Min"  sortBy="#{ct.elevationMin}" style="width:8%;">  <h:outputText value="#{ct.elevationMin}"/> </p:column>	
+	       	<p:column headerText="Elevation Max"  sortBy="#{ct.elevationMax}" style="width:8%;">  <h:outputText value="#{ct.elevationMax}"/> </p:column>	
+	 		<p:column headerText="Tectonic Setting"  sortBy="#{ct.tectonicSettingName}" style="width:26%;">  <h:outputText value="#{ct.tectonicSettingName}"/> </p:column>	
+</p:dataTable>	
+</h:panelGroup>
+
+</h:form>
+
+ 
+</ui:composition>
+ 

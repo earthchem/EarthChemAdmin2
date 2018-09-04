@@ -1,0 +1,68 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+ <h:form id="datasetListForm">
+  <p:growl id="msgs" showDetail="true"/> 
+<h:panelGrid columns = "3" border = "0" cellpadding = "0" cellspacing = "3" resizable = "true">
+<p:outputLabel value="Citation Num: "/> 
+      <p:inputText value="#{datasetBean.citationNum}" style = "width:120px;"/>
+ <p:commandButton value="Lookup" actionListener="#{datasetBean.lookup}" update="datasetListForm"/>  		 	 
+</h:panelGrid>
+
+<p:dataTable id="datasetTable" widgetVar="datasetTableWidgetVar" var="ct" value="#{datasetBean.datasetList}"  editable="true" style="margin-bottom:20px">  
+  <p:ajax event="rowEdit" listener="#{datasetBean.onRowEdit}" update=":eca:datasetListForm:msgs datasetTable" />
+   	    <p:column headerText="Dataset Number" sortBy="#{ct.num}" style="width:10%;"><h:outputText value="#{ct.num}"/></p:column>   	   
+       	<p:column headerText="Code" sortBy="#{ct.code}"  style="width:10%;"><p:cellEditor>   
+       			<f:facet name="output"><h:outputText value="#{ct.code}"/></f:facet> 
+       			<f:facet name="input"><h:inputText value="#{ct.code}"/></f:facet> 
+       	</p:cellEditor></p:column>	 	
+ 		<p:column headerText="Title" sortBy="#{ct.title}" style="width:55%;"><p:cellEditor>
+ 		  	<f:facet name="output"><h:outputText value="#{ct.title}"/></f:facet>
+ 		  	<f:facet name="input"><h:inputText value="#{ct.title}"/></f:facet>
+ 		</p:cellEditor></p:column>  
+ 	<p:column headerText="Abstract" sortBy="#{ct.abstr}" style="width:10%;"><p:cellEditor> 
+   	      	  <f:facet name="output"><h:outputText value="#{ct.abstr}"/></f:facet> 
+   	      	  <f:facet name="input"><h:inputText value="#{ct.abstr}"/></f:facet> 
+   	    </p:cellEditor></p:column>      	
+ 		<p:column headerText="Type" sortBy="#{ct.type}" style="width:10%;"><p:cellEditor>  
+   	    	 	<f:facet name="output"><h:outputText value="#{ct.type}"/></f:facet>
+   	    	  	<f:facet name="input"> <p:selectOneMenu value="#{ct.typeNum}" >    
+   				<f:selectItems value="#{datasetBean.datasetTypes}" /> 
+  	  			</p:selectOneMenu></f:facet>
+ 		</p:cellEditor></p:column>     			
+ 		<p:column headerText="edit" style="width:5%;"><p:rowEditor /></p:column>   
+</p:dataTable>	
+
+
+
+<h:panelGrid columns = "13" border = "0" cellpadding = "2" cellspacing = "2" rendered="#{not empty datasetBean.citationNum}"> 	
+    <p:outputLabel value="Code*: "/> 
+      <p:inputText  value="#{datasetBean.dataset.code}" style = "width:80px;"/><p:spacer width="5" height="10" />        
+<p:outputLabel value="Type*: "/> 
+       <p:selectOneMenu value="#{datasetBean.dataset.typeNum}" >    
+   			<f:selectItems value="#{datasetBean.datasetTypes}" /> 
+  	  </p:selectOneMenu><p:spacer width="5" height="10" />     
+   <p:outputLabel value="Title: "/> 
+      <p:inputText value="#{datasetBean.dataset.title}" style = "width:600px;"/>
+ <p:spacer width="5" height="10" />     
+	<p:outputLabel value="Abstract: "/> 
+      <p:inputText  value="#{datasetBean.dataset.abstr}" style = "width:220px;"/>    
+  <p:spacer width="5" height="10" />     
+	<p:commandButton value="Add"  actionListener="#{datasetBean.save}" update=":eca:datasetListForm:datasetTable"> 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+</h:panelGrid>
+
+
+
+
+
+</h:form>
+
+ 
+</ui:composition>
+ 

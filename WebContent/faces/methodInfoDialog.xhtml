@@ -1,0 +1,65 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+                  
+
+<p:messages id="methodInfoEditMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+<h:form id="methodInfoEditForm">	
+<p:dataTable id="actionTable"  var="a" value="#{methodInfoBean.actionList}" >                   
+  <p:column headerText="Action Num" style="width:7%;"><p:outputLabel value="#{a.actionNum}" /></p:column>        
+  <p:column headerText="Dataset"  style="width:9%;"><p:outputLabel value="#{a.datasetCode}" /></p:column>         
+   <p:column headerText="Method"  style="width:9%;"><p:outputLabel value="#{a.methodCode}" /></p:column>    
+   <p:column headerText="Organization"   style="width:30%;"><p:outputLabel value="#{a.organizationName}"/></p:column>              
+  <p:column headerText="Description" style="width:22%;"><p:outputLabel value="#{a.description}" /></p:column>  
+<p:column headerText="Date" style="width:10%;"><p:outputLabel value="#{a.date}"/></p:column>  
+<p:column headerText="Analyst"  style="width:4%;"><p:outputLabel value="#{a.analyst}" /></p:column> 
+ <p:column style="width:9%;"><p:commandButton value="Delete" actionListener="#{analysisActionBean.delete(a.actionNum)}"  update="actionTable"> 
+ 	<p:confirm header="Confirmation" message="Are you sure you want to delete it?" icon="ui-icon-alert"/></p:commandButton>		  
+ </p:column>
+ </p:dataTable>
+
+<!--  
+<h:panelGrid columns = "2" border = "0" cellpadding = "0" cellspacing = "0">
+   <h:panelGroup style = "display:block; text-align:left">
+       <h2>Edit Method</h2>
+   </h:panelGroup>
+  <h:panelGroup style = "display:block; width:400px; text-align:right">
+         <p:inputText value="#{methodInfoBean.methodInfo.methodInfoNum}" disabled="true" style = "width:40px;"/>
+   </h:panelGroup>
+</h:panelGrid>
+
+<h:panelGrid columns = "3" border = "0" cellpadding = "2" cellspacing = "2"> 	
+      <p:outputLabel value="Code*: "/> 
+      <p:inputText  value="#{methodInfoBean.methodInfo.methodInfoCode}" style = "width:400px;"/><h:panelGroup/>  
+  <p:outputLabel value="Name*: "/> 
+      <p:inputText  value="#{methodInfoBean.methodInfo.methodInfoName}" style = "width:400px;"/><h:panelGroup/> 
+ 
+  <p:outputLabel value="Method Type*: "/>
+       <p:selectOneMenu value="#{methodInfoBean.methodInfo.methodInfoTypeNum}" >    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItems value="#{optionBean.methodInfoTypes}" /> 
+  	  </p:selectOneMenu><h:panelGroup/> 
+	<p:outputLabel value="Description: "/> 
+      <p:inputText  value="#{methodInfoBean.methodInfo.methodInfoDescription}" style = "width:400px;"/><h:panelGroup/>  
+ 
+ 
+     <h:panelGrid columns = "4" border = "0" cellpadding = "2" cellspacing = "2">
+	<p:commandButton value="Save"  actionListener="#{methodInfoBean.updateMethod}" update=":eca:methodInfoListForm"  > 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+	<p:commandButton value="Cancel"  actionListener="#{methodInfoBean.cancelEditMethod}" >
+		<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>	
+
+</h:panelGrid>
+
+</h:panelGrid>
+-->
+</h:form>
+
+
+</ui:composition>
+ 

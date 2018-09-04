@@ -1,0 +1,40 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+  
+<p:dialog header="" widgetVar="sampleDialog" width="900" height="500" resizable="false"> 
+ <ui:fragment><ui:include src="sampleDialog.xhtml" /></ui:fragment>
+</p:dialog>
+
+ <h:form id="sampleListForm">
+ 
+<h:panelGrid columns = "3" border = "0" cellpadding = "0" cellspacing = "3" resizable = "true">
+<h:panelGroup >
+       <p:outputLabel value="Sample ID: "/> 
+      <p:inputText value="#{sampleBean.search}" style = "width:120px;"/>
+ 
+       <p:commandButton value="Lookup" actionListener="#{sampleBean.lookup}" update="sampleListForm :eca:sampleEditForm" />  		 	 
+<p:messages for="sampleListMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+</h:panelGroup>
+ <p:commandButton value="New" actionListener="#{sampleBean.createNew}"  update=":eca:sampleEditForm"  oncomplete="PF('sampleDialog').show()" />  		 	 
+
+</h:panelGrid>
+
+<h:panelGroup id="sampleTable">
+<p:dataTable  widgetVar="sampleTableWidgetVar" var="ct" value="#{sampleBean.sampleList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{sampleBean.sample}" rowKey="#{ct.sampleNum}">  
+  <p:ajax event="rowSelect" listener="#{sampleBean.selectSample}" update=":eca:sampleEditForm"  oncomplete="PF('sampleDialog').show()" /> 
+    	    <p:column headerText="Number" sortBy="#{ct.sampleNum}" filterBy="#{ct.sampleNum}"> <h:outputText value="#{ct.sampleNum}"/></p:column>     
+	       	<p:column headerText="Sample Code" sortBy="#{ct.samplingFeatureCode}" filterBy="#{ct.samplingFeatureCode}" >  <h:outputText value="#{ct.samplingFeatureCode}"/> </p:column>
+	       	<p:column headerText="Station Code" sortBy="#{ct.stationName}" filterBy="#{ct.stationName}" >  <h:outputText value="#{ct.stationName}"/> </p:column>
+	</p:dataTable>	
+</h:panelGroup>
+
+</h:form>
+
+ 
+</ui:composition>
+ 

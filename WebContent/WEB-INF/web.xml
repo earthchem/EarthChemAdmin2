@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>JournalDev-PrimefacesWebApplication</display-name>
+
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+ 	<url-pattern>*.xhtml</url-pattern>    
+  </servlet-mapping>
+  <context-param>
+    <description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
+    <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+    <param-value>client</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+    <param-value>resources.application</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+ </context-param>
+  <context-param>
+    <param-name>primefaces.THEME</param-name>
+    <param-value>bluesky</param-value>
+  </context-param>
+  <context-param>
+    <param-name>Load_Sheet</param-name>
+    <param-value>http://ec2odm2.earthchemportal.org/loadsheet</param-value> 
+ </context-param>
+ <context-param>
+    <param-name>E_Checker</param-name>
+    <param-value>http://ec2odm2.earthchemportal.org/echecker</param-value> 
+ </context-param>
+ <context-param>
+    <param-name>com.sun.faces.enableViewStateIdRendering</param-name>
+    <param-value>false</param-value> 
+ </context-param>
+ <context-param>
+          <param-name>com.sun.faces.enableRestoreView11Compatibility</param-name>
+          <param-value>true</param-value>
+</context-param>
+ 
+<!-- following two are good for production, but not good for develop --> 
+<context-param>
+       <param-name>facelets.DEVELOPMENT</param-name>
+       <param-value>false</param-value>
+</context-param>
+<context-param>
+       <param-name>facelets.REFRESH_PERIOD</param-name>
+       <param-value>-1</param-value>
+</context-param>
+
+ <!-- "j_id1" solution -->
+ <context-param>
+<param-name>javax.faces.STATE_SAVING_METHOD</param-name> 
+<param-value>client</param-value>
+</context-param>
+<!--  
+<resource-ref>
+    <description>postgreSQL Datasource</description>
+    <res-ref-name>datasources/earthchemDBDev</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+-->
+  <login-config>
+	  <auth-method>FORM</auth-method>
+	  <form-login-config>
+	     <form-login-page>/login.xhtml</form-login-page>
+	     <form-error-page>/error.xhtml</form-error-page>
+	  </form-login-config>  
+  </login-config>	 
+     
+  <security-constraint>
+      <display-name>EarthChem Data Tool Login</display-name>
+      <web-resource-collection>
+         <web-resource-name>Protected Area</web-resource-name>
+         <url-pattern>/faces/*</url-pattern>     
+         <http-method>DELETE</http-method>
+         <http-method>GET</http-method>
+         <http-method>POST</http-method>
+         <http-method>PUT</http-method>
+      </web-resource-collection>
+      
+      <auth-constraint>
+         <role-name>Manager</role-name>
+         <role-name>Admin</role-name>
+      </auth-constraint>
+      
+      <user-data-constraint>
+         <transport-guarantee>NONE</transport-guarantee>
+      </user-data-constraint>
+      
+    </security-constraint>
+	
+    <security-role>
+      <description>The role required to access restricted content </description>
+      <role-name>Manager</role-name>
+    </security-role> 
+    <security-role>
+      <role-name>User</role-name>      
+    </security-role>
+    <security-role>
+      <role-name>Admin</role-name>
+    </security-role>
+   <session-config>
+     <session-timeout>-1</session-timeout>
+   </session-config>
+
+   <error-page>
+      <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+      <location>/expired.xhtml</location>   
+   </error-page> 
+   
+   <error-page>
+    <error-code>404</error-code>
+    <location>/notFound.xhtml</location>
+   </error-page>
+   
+   <error-page>
+    <error-code>408</error-code>
+    <location>/expired.xhtml</location>
+   </error-page>
+   
+   <error-page>
+    <error-code>500</error-code>
+    <location>/serverError.xhtml</location>
+   </error-page>
+
+</web-app>

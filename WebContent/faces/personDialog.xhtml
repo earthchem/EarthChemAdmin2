@@ -1,0 +1,152 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+		
+
+
+<h:form id="personEditForm">
+ <h:panelGrid columns = "2" border = "0" cellpadding = "0" cellspacing = "0">
+   <h:panelGroup style = "display:block; text-align:left">
+       <h2>Edit Person</h2>
+   </h:panelGroup>
+   <h:panelGroup style = "display:block; width:700px; text-align:right" rendered="#{not personBean.new}">
+         <p:inputText value="#{personBean.person.personNum}" disabled="true" style = "width:40px;"/>
+   </h:panelGroup>
+</h:panelGrid>
+ <p:messages for="personMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+ <p:outputLabel value="Name" />
+ <p:dataTable var="p" value="#{personBean.person}" style = "width:430px;">
+<p:column headerText="last name*" style = "width:120px;">
+  <p:inputText value="#{p.lastName}"  style = "width:120px;"/>
+</p:column>
+<p:column headerText="first name*" style = "width:70px;">
+  <p:inputText value="#{p.firstName}"  style = "width:66px;"/>
+</p:column>
+<p:column headerText="middle name" style = "width:70px;">
+  <p:inputText value="#{p.middleName}" style = "width:66px;"/>
+</p:column>
+<p:column headerText="pnum*" style = "width:40px;">
+  <p:inputText value="#{p.pnum}"  style = "width:36px;"/> 
+</p:column>
+</p:dataTable>
+<br/>
+<p:outputLabel value="Identifiers" />
+<p:dataTable id="npeiTable2" var="npei" value="#{personBean.newPEI}" cellpadding = "0" cellspacing = "0">
+    <p:column headerText="Scheme">
+       <p:selectOneMenu value="#{npei.externalIdentifierSystemNum}" >    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItems value="#{optionBean.externalIdentifierSystems}" /> 
+   			<p:ajax update="npeiTable2"/> 	  		
+  	</p:selectOneMenu>
+    </p:column>
+    <p:column headerText="Identifier String">
+        <p:inputText value="#{npei.personExternalIdentifier}">
+          <p:ajax event="blur" listener="#{personBean.addIdentifier}" update="npeiTable2"/>
+         </p:inputText>
+    </p:column>
+</p:dataTable>
+<br/>
+
+<p:outputLabel value="Affiliations" />
+<h:panelGroup id="affTable">
+<p:dataTable  var="aff" value="#{personBean.affiliations}" cellpadding = "0" cellspacing = "0">
+  <p:column headerText="Organization" style = "width:260px;">
+      <p:outputLabel value="#{aff.organizationName}"/>
+     </p:column>
+    <p:column headerText="E-mail address" style = "width:120px;">
+          <p:outputLabel value="#{aff.primaryEmail}" size="30" /> 
+    </p:column> 
+    <p:column>
+     <p:commandButton value="Delete" >   
+     	<p:ajax event="click" listener="#{personBean.deleteAff(aff.affiliationNum)}"  update=":eca:personListForm :eca:personEditForm:affTable" /> 
+     </p:commandButton>
+	</p:column>
+</p:dataTable>
+</h:panelGroup>
+<p:dataTable id = "autoAff" var="autoAff" value="#{personBean.autoAffiliations}" cellpadding = "0" cellspacing = "0">
+   <p:column headerText="Organization from db" style = "width:55%;">
+       <p:autoComplete value="#{personBean.selectedOrganization}" completeMethod="#{personBean.completeTheme}"   scrollHeight="500"
+		var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme}"  converter="organizationConverter" forceSelection="true" >
+            <p:ajax event="itemSelect" listener="#{personBean.onItemSelect}" />
+	</p:autoComplete>     
+     </p:column>
+    <p:column headerText="E-mail address" style = "width:30%;">
+          <p:inputText id="email" value="#{autoAff.primaryEmail}" style = "width:110px;"  validatorMessage="Email is invalid."> 
+     			<p:ajax event="blur" update="email" />  
+           <f:validateRegex pattern="(.+@.+\.[a-z]+)?"/>
+           </p:inputText>
+    </p:column> 
+    <p:column>
+     <p:commandButton value="Add" >   
+     	<p:ajax event="click" listener="#{personBean.addAffByAuto}"  update="autoAff :eca:personEditForm:affTable" /> 
+     </p:commandButton>
+	</p:column>
+</p:dataTable>
+<h:panelGrid columns="2" style="margin-top:10px" cellpadding="1">    
+		  	<p:commandButton value="Save" actionListener="#{personBean.save()}"  update=":eca:personListForm :eca:personListForm"  oncomplete="PF('personTableWidgetVar').filter()">  
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+		  	</p:commandButton>
+		  	<p:commandButton value="Cancel" actionListener="#{personBean.cancel}" >
+		<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+</h:panelGrid> 
+<br/>
+</h:form>  
+
+
+<h:form id="personOrg">
+<p:accordionPanel id="newOrgAP" activeIndex="#{personBean.activeIndex}">
+<p:tab title="Create affiliation with new organization"> 
+<h:panelGrid columns = "2" border = "0" cellpadding = "2" cellspacing = "2">
+      <p:outputLabel value="Organization Name*: "/>  
+      <p:inputText value="#{personBean.newOrg.organizationName}" style = "width:300px;"/>
+    <p:outputLabel value="Department: "/>
+      <p:inputText value="#{personBean.newOrg.department}" style = "width:300px;"/>
+      <p:outputLabel value="Type*: "/>
+      <p:selectOneMenu value="#{personBean.newOrg.organizationTypeNum}" >    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItems value="#{optionBean.orgTypes}" /> 
+  	  </p:selectOneMenu>
+ 	  <p:outputLabel value="Home Page:"/>
+  	   <p:inputText value="#{personBean.newOrg.organizationLink}" style = "width:300px;"/>
+ <p:outputLabel value="City:"/><p:inputText value="#{personBean.newOrg.city}" style = "width:300px;"/>
+ 
+<p:outputLabel value="Country*:"/>
+ 	<p:selectOneMenu value="#{personBean.newOrg.countryNum}">    
+   			<f:selectItems value="#{optionBean.countries}" /> 
+   			<p:ajax listener="#{personBean.selectCountry}" update="state"/> 
+  	  </p:selectOneMenu>
+ 
+<p:outputLabel value="State:"/>
+ <h:panelGroup id="state">
+ 		<p:selectOneMenu value="#{personBean.newOrg.stateNum}" rendered="#{personBean.newOrg.countryNum ==840 or personBean.newOrg.countryNum ==826}">    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItems value="#{optionBean.states}" /> 
+  	  	</p:selectOneMenu>
+</h:panelGroup>
+
+ <p:outputLabel value="Address:"/><p:inputText value="#{personBean.newOrg.addressPart1}" style = "width:300px;"/>
+ <p:outputLabel value="E-mail address:"/>
+          <p:inputText id="email2" value="#{personBean.newOrg.email}" style = "width:300px;" validatorMessage="Email is invalid."> 
+          <p:ajax event="blur" update="email2"/>
+           <f:validateRegex pattern="(.+@.+\.[a-z]+)?"/>
+ </p:inputText>
+ </h:panelGrid>
+ 
+ 	<h:panelGrid columns="2" style="margin-top:5px;" cellpadding="1" >  
+ 	 <p:commandButton value="Save organization" actionListener="#{personBean.addNewOrganization}" update=":eca:personOrg :eca:personEditForm:affTable" >		  
+	<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+	<p:commandButton value="Cancel" actionListener="#{personBean.cancleNewOrganization}" update=":eca:personOrg">
+		<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+	</h:panelGrid> 
+</p:tab>
+</p:accordionPanel>	 
+</h:form>
+
+</ui:composition>
+ 
