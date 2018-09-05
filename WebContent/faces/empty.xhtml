@@ -1,0 +1,20 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:panelGrid rendered="#{searchBean.selectedTable eq 'citation'}">
+<p:outputLabel  value="This form is for browsing citations in the EarthChemDb. The citations include those for which data have been entered into the database, as well as other publications that contain data that could be loaded into the database." style="font-size:14px;"/> <br/><br/>
+<p:outputLabel  value="Click 'New' to enter a new citation. If you know the DOI for the citation, enter that first and the required information will be pulled from DataCite. To edit an existing citation, you can select using the citation number, an 'author, year' string, the title, or the DOI." style="font-size:14px;"/>  
+</h:panelGrid>
+<h:panelGrid rendered="#{searchBean.selectedTable eq 'organization'}">
+<p:outputLabel   value="This form is for browsing organizations in the EarthChemDb. The Organizations are used to assign affiliations for persons, and to associate equipment, analysis events, and expeditions with laboratories or sponsor organizations." style="font-size:14px;"/><br/>   <br/>
+<p:outputLabel  value="Click 'New' to add a new organization. To edit an existing organization, find the record using any text from the name of the organization organizaiton in the 'Search by' box." style="font-size:14px;"/>
+</h:panelGrid>
+<h:panelGrid rendered="#{searchBean.selectedTable eq 'person'}">
+<p:outputLabel  value="This form is for browsing persons in the EarthChemDb. Persons are associated with citations as authors, or with activities such as analysis events or expeditions." style="font-size:14px;"/>  <br/> <br/>
+<p:outputLabel value="Click 'New' to add a new person. To edit an existing person, find the record using any text from their name in the 'Search by' box."  style="font-size:14px;"/>  
+</h:panelGrid>
+</ui:composition>
+ 

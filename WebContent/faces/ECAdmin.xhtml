@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+ <f:view contentType="text/html">
+    <h:head>
+        <title>EarthChemDBAdmin</title>
+   	<link href="#{request.contextPath}/css/basic.css" rel="stylesheet"></link>	
+    </h:head>
+    <h:body> 
+  <p:messages id="mainMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+
+<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+    <p:graphicImage name="/ajaxloadingbar.gif" />
+</p:dialog>
+
+
+   <table cellspacing="0" cellpadding="0" border= "0" width="95%">
+	<tr><td align="left" width="40%">
+	<h:panelGroup><h:form id="refreshDBForm" onsubmit="document.body.style.cursor='wait'">
+	
+	<p:button target="_blank" href="#{initParam['Load_Sheet']}" value="Load Sheet" /><p:spacer width="10" />
+	<p:button target="_blank" href="#{initParam['E_Checker']}" value="E-Checker" />
+	<p:spacer width="10" />
+	<p:commandButton value="Refresh View" actionListener="#{refreshViewBean.refreshView}"  onstart="PF('statusDialog').show()"/></h:form>	
+	</h:panelGroup>
+	</td>	
+	<td  align="center" width="20%"><h4>EarthChem Admin</h4></td>
+	<td align="right" width="40%"><p:commandButton id="logout" value="Logout"  action="#{logoutBean.logout}"/>			
+	</td></tr>	
+	</table>   
+ 
+ <p:tabView id="eca">
+ <p:ajax event="tabChange" listener="#{homeBean.onTabChange}"/> 
+         <p:tab titletip="Home" title="Home">                       
+                <h:outputText value="Welcome to EarthChemDB Admin" />
+        </p:tab>
+
+        <p:tab titletip="Citation" title="Citation" >
+          <ui:fragment><ui:include src="citationList.xhtml" /></ui:fragment>
+        </p:tab>
+
+        <p:tab titletip="Dataset" title="Dataset">
+          <ui:fragment><ui:include src="datasetList.xhtml" /></ui:fragment>
+        </p:tab>
+   
+      <p:tab titletip="Sampling Feature" title="Samp Feature" >
+          <ui:fragment><ui:include src="samplingFeatureList.xhtml" /></ui:fragment>
+        </p:tab>  
+
+           <p:tab titletip="Annotation Type" title="Ann Type">
+          <ui:fragment><ui:include src="annotationTypeList.xhtml" /></ui:fragment>
+        </p:tab>
+  
+  		<p:tab titletip="Person" title="Person">
+          <ui:fragment><ui:include src="personList.xhtml" /></ui:fragment>
+        </p:tab>   
+
+         <p:tab titletip="Organization" title="Organization">
+          <ui:fragment><ui:include src="organizationList.xhtml" /></ui:fragment>
+        </p:tab>   
+    
+       	<p:tab titletip="Expedition" title="Expedition">
+          <ui:fragment><ui:include src="expeditionList.xhtml" /></ui:fragment>
+        </p:tab>     
+
+        <p:tab titletip="Method" title="Method">
+          <ui:fragment><ui:include src="methodList.xhtml" /></ui:fragment>
+        </p:tab> 
+        
+         <p:tab titletip="Method Information" title="Method Info">
+          <ui:fragment><ui:include src="methodInfoList.xhtml" /></ui:fragment>
+        </p:tab> 
+
+        <p:tab titletip="Analysis Action" title="Analysis">
+          <ui:fragment><ui:include src="analysisActionList.xhtml" /></ui:fragment>
+        </p:tab> 
+       
+        <p:tab titletip="Classification" title="Classification">
+          <ui:fragment><ui:include src="rockclassList.xhtml" /></ui:fragment>
+        </p:tab>  
+         <p:tab titletip="Variable" title="Variable">
+          <ui:fragment><ui:include src="variableList.xhtml" /></ui:fragment>
+        </p:tab>     
+        <p:tab titletip="Feature Of Interest CV" title="FOI CV">
+          <ui:fragment><ui:include src="featureOfInterestCvList.xhtml" /></ui:fragment>
+        </p:tab>   
+         <p:tab titletip="Feature Of Interest Type" title="FOI Type">
+          <ui:fragment><ui:include src="featureOfInterestTypeList.xhtml" /></ui:fragment>
+        </p:tab>  
+ 		 <p:tab titletip="Check View" title="Check View">
+          <ui:fragment><ui:include src="checkViewList.xhtml" /></ui:fragment>     
+        </p:tab> 
+       
+    </p:tabView>
+ 
+        <p:confirmDialog global="true">
+			<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+		</p:confirmDialog>
+	
+		
+   </h:body>
+	
+    </f:view>
+    
+</html>

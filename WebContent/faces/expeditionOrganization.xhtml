@@ -1,0 +1,58 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+     <h2>New Organization</h2>
+<h:form id="newOrgForm">
+<p:messages for="newOrganizationMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+<h:panelGrid columns = "2" border = "0" cellpadding = "2" cellspacing = "2">
+      <p:outputLabel value="Organization Name*: "/>  
+      <p:inputText value="#{expeditionBean.organization.organizationName}" style = "width:300px;"/>
+    <p:outputLabel value="Department: "/>
+      <p:inputText value="#{expeditionBean.organization.department}" style = "width:300px;"/>
+      <p:outputLabel value="Type*: "/>
+      <p:selectOneMenu value="#{expeditionBean.organization.organizationTypeNum}" >    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItems value="#{optionBean.orgTypes}" /> 
+  	  </p:selectOneMenu>
+
+ 	  <p:outputLabel value="Home Page:"/>
+  	   <p:inputText value="#{expeditionBean.organization.organizationLink}" style = "width:300px;"/>
+ <p:outputLabel value="City:"/><p:inputText value="#{expeditionBean.organization.city}" style = "width:300px;"/>
+ 
+<p:outputLabel value="Country*:"/>
+ 	<p:selectOneMenu value="#{expeditionBean.organization.countryNum}">    
+   			<f:selectItems value="#{optionBean.countries}" /> 
+   			<p:ajax listener="#{personNewBean.selectCountry}" update="state"/> 
+  	  </p:selectOneMenu>
+ 
+<p:outputLabel value="State:"/>
+ <h:panelGroup id="state">
+ 		<p:selectOneMenu value="#{expeditionBean.organization.stateNum}" rendered="#{expeditionBean.organization.countryNum ==840 or expeditionBean.organization.countryNum ==826}">    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItems value="#{optionBean.states}" /> 
+  	  	</p:selectOneMenu>
+</h:panelGroup>
+
+ <p:outputLabel value="Address:"/><p:inputText value="#{expeditionBean.organization.addressPart1}" style = "width:300px;"/>
+ <p:outputLabel value="E-mail address:"/>
+          <p:inputText id="email2" value="#{expeditionBean.organization.email}" style = "width:300px;" validatorMessage="Email is invalid."> 
+          <p:ajax event="blur" update="email2"/>
+           <f:validateRegex pattern="(.+@.+\.[a-z]+)?"/>
+ </p:inputText>
+ </h:panelGrid>
+ 
+ 	<h:panelGrid columns="2" style="margin-top:5px;" cellpadding="1" >  
+ 	 <p:commandButton value="Save organization" actionListener="#{expeditionBean.addNewOrganization}" update=":eca:expeditionEditForm :eca:newOrgForm" >		  
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+ 	<p:commandButton value="Cancel" actionListener="#{expeditionBean.cancleNewOrganization}" update=":eca:newOrgForm">
+
+			<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>	
+	</h:panelGrid> 
+</h:form>
+</ui:composition>
+ 

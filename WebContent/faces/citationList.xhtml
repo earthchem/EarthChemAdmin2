@@ -1,0 +1,50 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<p:dialog header="" widgetVar="citationDialog" width="900" height="500"  resizable="false"> 
+ <ui:fragment><ui:include src="citationDialog.xhtml" /></ui:fragment>
+</p:dialog>
+
+ <h:form id="viewForm">
+
+<h:panelGrid columns = "2" border = "0" cellpadding = "0" cellspacing = "3" resizable = "true">
+<h:panelGroup >
+	      <p:selectOneMenu value="#{citationBean2.dataStatus}">  
+	       <p:ajax listener="#{citationBean2.selectStatus}" update="viewForm"     oncomplete="PF('citationTableWidgetVar').filter()"/>
+	         <f:selectItem itemLabel="Select One" itemValue="#{null}" />
+	          <f:selectItem itemLabel="ALL" itemValue="ALL" />
+		      <f:selectItem itemLabel="IN_QUEUE" itemValue="IN_QUEUE" />
+               <f:selectItem itemLabel="IN_PROGRESS" itemValue="IN_PROGRESS" />
+               <f:selectItem itemLabel="DATA_LOADED" itemValue="DATA_LOADED" />
+               <f:selectItem itemLabel="COMPLETED" itemValue="COMPLETED" />  
+               <f:selectItem itemLabel="ALERT" itemValue="ALERT" /> 
+		  </p:selectOneMenu> 	  
+		 
+</h:panelGroup>
+    <p:commandButton value="New">
+		  <p:ajax listener="#{citationBean2.createNew}"   update=":eca:citationEditForm"  oncomplete="PF('citationDialog').show()"/>
+		  </p:commandButton>
+</h:panelGrid>
+
+<h:panelGroup id="citationTable">
+
+<p:dataTable  widgetVar="citationTableWidgetVar" var="ct" value="#{citationBean2.citations}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{citationBean2.citation}" rowKey="#{ct.citationNum}">  
+  <p:ajax event="rowSelect" listener="#{citationBean2.selectCitation}" update=":eca:citationEditForm"  oncomplete="PF('citationDialog').show()" /> 
+    	    <p:column headerText="Number" sortBy="#{ct.citationNum}" filterBy="#{ct.citationNum}" style="width:5%;"> <h:outputText value="#{ct.citationNum}"/></p:column>     
+	       	<p:column headerText="Doi" sortBy="#{ct.doi}" filterBy="#{ct.doi}" style="width:20%;" >  <h:outputText value="#{ct.doi}"/> </p:column>
+	       	<p:column headerText="Title"  sortBy="#{ct.title}" filterBy="#{ct.title}" style="width:25%;"> <h:outputText value="#{ct.title}"/></p:column>
+	       	<p:column headerText="Journal"  sortBy="#{ct.journal}" filterBy="#{ct.journal}" style="width:25%;">  <h:outputText value="#{ct.journal}"/> </p:column>	
+	       	<p:column headerText="Internal Comment"  sortBy="#{ct.internalComment}" filterBy="#{ct.internalComment}" style="width:25%;">  <h:outputText value="#{ct.internalComment}"/> </p:column>			
+</p:dataTable>	
+
+</h:panelGroup>
+</h:form>
+
+ 
+</ui:composition>
+ 

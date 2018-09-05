@@ -1,0 +1,37 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<p:dialog header="" widgetVar="featureOfInterestCvDialog" width="900" height="500" resizable="false"> 
+ <ui:fragment><ui:include src="featureOfInterestCvDialog.xhtml" /></ui:fragment>
+</p:dialog>
+<h:form id="featureOfInterestCvListForm">
+<h:panelGroup >
+<h:panelGrid columns = "4" border = "0" cellpadding = "0" cellspacing = "3">
+     <p:outputLabel value="Name: "/> 
+      <p:inputText value="#{featureOfInterestCvBean.search}" style = "width:120px;"/>
+ <p:commandButton value="Lookup" actionListener="#{featureOfInterestCvBean.lookup}" update="featureOfInterestCvListForm"/>  		 	 
+<p:commandButton value="New">
+		  <p:ajax listener="#{featureOfInterestCvBean.createNew}"  update=":eca:featureOfInterestCvEditForm"    oncomplete="PF('featureOfInterestCvDialog').show()"/>
+</p:commandButton>
+
+</h:panelGrid>
+
+<p:dataTable widgetVar="featureOfInterestCvTableWidgetVar" id="featureOfInterestCvTable" var="mt" value="#{featureOfInterestCvBean.featureOfInterestCvList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{featureOfInterestCvBean.featureOfInterestCv}" rowKey="#{mt.featureOfInterestCvNum}">  	
+  <p:ajax event="rowSelect" listener="#{featureOfInterestCvBean.selectFeatureOfInterestCv}" update=":eca:featureOfInterestCvEditForm"  oncomplete="PF('featureOfInterestCvDialog').show()" /> 
+  		<p:column headerText="Number" sortBy="#{mt.featureOfInterestCvNum}" filterBy="#{mt.featureOfInterestCvNum}" > <h:outputText value="#{mt.featureOfInterestCvNum}"/></p:column>
+ 		<p:column headerText="Name" sortBy="#{mt.featureOfInterestCvName}" filterBy="#{mt.featureOfInterestCvName}"  >  <h:outputText value="#{mt.featureOfInterestCvName}"/> </p:column>
+    	<p:column headerText="Description" sortBy="#{mt.featureOfInterestDescription}" filterBy="#{mt.featureOfInterestDescription}"  >  <h:outputText value="#{mt.featureOfInterestDescription}"/> </p:column>
+    
+</p:dataTable>	
+
+</h:panelGroup>
+
+</h:form>
+
+</ui:composition>
+ 

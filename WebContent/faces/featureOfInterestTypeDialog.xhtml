@@ -1,0 +1,43 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+                 
+
+<h:form id="featureOfInterestTypeEditForm">	
+
+<p:messages for="featureOfInterestTypeEditMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+<h:panelGrid columns = "2" border = "0" cellpadding = "0" cellspacing = "0">
+   <h:panelGroup style = "display:block; text-align:left">
+       <h2>Edit Feature Of Interest Type</h2>
+   </h:panelGroup>
+  <h:panelGroup style = "display:block; width:400px; text-align:right">
+         <p:inputText value="#{featureOfInterestTypeBean.featureOfInterestType.featureOfInterestTypeNum}" disabled="true" style = "width:40px;"/>
+   </h:panelGroup>
+</h:panelGrid>
+
+<h:panelGrid columns = "3" border = "0" cellpadding = "2" cellspacing = "2"> 	
+       <p:outputLabel value="Name*: "/> 
+      <p:inputText  value="#{featureOfInterestTypeBean.featureOfInterestType.featureOfInterestTypeName}" style = "width:400px;"/><h:panelGroup/> 
+	<p:outputLabel value="Description*: "/> 
+      <p:inputText  value="#{featureOfInterestTypeBean.featureOfInterestType.featureOfInterestTypeDescription}" style = "width:400px;"/><h:panelGroup/>  
+ 
+     <h:panelGrid columns = "4" border = "0" cellpadding = "2" cellspacing = "2">
+	<p:commandButton value="Save"  actionListener="#{featureOfInterestTypeBean.updateFeatureOfInterestType}" update=":eca:featureOfInterestTypeListForm"   oncomplete="PF('featureOfInterestTypeTableWidgetVar').filter()"> 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+	<p:commandButton value="Cancel"  actionListener="#{featureOfInterestTypeBean.cancelEditFeatureOfInterestType}" >
+		<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>	
+
+</h:panelGrid>
+
+</h:panelGrid>
+
+</h:form>
+
+
+</ui:composition>
+ 

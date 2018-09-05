@@ -1,0 +1,35 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<p:dialog header="" widgetVar="featureOfInterestTypeDialog" width="900" height="500" resizable="false"> 
+ <ui:fragment><ui:include src="featureOfInterestTypeDialog.xhtml" /></ui:fragment>
+</p:dialog>
+<h:form id="featureOfInterestTypeListForm">
+<h:panelGroup >
+<h:panelGrid columns = "1" border = "0" cellpadding = "0" cellspacing = "3">
+  
+<p:commandButton value="New">
+		  <p:ajax listener="#{featureOfInterestTypeBean.createNew}"  update=":eca:featureOfInterestTypeEditForm"    oncomplete="PF('featureOfInterestTypeDialog').show()"/>
+</p:commandButton>
+
+</h:panelGrid>
+
+<p:dataTable widgetVar="featureOfInterestTypeTableWidgetVar" id="featureOfInterestTypeTable" var="mt" value="#{featureOfInterestTypeBean.featureOfInterestTypeList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{featureOfInterestTypeBean.featureOfInterestType}" rowKey="#{mt.featureOfInterestTypeNum}">  	
+  <p:ajax event="rowSelect" listener="#{featureOfInterestTypeBean.selectFeatureOfInterestType}" update=":eca:featureOfInterestTypeEditForm"  oncomplete="PF('featureOfInterestTypeDialog').show()" /> 
+  		<p:column headerText="Number" sortBy="#{mt.featureOfInterestTypeNum}" filterBy="#{mt.featureOfInterestTypeNum}" > <h:outputText value="#{mt.featureOfInterestTypeNum}"/></p:column>
+ 		<p:column headerText="Name" sortBy="#{mt.featureOfInterestTypeName}" filterBy="#{mt.featureOfInterestTypeName}"  >  <h:outputText value="#{mt.featureOfInterestTypeName}"/> </p:column>
+    	<p:column headerText="Description" sortBy="#{mt.featureOfInterestTypeDescription}" filterBy="#{mt.featureOfInterestTypeDescription}"  >  <h:outputText value="#{mt.featureOfInterestTypeDescription}"/> </p:column>
+    
+</p:dataTable>	
+
+</h:panelGroup>
+
+</h:form>
+
+</ui:composition>
+ 

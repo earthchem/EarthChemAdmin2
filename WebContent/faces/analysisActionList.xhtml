@@ -1,0 +1,62 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+
+
+<h:form id="analysisActionListForm">
+<!-- 
+<p:messages for="analysisActionMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+-->
+<h:panelGrid columns = "4" border = "0" cellpadding = "0" cellspacing = "3" resizable = "true">
+<p:outputLabel value="Citation Num: "/> 
+      <p:inputText value="#{analysisActionBean.citationNum}" style = "width:120px;"/>
+ <p:commandButton value="Lookup" actionListener="#{analysisActionBean.lookup}" update="analysisActionListForm" />  		 	   
+</h:panelGrid>
+
+<p:dataTable id="actionTable"  var="a" value="#{analysisActionBean.actionList}" >                   
+  <p:column headerText="Action Num" style="width:7%;"><p:outputLabel value="#{a.actionNum}" /></p:column>        
+  <p:column headerText="Dataset"  style="width:9%;"><p:outputLabel value="#{a.datasetCode}" /></p:column>         
+   <p:column headerText="Method"  style="width:9%;"><p:outputLabel value="#{a.methodCode}" /></p:column>    
+   <p:column headerText="Organization"   style="width:30%;"><p:outputLabel value="#{a.organizationName}"/></p:column>              
+  <p:column headerText="Description" style="width:22%;"><p:outputLabel value="#{a.description}" /></p:column>  
+<p:column headerText="Date" style="width:10%;"><p:outputLabel value="#{a.date}"/></p:column>  
+<p:column headerText="Analyst"  style="width:4%;"><p:outputLabel value="#{a.analyst}" /></p:column> 
+ <p:column style="width:9%;"><p:commandButton value="Delete" actionListener="#{analysisActionBean.delete(a.actionNum)}"  update="actionTable"> 
+ 	<p:confirm header="Confirmation" message="Are you sure you want to delete it?" icon="ui-icon-alert"/></p:commandButton>		  
+ </p:column>
+ </p:dataTable><br/>
+ 
+<h:panelGrid columns = "14" border = "0" cellpadding = "5" cellspacing = "0" rendered="#{not empty analysisActionBean.citationNum}">
+<p:outputLabel value="Action Num:"/><p:inputText value="#{analysisActionBean.action.actionNum}" style = "width:60px;"/><p:spacer width="15" height="10" />
+<p:outputLabel value="Laboratory*:"/>
+ 		<p:autoComplete value="#{analysisActionBean.action.orgTheme}" completeMethod="#{personBean.completeTheme}"   scrollHeight="500"
+		var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme}"  converter="organizationConverter" forceSelection="true" >
+            <p:ajax event="itemSelect" listener="#{personBean.onItemSelect}" />
+	</p:autoComplete> <p:spacer width="15" height="10" />   
+<p:outputLabel value="Date*:"/><h:panelGroup><p:calendar value="#{analysisActionBean.action.date}" pattern="yyyy-MM-dd"/><p:outputLabel value=" (yyyy-mm-dd)"/></h:panelGroup><p:spacer width="15" height="10" />	  		
+<p:outputLabel value="Method*:"/> <p:selectOneMenu value="#{analysisActionBean.action.methodNum}"  filter="true" filterMatchMode="startsWith"><f:selectItem itemLabel="Select One" itemValue="#{null}" />
+ 		<f:selectItems value="#{optionBean.methods}" /></p:selectOneMenu> <p:spacer width="15" height="10" />
+ 		<p:outputLabel value="Equip 1:"/><p:selectOneMenu value="#{analysisActionBean.action.equipNum1}"   filter="true" filterMatchMode="startsWith"><f:selectItem itemLabel="Select One" itemValue="#{null}" />
+ 		<f:selectItems value="#{optionBean.equipments}" /></p:selectOneMenu>			
+ 		<p:outputLabel value="Analyst:"/><p:inputText value="#{analysisActionBean.action.analyst}" style = "width:60px;"/> <p:spacer width="15" height="10" />				
+	<p:outputLabel value="Preperation:"/><p:inputText value="#{analysisActionBean.action.preperation}" style = "width:200px;"/> <p:spacer width="15" height="10" />	
+	<p:outputLabel value="Comment:"/><p:inputText value="#{analysisActionBean.action.comment}" style = "width:200px;"/> <p:spacer width="15" height="10" />				
+	<p:outputLabel value="Dataset*:"/><p:selectOneMenu value="#{analysisActionBean.action.datasetNum}" ><f:selectItem itemLabel="Select One" itemValue="#{null}" />
+ 		<f:selectItems value="#{analysisActionBean.datasets}" /></p:selectOneMenu>			<p:spacer width="15" height="10" />	
+ 		<p:outputLabel value="Equip 2:"/><p:selectOneMenu value="#{analysisActionBean.action.equipNum2}"   filter="true" filterMatchMode="startsWith"><f:selectItem itemLabel="Select One" itemValue="#{null}" />
+ 		<f:selectItems value="#{optionBean.equipments}" /></p:selectOneMenu>
+ 		
+</h:panelGrid>
+
+<p:commandButton value="Add"  actionListener="#{analysisActionBean.add}" update=":eca:analysisActionListForm:actionTable"> 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>	
+
+</h:form>
+
+</ui:composition>
+ 
