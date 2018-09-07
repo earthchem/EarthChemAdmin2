@@ -174,6 +174,6 @@ public class PersonDB {
 		return "UPDATE person SET first_name = "+DBUtil.StringValue(p.getFirstName())+
 				", middle_name = "+DBUtil.StringValue(p.getMiddleName())+
 				", last_name = "+DBUtil.StringValue(p.getLastName())+
-				", pnum = "+p.getPnum() +"WHERE person_num = "+p.getPersonNum();	
+				", pnum = "+p.getPnum() +" WHERE person_num = "+p.getPersonNum();	
 	}
 }

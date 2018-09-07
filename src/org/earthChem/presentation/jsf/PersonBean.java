@@ -103,9 +103,11 @@ public class PersonBean implements Serializable {
 			a.setOrganizationName( selectedOrganization.getDisplayName());
 			String email = na.getPrimaryEmail();
 			a.setPrimaryEmail(email);
-			affiliations.add(a);		
+			Integer affNum = DBUtil.getNumber("select nextval('affiliation_affiliation_num_seq')");
 			String q = "insert into affiliation (affiliation_num,person_num, organization_num, primary_email) "+
-			" values (nextval('affiliation_affiliation_num_seq'),"+person.getPersonNum()+","+selectedOrganization.getId()+","+DBUtil.StringValue(email)+")";			
+			" values ("+affNum+","+person.getPersonNum()+","+selectedOrganization.getId()+","+DBUtil.StringValue(email)+")";			
+			a.setAffiliationNum(affNum);
+			affiliations.add(a);		
 			DBUtil.update(q);
 			selectedOrganization = null;
 			na.setPrimaryEmail(null);
