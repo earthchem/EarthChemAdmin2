@@ -37,7 +37,7 @@ public class DBUtil {
     }
     
    
-	
+	//Used fro JSF
 	public static List<org.earthChem.presentation.jsf.theme.Theme> getThemeList(String q) {
 		List<org.earthChem.presentation.jsf.theme.Theme> items = new ArrayList<Theme>();	
 		List<Object[]> list = list(q);		
@@ -47,6 +47,7 @@ public class DBUtil {
 		return items;
 	}
 	
+	//Used fro JSF
 	public static List<Theme> getSimpleThemeList(String q) {
 		List<Theme> items = new ArrayList<Theme>();	
 		List<Object[]> list = list(q);		
@@ -57,7 +58,7 @@ public class DBUtil {
 		return items;
 	}
 	
-	//get dropdown selected key and value
+	//Used fro JSF, get dropdown selected key and value
 	public static SelectItem[] getSelectItems(String q) {
 		SelectItem[] items = null;
 		List<Object[]> list = list(q);		

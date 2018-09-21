@@ -9,16 +9,6 @@ import org.earthChem.db.postgresql.hbm.Variable;
 import org.earthChem.db.postgresql.hbm.Organization;
 
 public class VariableDB {
-	private Integer variableNum;
-	private Integer variableTypeNum;
-	private Integer displayOrder;
-	private String variableCode;
-	private String variableName;
-	private String variableTypeName;
-	private String variable_definition;
-	
-	
-	
 	
 	public static List<Variable> getVariableList(Integer typeNum) {
 		String clause = "";
@@ -61,13 +51,15 @@ public class VariableDB {
 	
 	public static String update(Variable e, boolean isNew) {	
 		String q = null;
+		List<String> list = new ArrayList<String>();
 		Integer variableNum= e.getVariableNum();
 		Integer variableTypeNum = e.getVariableTypeNum();	
 		Integer order =  e.getDisplayOrder();
 		String variableCode = DBUtil.StringValue(e.getVariableCode());
 		String variableName = DBUtil.StringValue(e.getVariableName());				
-		String variableDefinition = DBUtil.StringValue(e.getVariableDefinition());			
-	
+		String variableDefinition = DBUtil.StringValue(e.getVariableDefinition());	
+		q = "update variable set display_order = (display_order+1) where display_order >= "+order;
+	    list.add(q);
 		if(isNew) {
 			
 			 q ="INSERT INTO variable (variable_num, variable_type_num, variable_code, variable_name,"+
@@ -80,6 +72,7 @@ public class VariableDB {
 				" variable_definition="+variableDefinition+","+
 				" display_order="+order+" where variable_num="+variableNum;
 		}
-		return DBUtil.update(q);
+		list.add(q);
+		return DBUtil.updateList(list);
 	}
 }

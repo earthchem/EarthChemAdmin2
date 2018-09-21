@@ -100,7 +100,7 @@
         <configuration>
           <warSourceDirectory>WebContent</warSourceDirectory>
           <failOnMissingWebXml>false</failOnMissingWebXml>
-           <outputDirectory>C:\wildfly-10.1.0.Final\standalone\deployments</outputDirectory>
+           <outputDirectory>C:\wildfly-13.0.0.Final\standalone\deployments</outputDirectory>
         </configuration>
       </plugin>
       <plugin>
