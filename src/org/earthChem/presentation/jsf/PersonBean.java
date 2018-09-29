@@ -61,6 +61,7 @@ public class PersonBean implements Serializable {
 		 person = new Person();	
 		 newAffiliations = new ArrayList<Affiliation>();		 
 		 newAffiliations.add(new Affiliation());
+		 affiliations = new ArrayList<Affiliation>();	
 		 selectedOrganization = null;
 		 newOrg = new Organization();
 		 isNew = true;
