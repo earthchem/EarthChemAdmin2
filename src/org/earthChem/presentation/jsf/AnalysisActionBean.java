@@ -14,6 +14,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.earthChem.rest.CitationRest;
+import org.primefaces.event.RowEditEvent;
 import org.earthChem.db.CitationDB;
 import org.earthChem.db.CitationList;
 import org.earthChem.db.CitationPurge;
@@ -32,9 +33,42 @@ public class AnalysisActionBean implements Serializable {
 	private Action action;
 	private Integer citationNum;
 	
+	
+	public void createNew(RowEditEvent event) {
+		
+	}
+	
+	
+	
+	public void onRowEdit(RowEditEvent event) {
+		Action editedAction =(Action) event.getObject();
+	
+		System.out.println("bc-add "+editedAction.getMethodNum());
+	
+	}
+	
+	
+	
+	
 
 	public void lookup() {
-		actionList = ActionDB.getActionList(citationNum);
+	//	actionList = ActionDB.getActionList(citationNum);
+		
+		
+		actionList = new ArrayList<Action>();
+		
+			Action ac = new Action();
+			ac.setMethodNum(3);
+			actionList.add(ac);
+			ac = new Action();
+			ac.setMethodNum(5);
+			actionList.add(ac);
+		
+		
+		
+		
+		
+		
 		if(actionList.size()==0) {
 			FacesContext.getCurrentInstance().addMessage("analysisActionMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "No action data were found!", ""));
 		}

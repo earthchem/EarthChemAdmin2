@@ -17,6 +17,22 @@
  <p:commandButton value="Lookup" actionListener="#{analysisActionBean.lookup}" update="analysisActionListForm" />  		 	   
 </h:panelGrid>
 
+<p:dataTable id="actionTable" widgetVar="actionTableWidgetVar" var="a" value="#{analysisActionBean.actionList}" editable="true" scrollable="true" scrollHeight="300">   
+ <p:ajax event="rowEdit" listener="#{analysisActionBean.onRowEdit}" />
+ <p:ajax event="rowEditCancel" listener="#{analysisActionBean.onRowCancel}" />
+                     
+  <p:column headerText="Technique"  style="width:9%;"><p:cellEditor>
+  		<f:facet name="output"><h:outputText value="#{a.methodNum}" /></f:facet>
+   		<f:facet name="input"><p:selectOneMenu value="#{a.methodNum}"  filter="true" filterMatchMode="startsWith" style="width:70px;"><f:selectItem itemLabel="Select One" itemValue="#{null}" />
+			<f:selectItems value="#{optionBean.methods}" /></p:selectOneMenu></f:facet>
+  </p:cellEditor></p:column>  
+ <p:column style="width:32px">
+           <p:rowEditor />
+  </p:column>
+  </p:dataTable>
+
+<!--  
+
 <p:dataTable id="actionTable"  var="a" value="#{analysisActionBean.actionList}" >                   
   <p:column headerText="Action Num" style="width:7%;"><p:outputLabel value="#{a.actionNum}" /></p:column>        
   <p:column headerText="Dataset"  style="width:9%;"><p:outputLabel value="#{a.datasetCode}" /></p:column>         
@@ -29,7 +45,9 @@
  	<p:confirm header="Confirmation" message="Are you sure you want to delete it?" icon="ui-icon-alert"/></p:commandButton>		  
  </p:column>
  </p:dataTable><br/>
- 
+
+
+
 <h:panelGrid columns = "14" border = "0" cellpadding = "5" cellspacing = "0" rendered="#{not empty analysisActionBean.citationNum}">
 <p:outputLabel value="Action Num:"/><p:inputText value="#{analysisActionBean.action.actionNum}" style = "width:60px;"/><p:spacer width="15" height="10" />
 <p:outputLabel value="Laboratory*:"/>
@@ -55,7 +73,7 @@
 <p:commandButton value="Add"  actionListener="#{analysisActionBean.add}" update=":eca:analysisActionListForm:actionTable"> 
 		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
 	</p:commandButton>	
-
+-->
 </h:form>
 
 </ui:composition>
