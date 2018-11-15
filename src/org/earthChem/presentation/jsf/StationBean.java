@@ -25,6 +25,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
 
 import org.earthChem.db.AnnotationDB;
 import org.earthChem.db.DBUtil;
@@ -41,7 +42,7 @@ import org.primefaces.context.RequestContext;
 
  
 @ManagedBean(name="stationBean")
-@SessionScoped
+@ViewScoped
 public class StationBean implements Serializable {
 	
 	
@@ -148,6 +149,7 @@ public class StationBean implements Serializable {
 	public List<Station> getStationList() {
 		String sfCode =(String) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("sfCode");
 		if(sfCode != null) stationList = StationDB.getStationList(sfCode);
+		if(stationList==null) stationList = new ArrayList<Station>();
 		return stationList;
 	}
 	public void setStationList(List<Station> stationList) {
