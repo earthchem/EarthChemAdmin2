@@ -42,7 +42,7 @@ import org.primefaces.context.RequestContext;
 
  
 @ManagedBean(name="stationBean")
-@ViewScoped
+@SessionScoped
 public class StationBean implements Serializable {
 	
 	
