@@ -7,7 +7,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.earthChem.db.DBUtil;
+import org.earthChem.db.EntityStatisticsDB;
 import org.earthChem.db.VariableDB;
+import org.earthChem.db.postgresql.hbm.EntityStatistics;
 import org.earthChem.db.postgresql.hbm.Variable;
 import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
@@ -51,4 +53,6 @@ public class RefreshViewBean implements Serializable {
 		String status = DBUtil.update("refresh materialized view "+table);
 		return status;
 	}
+	
+	public List<EntityStatistics> getStatisticsList() { return EntityStatisticsDB.getStatisticsList();}
  }

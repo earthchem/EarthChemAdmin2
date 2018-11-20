@@ -1,0 +1,27 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+	
+
+<p:dataTable  var="e" value="#{refreshViewBean.statisticsList}">  
+       	<p:column headerText="statistics_num"> <h:outputText value="#{e.statistics_num}"/></p:column>
+       	<p:column headerText="citations"> <h:outputText value="#{e.citations}"/></p:column>
+       	<p:column headerText="datasets"> <h:outputText value="#{e.datasets}"/></p:column>
+       	<p:column headerText="stations"> <h:outputText value="#{e.stations}"/></p:column>
+       	<p:column headerText="expeditions"> <h:outputText value="#{e.expeditions}"/></p:column>
+       	<p:column headerText="specimens"> <h:outputText value="#{e.specimens}"/></p:column>
+       	<p:column headerText="total_chem_values"> <h:outputText value="#{e.total_chem_values}"/></p:column>
+       	<p:column headerText="rock_values"> <h:outputText value="#{e.rock_values}"/></p:column>
+       	<p:column headerText="mineral_values"> <h:outputText value="#{e.mineral_values}"/></p:column>
+       	<p:column headerText="volc_glass_values"> <h:outputText value="#{e.volc_glass_values}"/></p:column>
+       	<p:column headerText="inclusion_values"> <h:outputText value="#{e.inclusion_values}"/></p:column>
+       	<p:column headerText="ts"> <h:outputText value="#{e.ts}"/></p:column>
+ 		
+</p:dataTable>	
+
+
+</ui:composition>
+ 
