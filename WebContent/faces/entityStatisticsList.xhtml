@@ -4,7 +4,11 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://java.sun.com/jsf/facelets"> 
-	
+                
+<style type="text/css">                
+.ui-datatable-odd {
+background: none repeat scroll 0 0 #F2F5F9;}
+</style>
 
 <p:dataTable id="statisticsTable" var="e" value="#{refreshViewBean.statisticsList}">  
        	<p:column headerText="statistics_num"> <h:outputText value="#{e.statistics_num}"/></p:column>
