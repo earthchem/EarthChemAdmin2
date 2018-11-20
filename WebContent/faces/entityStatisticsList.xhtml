@@ -6,7 +6,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"> 
 	
 
-<p:dataTable  var="e" value="#{refreshViewBean.statisticsList}">  
+<p:dataTable id="statisticsTable" var="e" value="#{refreshViewBean.statisticsList}">  
        	<p:column headerText="statistics_num"> <h:outputText value="#{e.statistics_num}"/></p:column>
        	<p:column headerText="citations"> <h:outputText value="#{e.citations}"/></p:column>
        	<p:column headerText="datasets"> <h:outputText value="#{e.datasets}"/></p:column>

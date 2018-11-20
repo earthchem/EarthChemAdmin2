@@ -46,7 +46,6 @@ public class RefreshViewBean implements Serializable {
 		else {
 			FacesContext.getCurrentInstance().addMessage("mainMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Error! " + status));
 		}
-		PrimeFaces.current().executeScript("PF('statusDialog').hide()");
 	}
 	
 	private String refreshOne(String table) {
