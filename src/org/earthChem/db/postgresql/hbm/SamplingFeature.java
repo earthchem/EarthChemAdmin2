@@ -28,11 +28,39 @@ public class SamplingFeature implements java.io.Serializable {
 	private Double lat2;
 	private Double long2;
 	private String tectonicSettingName;
+	private Integer parentNum;
+	private String parentCode;
+	private Integer relationShipType;
+	private Integer relatedFeatureNum;
 	
 	
 	
 	
 	
+	public Integer getParentNum() {
+		return parentNum;
+	}
+	public void setParentNum(Integer parentNum) {
+		this.parentNum = parentNum;
+	}
+	public String getParentCode() {
+		return parentCode;
+	}
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
+	}
+	public Integer getRelationShipType() {
+		return relationShipType;
+	}
+	public void setRelationShipType(Integer relationShipType) {
+		this.relationShipType = relationShipType;
+	}
+	public Integer getRelatedFeatureNum() {
+		return relatedFeatureNum;
+	}
+	public void setRelatedFeatureNum(Integer relatedFeatureNum) {
+		this.relatedFeatureNum = relatedFeatureNum;
+	}
 	public Integer getTectonicSettingNum() {
 		return tectonicSettingNum;
 	}

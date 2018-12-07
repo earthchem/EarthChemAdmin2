@@ -49,38 +49,65 @@ import org.primefaces.event.TabCloseEvent;
 @SessionScoped
 public class CheckViewBean implements Serializable {
 
-	private List<SamplingFeature> noParentAnalyzed; 
+	/*private List<SamplingFeature> noParentAnalyzed; 
 	private List<SamplingFeature> noChildStation; 
 	private List<SamplingFeature> noParentSpecimen; 
 	private List<SamplingFeature> noChildSpecimen; 
+	private List<SamplingFeature> dupStation; 
+	*/
 	
-	/*
-analyzed sample without specimen
-select vas.sampling_feature_num, vas.sampling_feature_type_num, vas.sampling_feature_code from v_analyzed_samples vas
-where vas.sampling_feature_num not in (select distinct sampling_feature_num from related_feature rf where rf.relationship_type_num=9);
-
-station without specimen
-select  vas.sampling_feature_num, vas.sampling_feature_type_num, vas.sampling_feature_code from v_stations vas
-where vas.sampling_feature_num not in (select distinct related_sampling_feature_num from related_feature rf where rf.relationship_type_num=22);
-
-specimen without station
-select  vas.sampling_feature_num, vas.sampling_feature_type_num, vas.sampling_feature_code from v_specimens vas
-where vas.sampling_feature_num not in (select distinct sampling_feature_num from related_feature rf where rf.relationship_type_num=22);
-
-specimen without analyzed sample
-select vas.sampling_feature_num, vas.sampling_feature_type_num, vas.sampling_feature_code from v_specimens vas
-where vas.sampling_feature_num not in (select distinct related_sampling_feature_num from related_feature rf where rf.relationship_type_num=9);
-;
-*/
+	private void updateMsg(String status) {
+		if(status == null) 
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO:", "The data were deleted!"));
+		else 
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
+	}
+	
+	public void delete(Integer samplingFeatureNum) {
+		List<String> qs = new ArrayList<String>();			
+		qs.add("DELETE FROM sampling_feature_external_identifier WHERE sample_feature_num="+samplingFeatureNum);
+		qs.add("DELETE FROM sampling_feature_taxonomic_classifier WHERE sampling_feature_num="+samplingFeatureNum);
+		qs.add("DELETE FROM specimen WHERE sampling_feature_num="+samplingFeatureNum);				
+		qs.add("DELETE FROM sampling_feature_extension_property WHERE sampling_feature_num="+samplingFeatureNum);
+		qs.add("DELETE FROM sampling_feature_annotation WHERE sampling_feature_num="+samplingFeatureNum);		
+		qs.add("DELETE FROM feature_of_interest WHERE sampling_feature_num="+samplingFeatureNum);
+		qs.add("DELETE FROM feature_action WHERE sampling_feature_num="+samplingFeatureNum);
+		qs.add("DELETE FROM related_feature WHERE related_sampling_feature_num="+samplingFeatureNum);
+		qs.add("DELETE FROM related_feature WHERE sampling_feature_num="+samplingFeatureNum);
+		qs.add("DELETE FROM sampling_feature WHERE sampling_feature_num="+samplingFeatureNum);
+		updateMsg(DBUtil.updateList(qs));
+	}
+/*	
+	public void deleteNoParentAnalyzed(Integer samplingFeatureNum) {
+		DBUtil.update("DELETE FROM sampling_feature WHERE sampling_feature_num="+samplingFeatureNum);
+	}
+	
+	public void deleteNoChildStation(Integer samplingFeatureNum) {
+		DBUtil.update("DELETE FROM sampling_feature WHERE sampling_feature_num="+samplingFeatureNum);
+	}
+	
+	public void deleteNoParentSpecimen(Integer samplingFeatureNum) {
+		DBUtil.update("DELETE FROM sampling_feature WHERE sampling_feature_num="+samplingFeatureNum);
+	}
+	
+	public void deleteNoChildSpecimen(Integer samplingFeatureNum) {
+		DBUtil.update("DELETE FROM sampling_feature WHERE sampling_feature_num="+samplingFeatureNum);
+	}
+*/	
+	public void deleteDupStation(Integer relatedFeatureNum) {
+		updateMsg(DBUtil.update("DELETE FROM related_feature WHERE related_feature_num="+relatedFeatureNum));
+	}
+	
 	public List<SamplingFeature> getNoParentAnalyzed() {
 		String q = "select vas.sampling_feature_num, vas.sampling_feature_type_num, vas.sampling_feature_code from v_analyzed_samples vas "+
 				" where vas.sampling_feature_num not in (select distinct sampling_feature_num from related_feature rf where rf.relationship_type_num=9) ";
 		return getList(q);
 	}
 	
+	
 	public List<SamplingFeature> getNoChildStation() {
 		String q = "select  vas.sampling_feature_num, vas.sampling_feature_type_num, vas.sampling_feature_code from v_stations vas "+
-				" where vas.sampling_feature_num not in (select distinct related_sampling_feature_num from related_feature rf where rf.relationship_type_num=22)";
+				" where vas.sampling_feature_num not in (select distinct related_sampling_feature_num from related_feature rf where rf.relationship_type_num=22 )";
 		return getList(q);
 	}
 
@@ -104,6 +131,26 @@ where vas.sampling_feature_num not in (select distinct related_sampling_feature_
 			s.setSamplingFeatureNum((Integer)i[0]);
 			s.setSamplingFeatureTypeNum((Integer)i[1]);
 			s.setSamplingFeatureCode(""+i[2]);
+			list.add(s);
+		}
+		return list;
+	}
+	
+	public List<SamplingFeature> getDupStation() {
+		String q = "select r.related_feature_num, c.sampling_feature_num, c.sampling_feature_code, p.sampling_feature_num, p.sampling_feature_code, r.relationship_type_num " + 
+				" from related_feature r, sampling_feature c, sampling_feature p " + 
+				" where r.sampling_feature_num = c.sampling_feature_num and p.sampling_feature_num = r.related_sampling_feature_num and c.sampling_feature_num in" + 
+				" (select sampling_feature_num from related_feature where relationship_type_num = 22 group by sampling_feature_num having count(*) > 1)";
+		List<SamplingFeature> list =  new ArrayList<SamplingFeature>();
+		List<Object[]> olist = DBUtil.getECList(q);
+		for(Object[] i: olist) {
+			SamplingFeature s = new SamplingFeature();
+			s.setRelatedFeatureNum((Integer)i[0]);
+			s.setSamplingFeatureNum((Integer)i[1]);
+			s.setSamplingFeatureCode(""+i[2]);
+			s.setParentNum((Integer)i[3]);
+			s.setParentCode(""+i[4]);
+		    s.setRelationShipType((Integer)i[5]);
 			list.add(s);
 		}
 		return list;
