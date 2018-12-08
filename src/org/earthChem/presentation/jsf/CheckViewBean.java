@@ -68,7 +68,6 @@ public class CheckViewBean implements Serializable {
 		qs.add("DELETE FROM sampling_feature_external_identifier WHERE sample_feature_num="+samplingFeatureNum);
 		qs.add("DELETE FROM sampling_feature_taxonomic_classifier WHERE sampling_feature_num="+samplingFeatureNum);
 		qs.add("DELETE FROM specimen WHERE sampling_feature_num="+samplingFeatureNum);				
-		qs.add("DELETE FROM sampling_feature_extension_property WHERE sampling_feature_num="+samplingFeatureNum);
 		qs.add("DELETE FROM sampling_feature_annotation WHERE sampling_feature_num="+samplingFeatureNum);		
 		qs.add("DELETE FROM feature_of_interest WHERE sampling_feature_num="+samplingFeatureNum);
 		qs.add("DELETE FROM feature_action WHERE sampling_feature_num="+samplingFeatureNum);
