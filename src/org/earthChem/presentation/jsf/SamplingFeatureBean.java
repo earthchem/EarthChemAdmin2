@@ -44,6 +44,7 @@ import org.primefaces.context.RequestContext;
 public class SamplingFeatureBean implements Serializable {
 	
 	public void lookup() {
+//	System.out.println("bc-lk "+	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("database"));
 		String code = search.getSamplingFeatureCode();
 		if(code==null || "".equals(code.trim())) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("WARN!",  "The code is required!") );

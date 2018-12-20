@@ -5,8 +5,6 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
-	  
-    <f:view contentType="text/html">
     <h:head>
         <title>Log In</title>
           <link href="#{request.contextPath}/css/redmond/jquery-ui-1.10.4.custom.css" rel="stylesheet"></link>	
@@ -44,16 +42,25 @@
             <p>
        			 <input type="submit" value="Submit" /></p>
        </form>
- -->  
+ 
         <input type="submit" value="Submit" />
-                <input type="reset" value="Reset" />
+                <input type="reset" value="Reset" /> 
+                
+       
+                --> 
     <h:form id="login" onsubmit="document.getElementById('login').action='j_security_check';" prependId="false">
     <h:panelGrid columns="2">
+                <p:outputLabel for="database" value="Database:"/> 
+       <p:selectOneRadio id="database" value="#{homeBean.database}" required="true">
+            <f:selectItem itemLabel="petdb" itemValue="petdb" />
+            <f:selectItem itemLabel="tephra" itemValue="tephra" />
+          <p:ajax event="valueChange" process="@this" listener="#{homeBean.selectDatabase}"/>
+        </p:selectOneRadio>
         <p:outputLabel for="j_username" value="Username" />
         <p:inputText id="j_username" name="j_username" />            
         <p:outputLabel for="j_password" value="Password" />
         <p:password id="j_password" name="j_password"/>
-        <p:commandButton id="submit" value="Login" ajax="false"/>
+        <p:commandButton id="submit" value="Login" ajax="false"  />
     </h:panelGrid>
     
     
@@ -76,7 +83,6 @@
       
     </h:body>
 
-	
-    </f:view>
+
     
 </html>

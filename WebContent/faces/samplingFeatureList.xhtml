@@ -30,9 +30,9 @@
      	<p:ajax event="click" process="@form" listener="#{sfBean.createNew}" /> 
      </p:commandButton>
  </h:panelGroup>
-  
+
  <p:dataTable  widgetVar="sampleTableWidgetVar" var="ct" value="#{sampleBean.sampleList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
-selectionMode="single" selection="#{sampleBean.sample}" rowKey="#{ct.sampleNum}" rendered="#{sfBean.search.samplingFeatureTypeNum eq 1}">  
+selectionMode="single" selection="#{sampleBean.sample}" rowKey="#{ct.sampleNum}" rendered="#{session.getAttribute('database') eq 'petdb' and sfBean.search.samplingFeatureTypeNum eq 1}">  
   <p:ajax event="rowSelect" listener="#{sampleBean.selectSample}" update=":eca:sampleEditForm"  oncomplete="PF('sampleDialog').show()" /> 
   <f:facet name="header"> Counts: #{sampleBean.sampleList.size()}</f:facet>
     	    <p:column headerText="Number" sortBy="#{ct.sampleNum}" filterBy="#{ct.sampleNum}"> <h:outputText value="#{ct.sampleNum}"/></p:column>     

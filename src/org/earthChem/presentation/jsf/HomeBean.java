@@ -11,6 +11,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import org.earthChem.rest.CitationRest;
@@ -48,7 +50,11 @@ import org.primefaces.event.TabCloseEvent;
 @SessionScoped
 public class HomeBean implements Serializable {
 	
-	 public void onTabChange(TabChangeEvent event) {
+	public void selectDatabase(AjaxBehaviorEvent event) {
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("database", database);
+	 }
+	
+	public void onTabChange(TabChangeEvent event) {
 		 tab = event.getTab().getTitle();
 	 }
 	
@@ -64,7 +70,20 @@ public class HomeBean implements Serializable {
 		this.tab = tab;
 	}
 
+	
+
+	public String getDatabase() {
+		return database;
+	}
+
+
+
+	public void setDatabase(String database) {
+		this.database = database;
+	}
+
 
 
 	private String tab;
- }
+	private String database;
+}				

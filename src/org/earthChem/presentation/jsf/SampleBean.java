@@ -278,6 +278,16 @@ public class SampleBean implements Serializable {
 		this.taxonomicClassifier = taxonomicClassifier;
 	}
 
+	
+
+	public boolean isPetdb() {
+		return isPetdb;
+	}
+
+	public void setPetdb(boolean isPetdb) {
+		this.isPetdb = isPetdb;
+	}
+
 
 
 	private Sample sample;
@@ -290,6 +300,7 @@ public class SampleBean implements Serializable {
 	private Annotation delAnnotation;
 	private List<TaxonomicClassifier> tcList;
 	private TaxonomicClassifier taxonomicClassifier;
+	private boolean isPetdb = false;
 	  
 	
 	static public class ColumnModel implements Serializable {
