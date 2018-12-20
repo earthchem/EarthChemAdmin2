@@ -21,8 +21,8 @@ import org.earthChem.db.CitationPurge;
 import org.earthChem.db.DBUtil;
 import org.earthChem.db.EquipmentDB;
 import org.earthChem.db.ExpeditionDB;
+import org.earthChem.model.Action;
 import org.earthChem.db.ActionDB;
-import org.earthChem.db.postgresql.hbm.Action;
 
 
  

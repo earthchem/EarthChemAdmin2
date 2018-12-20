@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import org.earthChem.db.postgresql.hbm.Organization;
+import org.earthChem.model.Organization;
 
 public class OrganizationDB {
 	
@@ -149,7 +149,7 @@ public class OrganizationDB {
 	@SuppressWarnings("unchecked")
 	public static List<Organization> getSavedOrganizations(int citationNum) {
 		List<Organization> orgs = new ArrayList<Organization>();
-		org.earthChem.db.postgresql.hbm.Organization org2 = null;
+		org.earthChem.model.Organization org2 = null;
 
 			String q = "select o.organization_id, o.organization_num, t.organization_type_name,"+
 				" o.organization_name, o.department,o.address_part1, o.address_part2, o.city, s.state_abbrv, o.zip, c.country_name "+

@@ -1,4 +1,4 @@
-package org.earthChem.db.postgresql.hbm;
+package org.earthChem.model;
 
 public class Equipment implements java.io.Serializable {
 

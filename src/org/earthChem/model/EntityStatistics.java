@@ -1,4 +1,4 @@
-package org.earthChem.db.postgresql.hbm;
+package org.earthChem.model;
 
 import java.util.ArrayList;
 

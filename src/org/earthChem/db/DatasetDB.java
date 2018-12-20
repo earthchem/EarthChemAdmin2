@@ -3,9 +3,8 @@ package org.earthChem.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.earthChem.db.postgresql.hbm.Dataset;
-import org.earthChem.db.postgresql.hbm.Dataset;
-import org.earthChem.db.postgresql.hbm.Method;
+import org.earthChem.model.Dataset;
+import org.earthChem.model.Method;
 
 
 public class DatasetDB {

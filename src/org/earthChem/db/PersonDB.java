@@ -9,10 +9,11 @@ package org.earthChem.db;
  */
 import java.util.ArrayList;
 import java.util.List;
-import org.earthChem.db.postgresql.hbm.Affiliation;
-import org.earthChem.db.postgresql.hbm.Organization;
-import org.earthChem.db.postgresql.hbm.Person;
-import org.earthChem.db.postgresql.hbm.PersonExternalIdentifier;
+
+import org.earthChem.model.Affiliation;
+import org.earthChem.model.Organization;
+import org.earthChem.model.Person;
+import org.earthChem.model.PersonExternalIdentifier;
 import org.earthChem.presentation.jsf.theme.Theme;
 
 public class PersonDB {

@@ -1,4 +1,4 @@
-package org.earthChem.db.postgresql.hbm;
+package org.earthChem.model;
 
 // Generated Jul 30, 2014 4:07:06 PM by Hibernate Tools 4.0.0
 
@@ -43,8 +43,17 @@ public class Sample implements java.io.Serializable {
 	private String tcParentName;  //taxonomic_classifier
 	private Integer tcNum;  //taxonomic_classifier
 	private Integer tcParentNum;  //taxonomic_classifier
+    private Integer materialNum;
+    
+    
+    
 
-
+	public Integer getMaterialNum() {
+		return materialNum;
+	}
+	public void setMaterialNum(Integer materialNum) {
+		this.materialNum = materialNum;
+	}
 	public Integer getTcNum() {
 		return tcNum;
 	}

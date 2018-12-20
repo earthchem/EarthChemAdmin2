@@ -10,8 +10,8 @@ import javax.faces.model.SelectItem;
 import org.earthChem.db.ActionDB;
 import org.earthChem.db.DBUtil;
 import org.earthChem.db.MethodInfoDB;
-import org.earthChem.db.postgresql.hbm.Action;
-import org.earthChem.db.postgresql.hbm.MethodInfo;
+import org.earthChem.model.Action;
+import org.earthChem.model.MethodInfo;
 
 @ManagedBean(name="methodInfoBean")
 @SessionScoped

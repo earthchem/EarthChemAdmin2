@@ -3,7 +3,7 @@ package org.earthChem.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.earthChem.db.postgresql.hbm.FeatureOfInterestType;
+import org.earthChem.model.FeatureOfInterestType;
 
 public class FeatureOfInterestTypeDB {
 

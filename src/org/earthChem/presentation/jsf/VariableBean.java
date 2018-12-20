@@ -9,7 +9,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.earthChem.db.DBUtil;
 import org.earthChem.db.VariableDB;
-import org.earthChem.db.postgresql.hbm.Variable;
+import org.earthChem.model.Variable;
 import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
 

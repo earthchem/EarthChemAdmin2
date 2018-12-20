@@ -14,9 +14,7 @@ import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-//import org.earthChem.domain.Citation;
-import org.earthChem.db.postgresql.hbm.Citation;
-//import org.earthChem.exception.InvalidDoiException;
+import org.earthChem.model.Citation;
 
 /*****
  * 

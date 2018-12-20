@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.earthChem.db.postgresql.hbm.EntityStatistics;
+import org.earthChem.model.EntityStatistics;
 
 public class EntityStatisticsDB {
 	

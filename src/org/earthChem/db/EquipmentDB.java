@@ -1,6 +1,6 @@
 package org.earthChem.db;
 
-import org.earthChem.db.postgresql.hbm.Equipment;
+import org.earthChem.model.Equipment;
 
 
 public class EquipmentDB {

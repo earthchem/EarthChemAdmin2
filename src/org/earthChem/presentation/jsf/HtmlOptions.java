@@ -35,7 +35,18 @@ public class HtmlOptions implements Serializable {
 	private SelectItem[] samplingFeatureTypes;
 	private SelectItem[] annotationGroups;
 	private SelectItem[] actionTypes;
+	private SelectItem[] materials;
 	
+	
+
+	public SelectItem[] getMaterials() {
+		if(materials==null) {
+			String q ="select material_num, material_code from material order by material_code";
+			materials= DBUtil.getSelectItems(q); 
+		}
+		return materials;
+	}
+
 	
 	public SelectItem[] getActionTypes() {
 		if(actionTypes==null) {

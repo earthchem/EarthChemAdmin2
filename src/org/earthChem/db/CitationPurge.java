@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
-import org.earthChem.db.postgresql.hbm.AuthorList;
-import org.earthChem.db.postgresql.hbm.Citation;
+import org.earthChem.model.AuthorList;
+import org.earthChem.model.Citation;
 import org.earthChem.presentation.jsf.theme.Theme;
 
 

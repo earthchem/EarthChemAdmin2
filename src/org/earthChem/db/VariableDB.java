@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import org.earthChem.db.postgresql.hbm.Variable;
-import org.earthChem.db.postgresql.hbm.Organization;
+import org.earthChem.model.Organization;
+import org.earthChem.model.Variable;
 
 public class VariableDB {
 	

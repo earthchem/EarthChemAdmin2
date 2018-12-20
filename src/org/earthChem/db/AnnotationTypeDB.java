@@ -6,14 +6,14 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import org.earthChem.db.postgresql.hbm.SamplingFeature;
-import org.earthChem.db.postgresql.hbm.Station;
-import org.earthChem.db.postgresql.hbm.Annotation;
-import org.earthChem.db.postgresql.hbm.AnnotationGroup;
-import org.earthChem.db.postgresql.hbm.AnnotationType;
-import org.earthChem.db.postgresql.hbm.FeatureOfInterest;
-import org.earthChem.db.postgresql.hbm.Method;
-import org.earthChem.db.postgresql.hbm.Organization;
+import org.earthChem.model.Annotation;
+import org.earthChem.model.AnnotationGroup;
+import org.earthChem.model.AnnotationType;
+import org.earthChem.model.FeatureOfInterest;
+import org.earthChem.model.Method;
+import org.earthChem.model.Organization;
+import org.earthChem.model.SamplingFeature;
+import org.earthChem.model.Station;
 
 public class AnnotationTypeDB {
 	

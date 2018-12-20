@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.earthChem.db.postgresql.hbm.Equipment;
-import org.earthChem.db.postgresql.hbm.Expedition;
+import org.earthChem.model.Equipment;
+import org.earthChem.model.Expedition;
 
 public class ExpeditionDB {
 	

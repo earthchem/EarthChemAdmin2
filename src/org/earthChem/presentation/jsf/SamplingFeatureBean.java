@@ -29,11 +29,11 @@ import javax.faces.model.SelectItem;
 import org.earthChem.db.AnnotationDB;
 import org.earthChem.db.DBUtil;
 import org.earthChem.db.StationDB;
-import org.earthChem.db.postgresql.hbm.Annotation;
-import org.earthChem.db.postgresql.hbm.FeatureOfInterest;
-import org.earthChem.db.postgresql.hbm.Method;
-import org.earthChem.db.postgresql.hbm.SamplingFeature;
-import org.earthChem.db.postgresql.hbm.Station;
+import org.earthChem.model.Annotation;
+import org.earthChem.model.FeatureOfInterest;
+import org.earthChem.model.Method;
+import org.earthChem.model.SamplingFeature;
+import org.earthChem.model.Station;
 import org.earthChem.presentation.jsf.theme.Theme;
 import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
@@ -44,7 +44,6 @@ import org.primefaces.context.RequestContext;
 public class SamplingFeatureBean implements Serializable {
 	
 	public void lookup() {
-//	System.out.println("bc-lk "+	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("database"));
 		String code = search.getSamplingFeatureCode();
 		if(code==null || "".equals(code.trim())) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("WARN!",  "The code is required!") );
@@ -55,8 +54,12 @@ public class SamplingFeatureBean implements Serializable {
 	}	
 	
 	public void createNew() {
+    String database =(String)	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("database");
 		if(search.getSamplingFeatureTypeNum() == 1) {
-			PrimeFaces.current().executeScript("PF('sampleDialog').show()");
+			if("petdb".equals(database))
+				PrimeFaces.current().executeScript("PF('sampleDialog').show()");
+			else 
+				PrimeFaces.current().executeScript("PF('sampleDialog2').show()");
 		} else {
 			PrimeFaces.current().executeScript("PF('stationDialog').show()");
 		}		

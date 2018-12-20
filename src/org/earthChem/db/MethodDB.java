@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import org.earthChem.db.postgresql.hbm.Method;
-import org.earthChem.db.postgresql.hbm.Organization;
+import org.earthChem.model.Method;
+import org.earthChem.model.Organization;
 
 public class MethodDB {
 	

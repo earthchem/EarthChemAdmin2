@@ -2,7 +2,7 @@ package org.earthChem.db;
 
 import java.util.List;
 
-import org.earthChem.db.postgresql.hbm.Citation;
+import org.earthChem.model.Citation;
 
 public class CitationList {
 	private static List<Citation> queueList;

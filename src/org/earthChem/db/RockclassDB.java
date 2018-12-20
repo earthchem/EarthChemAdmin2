@@ -5,9 +5,9 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import org.earthChem.db.postgresql.hbm.Taxonomic;
+import org.earthChem.model.Organization;
+import org.earthChem.model.Taxonomic;
 import org.earthChem.presentation.jsf.theme.Theme;
-import org.earthChem.db.postgresql.hbm.Organization;
 
 public class RockclassDB {
 	

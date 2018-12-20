@@ -1,4 +1,4 @@
-package org.earthChem.db.postgresql.hbm;
+package org.earthChem.model;
 
 // Generated Jul 30, 2014 4:07:06 PM by Hibernate Tools 4.0.0
 

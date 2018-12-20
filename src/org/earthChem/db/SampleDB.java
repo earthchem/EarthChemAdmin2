@@ -7,13 +7,13 @@ import java.util.Map;
 
 import javax.faces.context.FacesContext;
 
-import org.earthChem.db.postgresql.hbm.SamplingFeature;
-import org.earthChem.db.postgresql.hbm.Station;
-import org.earthChem.db.postgresql.hbm.TaxonomicClassifier;
+import org.earthChem.model.FeatureOfInterest;
+import org.earthChem.model.Organization;
+import org.earthChem.model.Sample;
+import org.earthChem.model.SamplingFeature;
+import org.earthChem.model.Station;
+import org.earthChem.model.TaxonomicClassifier;
 import org.earthChem.presentation.jsf.SampleBean.ColumnModel;
-import org.earthChem.db.postgresql.hbm.FeatureOfInterest;
-import org.earthChem.db.postgresql.hbm.Organization;
-import org.earthChem.db.postgresql.hbm.Sample;
 
 public class SampleDB {
 	
