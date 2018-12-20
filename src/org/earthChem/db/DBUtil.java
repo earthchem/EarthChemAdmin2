@@ -29,7 +29,7 @@ public class DBUtil {
     static {
         try {
            // dataSource = (DataSource) new InitialContext().lookup( "java:/comp/env/jdbc/postgres" );
-        	dataSource = (DataSource) new InitialContext().lookup( "java:jboss/datasources/earthchemDBDev" );
+        	dataSource = (DataSource) new InitialContext().lookup( "java:jboss/datasources/tephraDBDev" );
         }
         catch (NamingException e) { 
         	 System.err.println(e);

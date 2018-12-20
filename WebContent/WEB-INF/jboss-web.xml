@@ -2,5 +2,5 @@
 <jboss-web>       
     <security-domain>java:/jaas/earthchemdblogin</security-domain>
    <!-- for url  -->
-    <context-root>EarthChemDataTool</context-root>
+    <context-root>Tephra</context-root>
 </jboss-web>
