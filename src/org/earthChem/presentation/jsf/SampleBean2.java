@@ -44,9 +44,9 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.CellEditEvent;
 
  
-@ManagedBean(name="sampleBean")
+@ManagedBean(name="sampleBean2")
 @SessionScoped
-public class SampleBean implements Serializable {
+public class SampleBean2 implements Serializable {
 	
 	public void createNew() {
 			sample = new Sample();
@@ -83,8 +83,8 @@ public class SampleBean implements Serializable {
 		annotationHeads = SampleDB.getAnnotationHeads(sample.getSampleNum()); 
 		if(annotationHeads != null) {
 			annotationList = SampleDB.getAnnotationList(annotationHeads,sample.getSampleNum());
-			columns = new ArrayList<ColumnModel>();
-			for(String s: annotationHeads) columns.add(new ColumnModel(s,s));
+	//		columns = new ArrayList<ColumnModel>();
+	//		for(String s: annotationHeads) columns.add(new ColumnModel(s,s));
 		}
 	}
 	
@@ -111,28 +111,6 @@ public class SampleBean implements Serializable {
 			annotationList = SampleDB.getAnnotationList(annotationHeads,sample.getSampleNum());
 			createNew();
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were deleted!"));
-		} else {
-			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
-		}	
-	}
-	
-	public void deleteTc(Integer bridgeNum) {
-		String status = SampleDB.deleteSamplingTaxonomicClassifier(bridgeNum);
-		if(status == null) {
-			tcList= SampleDB.getTaxonomicClassifier(sample.getSampleNum());
-			taxonomicClassifier = new TaxonomicClassifier();
-			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
-		} else {
-			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
-		}	
-	}
-	
-	public void addTc() {
-		String status = SampleDB.addTaxonomicClassifier(taxonomicClassifier, sample.getSampleNum());
-		if(status == null) {
-			tcList= SampleDB.getTaxonomicClassifier(sample.getSampleNum());
-			taxonomicClassifier = new TaxonomicClassifier();
-			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
 		} else {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
 		}	
@@ -193,17 +171,6 @@ public class SampleBean implements Serializable {
 		this.search = search;
 	}
 
-	
-	
-	
-	public List<ColumnModel> getColumns() {
-		return columns;
-	}
-
-	public void setColumns(List<ColumnModel> columns) {
-		this.columns = columns;
-	}
-
 	public List<String[]> getAnnotationList() {
 		if(annotationList==null) annotationList = new ArrayList<String[]>();
 		return annotationList;
@@ -256,29 +223,8 @@ public class SampleBean implements Serializable {
 	public void setDelAnnotation(Annotation delAnnotation) {
 		this.delAnnotation = delAnnotation;
 	}
-
 	
-	public List<TaxonomicClassifier> getTcList() {
-		tcList= SampleDB.getTaxonomicClassifier(sample.getSampleNum());
-		return tcList;
-	}
 
-	public void setTcList(List<TaxonomicClassifier> tcList) {
-		this.tcList = tcList;
-	}	
-
-	
-	
-	public TaxonomicClassifier getTaxonomicClassifier() {
-		if(taxonomicClassifier==null) taxonomicClassifier = new TaxonomicClassifier();
-		return taxonomicClassifier;
-	}
-
-	public void setTaxonomicClassifier(TaxonomicClassifier taxonomicClassifier) {
-		this.taxonomicClassifier = taxonomicClassifier;
-	}
-
-	
 
 	public boolean isPetdb() {
 		return isPetdb;
@@ -291,21 +237,26 @@ public class SampleBean implements Serializable {
 	
 
 	public List<Annotation> getEditedAnnList() {
+		editedAnnList = new ArrayList<Annotation>();
+		editedAnnList.add(new Annotation(200, "annotation_type1"));
+		editedAnnList.add(new Annotation(201, "annotation_type2"));
+		editedAnnList.add(new Annotation(202, "annotation_type3"));
 		return editedAnnList;
 	}
 
 	public void setEditedAnnList(List<Annotation> editedAnnList) {
 		this.editedAnnList = editedAnnList;
+  
 	}
 
-	
 
-	public Integer getCitatioNum() {
-		return citatioNum;
+
+	public Integer getCitationNum() {
+		return citationNum;
 	}
 
-	public void setCitatioNum(Integer citatioNum) {
-		this.citatioNum = citatioNum;
+	public void setCitationNum(Integer citationNum) {
+		this.citationNum = citationNum;
 	}
 
 
@@ -313,18 +264,16 @@ public class SampleBean implements Serializable {
 	private Sample sample;
 	private List<Sample> sampleList;
 	private String search;
-	private List<ColumnModel> columns;
+//	private List<ColumnModel> columns;
 	private List<String[]> annotationList;
-	private List<Annotation> editedAnnList = new ArrayList<Annotation>();
+	private List<Annotation> editedAnnList;
 	private List<String> annotationHeads;
 	private Annotation annotation;
 	private Annotation delAnnotation;
-	private List<TaxonomicClassifier> tcList;
-	private TaxonomicClassifier taxonomicClassifier;
-	private Integer citatioNum;
+	private Integer citationNum;
 	private boolean isPetdb = false;
 	  
-	
+/*	
 	static public class ColumnModel implements Serializable {
 		 
         private String header;
@@ -343,5 +292,5 @@ public class SampleBean implements Serializable {
             return property;
         }
     }
-
+*/
  }

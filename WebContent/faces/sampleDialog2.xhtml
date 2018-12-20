@@ -8,126 +8,65 @@
 <h:form id="sampleEditForm22">	
  
 <p:messages for="sampleEditMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
-<!--  
-<h:panelGrid columns = "2" border = "0" cellpadding = "0" cellspacing = "0">
-  <h:panelGroup style = "display:block; width:400px; text-align:right" rendered="#{not empty sampleBean.sample.sampleNum}">
-         <p:inputText value="#{sampleBean.sample.sampleNum}" disabled="true" style = "width:40px;"/>
-   </h:panelGroup>
-</h:panelGrid>
-<h:panelGrid columns = "2" border = "0" cellpadding = "2" cellspacing = "2"> 	
-<p:outputLabel value="Station Code: "/>   <h:panelGroup>	
-        <p:inputText  value="#{sampleBean.sample.stationName}" style = "width:400px;"/> 
-</h:panelGroup>
--->
 <h:panelGrid columns = "2" border = "0" cellpadding = "2" cellspacing = "2"> 	
     <p:outputLabel value="Sample Code*: "/>       
-      <p:inputText  value="#{sampleBean.sample.samplingFeatureCode}" style = "width:400px;"/>     
+      <p:inputText  value="#{sampleBean2.sample.samplingFeatureCode}" style = "width:400px;"/>     
        <p:outputLabel value="IGSN: "/> 
-      <p:inputText  value="#{sampleBean.sample.igsn}" style = "width:400px;"/>
+      <p:inputText  value="#{sampleBean2.sample.igsn}" style = "width:400px;"/>
 
     <p:outputLabel value="Material: "/> 
-  <p:selectOneMenu value="#{sampleBean.sample.materialNum}" >    
+  <p:selectOneMenu value="#{sampleBean2.sample.materialNum}" >    
    			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
    			<f:selectItems value="#{optionBean.materials}" /> 
  </p:selectOneMenu>
     </h:panelGrid>  
      <h:panelGrid columns = "4" border = "0" cellpadding = "2" cellspacing = "2">
-	<p:commandButton value="Save"  actionListener="#{sampleBean.update}" > 
+	<p:commandButton value="Save"  actionListener="#{sampleBean2.update}" > 
 		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
 	</p:commandButton>
-	<p:commandButton value="Cancel"  process="@this" actionListener="#{sampleBean.cancel}" >
+	<p:commandButton value="Cancel"  process="@this" actionListener="#{sampleBean2.cancel}" >
 		<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
 	</p:commandButton>	
 </h:panelGrid>
 
  
 <p:accordionPanel id="moreInfo" activeIndex="null">
-<p:tab title="Annotations"> 
- <p:dataTable var="a" value="#{sampleBean.annotationList}" columnIndexVar="i">                   
-        <p:columns value="#{sampleBean.columns}" var="column" columnIndexVar="colIndex">
-            <f:facet name="header">
-                <h:outputText value="#{column.header}" />
-            </f:facet>
-           <h:outputText value="#{a[colIndex]}"/>
-        </p:columns>
-    </p:dataTable>
-    <br/>
+<p:tab title="Extra Metadata"> 
+<h:panelGrid columns = "2">
+<p:outputLabel value="Citation Num: "/> <p:inputText  value="#{sampleBean2.citationNum}" style = "width:100px;"/> 
+</h:panelGrid>
 
-<h:panelGroup >
-<p:outputLabel value="Citation Num: "/> <p:inputText  value="#{sampleBean.citationNum}" style = "width:400px;"/>
-
- 
+ <p:dataTable var="e" value="#{sampleBean2.editedAnnList}"  scrollable="true"  cellpadding = "0" cellspacing = "0">   
+	    <p:column headerText="Annotation Type"> <h:inputText value="#{e.annotationTypeName}"/></p:column>     
+	    <p:column headerText="Annotation Text"> <h:inputText value="#{e.annotationText}"/></p:column>     
+</p:dataTable>	
+<p:commandButton value="Add"  actionListener="#{sampleBean2.addAnnotation}"> 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+</p:commandButton>
 
 
 <!--  
   <p:outputLabel value="Annotation Type: "/>
-  <p:selectOneMenu value="#{sampleBean.annotation.annotationTypeNum}" >    
+  <p:selectOneMenu value="#{sampleBean2.annotation.annotationTypeNum}" >    
    			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-   			<f:selectItems value="#{sampleBean.annotationTypes}" /> 
+   			<f:selectItems value="#{sampleBean2.annotationTypes}" /> 
  </p:selectOneMenu><p:spacer width="10" height="10" />
  <p:outputLabel value="Citation Num: "/>
- <p:inputText  value="#{sampleBean.annotation.dataSourceNum}" style = "width:40px;"/> 
+ <p:inputText  value="#{sampleBean2.annotation.dataSourceNum}" style = "width:40px;"/> 
   <p:spacer width="10" height="10" />
   <p:outputLabel value="Annotation Text: "/>
- <p:inputText  value="#{sampleBean.annotation.annotationText}" style = "width:200px;"/> 
+ <p:inputText  value="#{sampleBean2.annotation.annotationText}" style = "width:200px;"/> 
   <p:spacer width="5" height="10" />
   
- <p:commandButton value="Add New"  actionListener="#{sampleBean.addAnnotation}" update="moreInfo" > 
+ <p:commandButton value="Add New"  actionListener="#{sampleBean2.addAnnotation}" update="moreInfo" > 
 		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
 </p:commandButton>
 </h:panelGroup><br/><br/>      
 -->
-
-
-
-
-
-
-<h:panelGroup >
-  <p:outputLabel value="Annotation Type: "/>
-  <p:selectOneMenu value="#{sampleBean.delAnnotation.annotationTypeNum}" >    
-   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-   			<f:selectItems value="#{sampleBean.annotationTypes}" /> 
- </p:selectOneMenu><p:spacer width="10" height="10" />
- <p:outputLabel value="Citation Num: "/>
-  <p:selectOneMenu value="#{sampleBean.delAnnotation.dataSourceNum}" >    
-   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-   			<f:selectItems value="#{sampleBean.citations}" /> 
- </p:selectOneMenu><p:spacer width="5" height="10" />
- <p:commandButton value="Delete"  actionListener="#{sampleBean.deleteAnnotation}" update="moreInfo" > 
-		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
-</p:commandButton>
-</h:panelGroup>       
+      
 </p:tab>
 
 <p:tab title="Taxonomic Classifiers"> 
-<p:dataTable id="tcTable" var="t" value="#{sampleBean.tcList}"  scrollable="true"  cellpadding = "0" cellspacing = "0">   
-	    <p:column headerText="Citation Num"> <h:outputText value="#{t.citationNum}"/></p:column>     
-	    <p:column headerText="Taxonomic Classifiers"> <h:outputText value="#{t.classifierName}"/></p:column>     
-    	<p:column headerText="Parent Taxonomic Classifiers">  <h:outputText value="#{t.parentName}"/> </p:column>
-    	<p:column><p:commandButton value="Delete" actionListener="#{sampleBean.deleteTc(t.bridgeNum)}"  update="tcTable">   
-     	<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		
-     </p:commandButton>   </p:column>
-</p:dataTable>	<br/>
-<h:panelGroup >
-  <p:outputLabel value="Citation Num: "/>
- <p:inputText  value="#{sampleBean.taxonomicClassifier.citationNum}" style = "width:40px;"/>   
- <p:spacer width="10" height="10" />
- <p:outputLabel value="Taxonomic Classifiers: "/>
-  <p:selectOneMenu value="#{sampleBean.taxonomicClassifier.classifierName}" >    
-   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-   			<f:selectItems value="#{optionBean.rockClasses}" /> 
- </p:selectOneMenu><p:spacer width="10" height="10" />
- <p:outputLabel value="Citation Num: "/>
-  <p:selectOneMenu value="#{sampleBean.taxonomicClassifier.parentNum}" >    
-   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-   			<f:selectItems value="#{optionBean.rockTypes}" /> 
- </p:selectOneMenu><p:spacer width="5" height="10" />
- <p:commandButton value="Add"  actionListener="#{sampleBean.addTc}" update="tcTable" > 
-		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
-</p:commandButton>
-</h:panelGroup>    
-
 </p:tab>		
 </p:accordionPanel>
 
