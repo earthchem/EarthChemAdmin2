@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://java.sun.com/jsf/facelets"> 
 
-<h:form id="sampleEditForm22">	
+<h:form id="sampleEditForm2">	
  
 <p:messages for="sampleEditMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
 <h:panelGrid columns = "2" border = "0" cellpadding = "2" cellspacing = "2"> 	
@@ -21,7 +21,7 @@
  </p:selectOneMenu>
     </h:panelGrid>  
      <h:panelGrid columns = "4" border = "0" cellpadding = "2" cellspacing = "2">
-	<p:commandButton value="Save"  actionListener="#{sampleBean2.update}" > 
+	<p:commandButton value="Save"  actionListener="#{sampleBean2.save}" > 
 		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
 	</p:commandButton>
 	<p:commandButton value="Cancel"  process="@this" actionListener="#{sampleBean2.cancel}" >
@@ -32,12 +32,20 @@
  
 <p:accordionPanel id="moreInfo" activeIndex="null">
 <p:tab title="Extra Metadata"> 
+<p:dataTable id="annotationView" var="e" value="#{sampleBean2.viewAnnList}"  scrollable="true" scrollHeight="100" cellpadding = "0" cellspacing = "0">   
+	    <p:column headerText="Citation Num"> <h:outputText value="#{e.dataSourceNum}"/></p:column>     
+	    <p:column headerText="Annotation Type"> <h:outputText value="#{e.annotationTypeName}"/></p:column>     
+	    <p:column headerText="Annotation Text"> <h:outputText value="#{e.annotationText}"/></p:column>  
+	    <p:column style = "width:50px;">
+			<p:commandButton value="delete"><p:ajax listener="#{sampleBean2.deleteAnnotation(e.sfAnnotationNum)}"  update="annotationView" />	
+			<p:confirm header="Confirmation" message="Are you sure you want to delete this annotation?" icon="ui-icon-alert"/></p:commandButton>   
+	   </p:column> 
+</p:dataTable>	
 <h:panelGrid columns = "2">
 <p:outputLabel value="Citation Num: "/> <p:inputText  value="#{sampleBean2.citationNum}" style = "width:100px;"/> 
 </h:panelGrid>
-
- <p:dataTable var="e" value="#{sampleBean2.editedAnnList}"  scrollable="true"  cellpadding = "0" cellspacing = "0">   
-	    <p:column headerText="Annotation Type"> <h:inputText value="#{e.annotationTypeName}"/></p:column>     
+ <p:dataTable var="e" value="#{sampleBean2.editedAnnList}"  scrollable="true" scrollHeight="150" cellpadding = "0" cellspacing = "0">   
+	    <p:column headerText="Annotation Type"> <h:outputText value="#{e.annotationTypeName}"/></p:column>     
 	    <p:column headerText="Annotation Text"> <h:inputText value="#{e.annotationText}"/></p:column>     
 </p:dataTable>	
 <p:commandButton value="Add"  actionListener="#{sampleBean2.addAnnotation}"> 

@@ -31,6 +31,7 @@ import org.earthChem.db.AnnotationDB;
 import org.earthChem.db.DBUtil;
 import org.earthChem.db.SampleDB;
 import org.earthChem.db.StationDB;
+import org.earthChem.db.TephraDB;
 import org.earthChem.model.Annotation;
 import org.earthChem.model.FeatureOfInterest;
 import org.earthChem.model.Method;
@@ -51,57 +52,38 @@ public class SampleBean2 implements Serializable {
 	public void createNew() {
 			sample = new Sample();
 			annotation = new Annotation();
-			delAnnotation =  new Annotation();
 			annotationList = new ArrayList<String[]>();
 	}
 	
-	public void lookup() {	
-		if(search != null && !"".equals(search)) {
-			search = search.trim();
-			sampleList = SampleDB.getSampleList(search);
-			if(sampleList.size()==0) {
-				FacesContext.getCurrentInstance().addMessage("sampleListMsg", new FacesMessage(FacesMessage.SEVERITY_WARN, "Error!", "The sample was not found!"));
-			} else {
-				PrimeFaces.current().executeScript("PF('sampleTableWidgetVar').filter()");
-			}
-		}
+	public void deleteAnnotation(Integer sfAnnotationNum) {
+		String status = AnnotationDB.deleteTephraAnnotation(sfAnnotationNum);
+		if(status == null) {
+			viewAnnList = AnnotationDB.getTephraAnnotationView(sample.getSampleNum());
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were deleted!"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
+		}	
 	}
 	
 
-	public void findStation(String code) {		
-		if(code != null && !"".equals(code)) {
-			Station tmp = StationDB.getStation(code);
-			if(tmp != null) {
-				sample.setStationNum(tmp.getSamplingFeatureNum());
-				sample.setStationName(tmp.getSamplingFeatureCode());
-			}
-		}
-	}
-
-
 	public void selectSample() {
-		annotationHeads = SampleDB.getAnnotationHeads(sample.getSampleNum()); 
-		if(annotationHeads != null) {
-			annotationList = SampleDB.getAnnotationList(annotationHeads,sample.getSampleNum());
-	//		columns = new ArrayList<ColumnModel>();
-	//		for(String s: annotationHeads) columns.add(new ColumnModel(s,s));
-		}
+		viewAnnList = AnnotationDB.getTephraAnnotationView(sample.getSampleNum());
 	}
 	
 	public void addAnnotation() {
-		String status = AnnotationDB.addSamplingFeatureAnnotation(sample.getSampleNum(),
-				annotation.getAnnotationTypeNum(),annotation.getDataSourceNum(),annotation.getAnnotationText());
+		String status = AnnotationDB.addTephraAnnotation(sample.getSampleNum(),  citationNum, editedAnnList);
 		if(status == null) {
-			annotation = new Annotation();
-			delAnnotation =  new Annotation();
-			annotationList = SampleDB.getAnnotationList(annotationHeads,sample.getSampleNum());
+			viewAnnList = AnnotationDB.getTephraAnnotationView(sample.getSampleNum());
+	//		annotation = new Annotation();
+	//		delAnnotation =  new Annotation();
+	//		annotationList = SampleDB.getAnnotationList(annotationHeads,sample.getSampleNum());
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
 		} else {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
 		}	
 	}
 	
-	
+/*	
 	public void deleteAnnotation() {
 		String status = AnnotationDB.deleteSamplingFeatureAnnotation(sample.getSampleNum(),
 				delAnnotation.getAnnotationTypeNum(),delAnnotation.getDataSourceNum());
@@ -115,25 +97,13 @@ public class SampleBean2 implements Serializable {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
 		}	
 	}
-	
-	public void update() {
-		String code = sample.getStationName();
-		if(code != null && !"".equals(code)) {
-				Station tmp = StationDB.getStation(code);
-				if(tmp != null) {
-					sample.setStationNum(tmp.getSamplingFeatureNum());
-					sample.setStationName(tmp.getSamplingFeatureCode());
-				} else {
-					FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "The station, "+code+" is not found in database!"));
-					return;
-				}
-		}	
-		
-		String status = SampleDB.update(sample);
+*/	
+	public void save() {		
+		String status = TephraDB.update(sample);
 		if(status == null) {
-			sample = new Sample();
-			PrimeFaces.current().executeScript("PF('sampleDialog').hide()");
-			PrimeFaces.current().executeScript("PF('sampleTableWidgetVar').filter()");
+	//		sample = new Sample();
+	//		PrimeFaces.current().executeScript("PF('sampleDialog').hide()");
+	//		PrimeFaces.current().executeScript("PF('sampleTableWidgetVar').filter()");
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
 		} else {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
@@ -156,9 +126,8 @@ public class SampleBean2 implements Serializable {
 		this.sample = sample;
 	}
 	public List<Sample> getSampleList() {
-
 		String sfCode =(String) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("sfCode");
-		if(sfCode != null) sampleList = SampleDB.getSampleList(sfCode);
+		if(sfCode != null) sampleList = TephraDB.getSampleList(sfCode);
 		return sampleList;
 	}
 	public void setSampleList(List<Sample> sampleList) {
@@ -194,14 +163,6 @@ public class SampleBean2 implements Serializable {
 	}
 
 
-	public List<String> getAnnotationHeads() {
-		return annotationHeads;
-	}
-
-	public void setAnnotationHeads(List<String> annotationHeads) {
-		this.annotationHeads = annotationHeads;
-	}
-
 	public SelectItem[] getAnnotationTypes() {
 		String q ="select distinct a.annotation_type_num, annotation_type_name from annotation_type a, annotation_type_group g "+
 				" where a.annotation_type_num = g.annotation_type_num and g.annotation_group_num = 2 order by annotation_type_name";
@@ -213,7 +174,7 @@ public class SampleBean2 implements Serializable {
 		return DBUtil.getSelectItems(q);
 	}
 	
-	
+	/*
 	public Annotation getDelAnnotation() {
 		if(delAnnotation == null) delAnnotation = new Annotation();
 		return delAnnotation;
@@ -223,25 +184,13 @@ public class SampleBean2 implements Serializable {
 	public void setDelAnnotation(Annotation delAnnotation) {
 		this.delAnnotation = delAnnotation;
 	}
-	
-
-
-	public boolean isPetdb() {
-		return isPetdb;
-	}
-
-	public void setPetdb(boolean isPetdb) {
-		this.isPetdb = isPetdb;
-	}
+	*/
 
 	
 
-	public List<Annotation> getEditedAnnList() {
-		editedAnnList = new ArrayList<Annotation>();
-		editedAnnList.add(new Annotation(200, "annotation_type1"));
-		editedAnnList.add(new Annotation(201, "annotation_type2"));
-		editedAnnList.add(new Annotation(202, "annotation_type3"));
-		return editedAnnList;
+	public List<Annotation> getEditedAnnList() {		
+	//	editedAnnList = new AnnotationDB.getTephraAnnotations();
+		return editedAnnList = AnnotationDB.getTephraAnnotations();
 	}
 
 	public void setEditedAnnList(List<Annotation> editedAnnList) {
@@ -259,6 +208,18 @@ public class SampleBean2 implements Serializable {
 		this.citationNum = citationNum;
 	}
 
+	
+
+
+	public List<Annotation> getViewAnnList() {
+		return viewAnnList;
+	}
+
+	public void setViewAnnList(List<Annotation> viewAnnList) {
+		this.viewAnnList = viewAnnList;
+	}
+
+
 
 
 	private Sample sample;
@@ -267,11 +228,10 @@ public class SampleBean2 implements Serializable {
 //	private List<ColumnModel> columns;
 	private List<String[]> annotationList;
 	private List<Annotation> editedAnnList;
-	private List<String> annotationHeads;
+	private List<Annotation> viewAnnList;
 	private Annotation annotation;
-	private Annotation delAnnotation;
 	private Integer citationNum;
-	private boolean isPetdb = false;
+
 	  
 /*	
 	static public class ColumnModel implements Serializable {

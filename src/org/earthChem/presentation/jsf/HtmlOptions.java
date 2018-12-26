@@ -36,8 +36,6 @@ public class HtmlOptions implements Serializable {
 	private SelectItem[] annotationGroups;
 	private SelectItem[] actionTypes;
 	private SelectItem[] materials;
-	
-	
 
 	public SelectItem[] getMaterials() {
 		if(materials==null) {
