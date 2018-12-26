@@ -46,7 +46,7 @@ selectionMode="single" selection="#{sampleBean.sample}" rowKey="#{ct.sampleNum}"
 
  <p:dataTable  widgetVar="sampleTableWidgetVar2" var="ct" value="#{sampleBean2.sampleList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
 selectionMode="single" selection="#{sampleBean2.sample}" rowKey="#{ct.sampleNum}" rendered="#{session.getAttribute('database') eq 'tephra' and sfBean.search.samplingFeatureTypeNum eq 1}">  
-  <p:ajax event="rowSelect" listener="#{sampleBean2.selectSample}" update=":eca:sampleEditForm2"  oncomplete="PF('sampleDialog2').show()" /> 
+  <p:ajax event="rowSelect" listener="#{sampleBean2.selectSample}" update=":eca:sampleEditForm2  :eca:sampleEditForm2:moreInfo"  oncomplete="PF('sampleDialog2').show()" /> 
   <f:facet name="header"> Counts: #{sampleBean2.sampleList.size()}</f:facet>
     	    <p:column headerText="Number" sortBy="#{ct.sampleNum}" filterBy="#{ct.sampleNum}"> <h:outputText value="#{ct.sampleNum}"/></p:column>     
 	       	<p:column headerText="Sample Code" sortBy="#{ct.samplingFeatureCode}" filterBy="#{ct.samplingFeatureCode}" >  <h:outputText value="#{ct.samplingFeatureCode}"/> </p:column>

@@ -36,6 +36,10 @@ public class HtmlOptions implements Serializable {
 	private SelectItem[] annotationGroups;
 	private SelectItem[] actionTypes;
 	private SelectItem[] materials;
+	private SelectItem[] minTaxonomicClassifiers;
+	private SelectItem[] rockTaxonomicClassifiers;
+	
+	
 
 	public SelectItem[] getMaterials() {
 		if(materials==null) {
@@ -76,6 +80,24 @@ public class HtmlOptions implements Serializable {
 			rockClasses= DBUtil.getSelectItems(q); 
 		}
 		return rockClasses;
+	}
+	
+	public SelectItem[] getRockTaxonomicClassifiers() {
+		if(rockTaxonomicClassifiers==null) {
+			String q ="select distinct t.taxonomic_classifier_num, concat(t.taxonomic_classifier_name,' (',p.taxonomic_classifier_name,')') " + 
+					" from taxonomic_classifier t, taxonomic_classifier p " + 
+					" where t.parent_taxonomic_classifier_num = p.taxonomic_classifier_num and t.taxonomic_classifier_type_cv = 'Rock Class' order by concat(t.taxonomic_classifier_name,' (',p.taxonomic_classifier_name,')') " ;
+			rockTaxonomicClassifiers= DBUtil.getSelectItems(q); 
+		}
+		return rockTaxonomicClassifiers;
+	}
+	
+	public SelectItem[] getMinTaxonomicClassifiers() {
+		if(minTaxonomicClassifiers==null) {
+			String q ="select distinct t.taxonomic_classifier_num, t.taxonomic_classifier_name from taxonomic_classifier t where t.taxonomic_classifier_type_cv = 'Mineral' order by t.taxonomic_classifier_name";
+			minTaxonomicClassifiers= DBUtil.getSelectItems(q); 
+		}
+		return minTaxonomicClassifiers;
 	}
 	
 	public SelectItem[] getRockTypes() {

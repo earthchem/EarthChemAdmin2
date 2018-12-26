@@ -48,33 +48,34 @@
 	    <p:column headerText="Annotation Type"> <h:outputText value="#{e.annotationTypeName}"/></p:column>     
 	    <p:column headerText="Annotation Text"> <h:inputText value="#{e.annotationText}"/></p:column>     
 </p:dataTable>	
-<p:commandButton value="Add"  actionListener="#{sampleBean2.addAnnotation}"> 
+<p:commandButton value="Add"  actionListener="#{sampleBean2.addAnnotation}" update="annotationView"> 
 		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
 </p:commandButton>
-
-
-<!--  
-  <p:outputLabel value="Annotation Type: "/>
-  <p:selectOneMenu value="#{sampleBean2.annotation.annotationTypeNum}" >    
-   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-   			<f:selectItems value="#{sampleBean2.annotationTypes}" /> 
- </p:selectOneMenu><p:spacer width="10" height="10" />
- <p:outputLabel value="Citation Num: "/>
- <p:inputText  value="#{sampleBean2.annotation.dataSourceNum}" style = "width:40px;"/> 
-  <p:spacer width="10" height="10" />
-  <p:outputLabel value="Annotation Text: "/>
- <p:inputText  value="#{sampleBean2.annotation.annotationText}" style = "width:200px;"/> 
-  <p:spacer width="5" height="10" />
-  
- <p:commandButton value="Add New"  actionListener="#{sampleBean2.addAnnotation}" update="moreInfo" > 
-		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
-</p:commandButton>
-</h:panelGroup><br/><br/>      
--->
       
 </p:tab>
 
 <p:tab title="Taxonomic Classifiers"> 
+<p:dataTable id="tcTable" var="t" value="#{sampleBean2.tcList}"  scrollable="true"  cellpadding = "0" cellspacing = "0">   
+	    <p:column headerText="Citation Num"> <h:outputText value="#{t.citationNum}"/></p:column>     
+	    <p:column headerText="Taxonomic Classifiers"> <h:outputText value="#{t.classifierName}"/></p:column>     
+    	<p:column><p:commandButton value="Delete" actionListener="#{sampleBean2.deleteTc(t.bridgeNum)}"  update="tcTable">   
+     	<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		
+     </p:commandButton>   </p:column>
+</p:dataTable>	<br/>
+<h:panelGroup >
+  <p:outputLabel value="Citation Num: "/>
+ <p:inputText  value="#{sampleBean2.taxonomicClassifier.citationNum}" style = "width:60px;"/>   
+ <p:spacer width="10" height="10" />
+ <p:outputLabel value="Taxonomic Classifiers: "/>
+  <p:selectOneMenu value="#{sampleBean2.taxonomicClassifier.classifierNum}" >    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItems value="#{sampleBean2.tcOptions}" /> 
+ </p:selectOneMenu><p:spacer width="5" height="10" />
+ <p:commandButton value="Add"  actionListener="#{sampleBean2.addTc}" update="tcTable" > 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+</p:commandButton>
+</h:panelGroup>    
+
 </p:tab>		
 </p:accordionPanel>
 

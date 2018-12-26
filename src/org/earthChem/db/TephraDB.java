@@ -73,19 +73,24 @@ public static Sample getSample(String code) {
 		}
 	}
 	
-	public static List<TaxonomicClassifier> getTaxonomicClassifier(Integer sampleNum) {		
+	public static List<TaxonomicClassifier> getTaxonomicClassifier(Integer sampleNum, Integer materialNum) {		
 		List<TaxonomicClassifier> list = new ArrayList<TaxonomicClassifier>();
-		String q = "select s.bridge_num, s.citation_num, t.taxonomic_classifier_name, tp.taxonomic_classifier_name "+
+		String q = null;
+		if(materialNum == 6) {
+			q = "select s.bridge_num, s.citation_num, t.taxonomic_classifier_name from sampling_feature_taxonomic_classifier s, taxonomic_classifier t " + 
+				" where s.taxonomic_classifier_num = t.taxonomic_classifier_num and s.sampling_feature_num = "+sampleNum+" order by citation_num ";
+		} else {
+			q =	"select s.bridge_num, s.citation_num, concat(t.taxonomic_classifier_name,' (',p.taxonomic_classifier_name,')') "+
 				" from sampling_feature_taxonomic_classifier s, taxonomic_classifier t, taxonomic_classifier tp "+
 				" where s.taxonomic_classifier_num = t.taxonomic_classifier_num and tp.taxonomic_classifier_num = t.parent_taxonomic_classifier_num "+
 				" and s.sampling_feature_num = "+sampleNum+" order by citation_num";
+		}
 		List<Object[]> olist = DBUtil.getECList(q);
 		for(Object[] arr: olist) {	
 			TaxonomicClassifier t = new TaxonomicClassifier();
 			t.setBridgeNum((Integer)arr[0]);
 			t.setCitationNum((Integer)arr[1]);
 			t.setClassifierName(""+arr[2]);
-			t.setParentName(""+arr[3]);
 			list.add(t);
 		}
 		
@@ -99,13 +104,8 @@ public static Sample getSample(String code) {
 	
 	public static String addTaxonomicClassifier(TaxonomicClassifier t, Integer sampleNum) {		
 		String error = null;
-		String q ="delete from sampling_feature_taxonomic_classifier s where s.sampling_feature_num = "+sampleNum+" and s.citation_num ="+t.getCitationNum();
-		error = DBUtil.update(q);
-		if(error != null) return error; 
-		Integer	tcNum = getTaxonomicClassifierNum(DBUtil.StringValue(t.getClassifierName()), t.getParentNum());		
-		q = "INSERT INTO sampling_feature_taxonomic_classifier "+
-			" (bridge_num, sampling_feature_num, taxonomic_classifier_num, citation_num) "+
-			" VALUES (nextVal('sampling_feature_taxonomic_classifier_bridge_num_seq'),"+sampleNum+","+tcNum+","+t.getCitationNum()+")";
+		String q = "INSERT INTO sampling_feature_taxonomic_classifier (sampling_feature_num, taxonomic_classifier_num, citation_num) "+
+			" VALUES ("+sampleNum+","+t.getClassifierNum()+","+t.getCitationNum()+")";
 		error = DBUtil.update(q);
 		if(error != null) return error; 
 		return DBUtil.update("");

@@ -39,6 +39,7 @@ import org.earthChem.model.Sample;
 import org.earthChem.model.SamplingFeature;
 import org.earthChem.model.Station;
 import org.earthChem.model.TaxonomicClassifier;
+import org.earthChem.presentation.jsf.SampleBean.ColumnModel;
 import org.earthChem.presentation.jsf.theme.Theme;
 import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
@@ -53,6 +54,47 @@ public class SampleBean2 implements Serializable {
 			sample = new Sample();
 			annotation = new Annotation();
 			annotationList = new ArrayList<String[]>();
+	}	
+
+	public void selectSample() {
+		viewAnnList = AnnotationDB.getTephraAnnotationView(sample.getSampleNum());
+		tcList= TephraDB.getTaxonomicClassifier(sample.getSampleNum(), sample.getMaterialNum());
+		getTcOptions();
+	}
+	
+	public SelectItem[] getTcOptions()
+	{
+		Integer merialNum = sample.getMaterialNum();
+		if(merialNum != null && merialNum == 6) {
+			tcOptions = (new HtmlOptions()).getMinTaxonomicClassifiers();
+		}
+		else tcOptions = (new HtmlOptions()).getRockTaxonomicClassifiers();
+		return tcOptions;
+	}
+	
+	public void save() {		
+		String status = TephraDB.update(sample);
+		if(status == null) {
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
+		}	
+	}
+	
+	public void cancel() {
+		PrimeFaces.current().executeScript("PF('sampleDialog').hide()");
+		sample = new Sample();
+	}
+	
+//-------------  annotation ------------------	
+	public void addAnnotation() {
+		String status = AnnotationDB.addTephraAnnotation(sample.getSampleNum(),  citationNum, editedAnnList);
+		if(status == null) {
+			viewAnnList = AnnotationDB.getTephraAnnotationView(sample.getSampleNum());
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
+		}	
 	}
 	
 	public void deleteAnnotation(Integer sfAnnotationNum) {
@@ -65,55 +107,30 @@ public class SampleBean2 implements Serializable {
 		}	
 	}
 	
-
-	public void selectSample() {
-		viewAnnList = AnnotationDB.getTephraAnnotationView(sample.getSampleNum());
-	}
-	
-	public void addAnnotation() {
-		String status = AnnotationDB.addTephraAnnotation(sample.getSampleNum(),  citationNum, editedAnnList);
+//------------------ tc --------------------	
+	public void deleteTc(Integer bridgeNum) {
+		String status = SampleDB.deleteSamplingTaxonomicClassifier(bridgeNum);
 		if(status == null) {
-			viewAnnList = AnnotationDB.getTephraAnnotationView(sample.getSampleNum());
-	//		annotation = new Annotation();
-	//		delAnnotation =  new Annotation();
-	//		annotationList = SampleDB.getAnnotationList(annotationHeads,sample.getSampleNum());
+			tcList= SampleDB.getTaxonomicClassifier(sample.getSampleNum());
+			taxonomicClassifier = new TaxonomicClassifier();
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
 		} else {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
 		}	
 	}
 	
-/*	
-	public void deleteAnnotation() {
-		String status = AnnotationDB.deleteSamplingFeatureAnnotation(sample.getSampleNum(),
-				delAnnotation.getAnnotationTypeNum(),delAnnotation.getDataSourceNum());
+	public void addTc() {
+		String status = TephraDB.addTaxonomicClassifier(taxonomicClassifier, sample.getSampleNum());
 		if(status == null) {
-			annotation = new Annotation();
-			delAnnotation =  new Annotation();
-			annotationList = SampleDB.getAnnotationList(annotationHeads,sample.getSampleNum());
-			createNew();
-			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were deleted!"));
-		} else {
-			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
-		}	
-	}
-*/	
-	public void save() {		
-		String status = TephraDB.update(sample);
-		if(status == null) {
-	//		sample = new Sample();
-	//		PrimeFaces.current().executeScript("PF('sampleDialog').hide()");
-	//		PrimeFaces.current().executeScript("PF('sampleTableWidgetVar').filter()");
+			tcList= TephraDB.getTaxonomicClassifier(sample.getSampleNum(), sample.getMaterialNum());
+			taxonomicClassifier = new TaxonomicClassifier();
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
 		} else {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
 		}	
 	}
 	
-	public void cancel() {
-		PrimeFaces.current().executeScript("PF('sampleDialog').hide()");
-		sample = new Sample();
-	}
+	
 	
 	public Sample getSample() {
 		if(sample==null) {
@@ -149,8 +166,6 @@ public class SampleBean2 implements Serializable {
 		this.annotationList = annotationList;
 	}
 
-	
-
 
 	public Annotation getAnnotation() {
 		if(annotation == null) annotation = new Annotation();
@@ -174,22 +189,17 @@ public class SampleBean2 implements Serializable {
 		return DBUtil.getSelectItems(q);
 	}
 	
-	/*
-	public Annotation getDelAnnotation() {
-		if(delAnnotation == null) delAnnotation = new Annotation();
-		return delAnnotation;
+	public List<TaxonomicClassifier> getTcList() {
+	//   if(sample != null)	tcList= SampleDB.getTaxonomicClassifier(sample.getSampleNum());
+		return tcList;
 	}
 
-
-	public void setDelAnnotation(Annotation delAnnotation) {
-		this.delAnnotation = delAnnotation;
-	}
-	*/
-
+	public void setTcList(List<TaxonomicClassifier> tcList) {
+		this.tcList = tcList;
+	}	
 	
 
 	public List<Annotation> getEditedAnnList() {		
-	//	editedAnnList = new AnnotationDB.getTephraAnnotations();
 		return editedAnnList = AnnotationDB.getTephraAnnotations();
 	}
 
@@ -219,38 +229,27 @@ public class SampleBean2 implements Serializable {
 		this.viewAnnList = viewAnnList;
 	}
 
+	public TaxonomicClassifier getTaxonomicClassifier() {
+		if(taxonomicClassifier==null) taxonomicClassifier = new TaxonomicClassifier();
+		return taxonomicClassifier;
+	}
+
+	public void setTaxonomicClassifier(TaxonomicClassifier taxonomicClassifier) {
+		this.taxonomicClassifier = taxonomicClassifier;
+	}
 
 
 
 	private Sample sample;
 	private List<Sample> sampleList;
 	private String search;
-//	private List<ColumnModel> columns;
 	private List<String[]> annotationList;
 	private List<Annotation> editedAnnList;
 	private List<Annotation> viewAnnList;
 	private Annotation annotation;
 	private Integer citationNum;
-
+	private List<TaxonomicClassifier> tcList;
+	private TaxonomicClassifier taxonomicClassifier;
+	private SelectItem[] tcOptions;
 	  
-/*	
-	static public class ColumnModel implements Serializable {
-		 
-        private String header;
-        private String property;
-        
-        public ColumnModel(String header, String property) {
-            this.header = header;
-            this.property = property;
-        }
- 
-        public String getHeader() {
-            return header;
-        }
- 
-        public String getProperty() {
-            return property;
-        }
-    }
-*/
- }
+}
