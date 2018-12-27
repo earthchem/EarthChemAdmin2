@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import org.earthChem.model.FeatureOfInterest;
 import org.earthChem.model.Organization;
+import org.earthChem.model.RelatedFeature;
 import org.earthChem.model.Sample;
 import org.earthChem.model.SamplingFeature;
 import org.earthChem.model.Station;
@@ -16,6 +18,53 @@ import org.earthChem.model.TaxonomicClassifier;
 import org.earthChem.presentation.jsf.SampleBean.ColumnModel;
 
 public class TephraDB {
+	
+//------ relationship -------------------	
+	public static SelectItem[] getRelationList(Integer type, String search) {
+		String	q = "select s.sampling_feature_num, s.sampling_feature_code "+
+				" from sampling_feature s "+
+				" where s.sampling_feature_type_num = "+type+" and s.sampling_feature_code like '%"+search+"%' "+
+				" order by s.sampling_feature_code";
+		System.out.println("bc-q "+q);
+			return DBUtil.getSelectItems(q);
+	}
+	
+	public static String saveRelations(Integer sfNum, Integer sfType, List<Integer> list) {
+		Integer relationType = (sfType == 3)? 22:14;
+		List<String> queries = new ArrayList<String>();
+		for(Integer n: list) {
+			String	q = "insert into related_feature ( sampling_feature_num, relationship_type_num, related_sampling_feature_num) values " + 
+				" ("+sfNum+","+relationType+","+n+")";
+			System.out.println("bc-q "+q);
+			queries.add(q);			
+		}
+		return DBUtil.updateList(queries);
+	}
+	
+	
+	public static List<RelatedFeature> getRelations(Integer num) {
+		
+		List<RelatedFeature> list = new ArrayList<RelatedFeature>();				
+		String	q = "  select r.related_feature_num, sp.sampling_feature_code, t.relationship_type_name" + 
+				" from related_feature r, sampling_feature sp, relationship_type t  where r.sampling_feature_num = " + num+
+				" and t.relationship_type_num = r.relationship_type_num and sp.sampling_feature_num = r.related_sampling_feature_num "+
+				" order by  r.relationship_type_num ";		
+		List<Object[]> olist = DBUtil.getECList(q);
+		for(Object[] arr: olist) {
+			RelatedFeature e = new RelatedFeature();
+			e.setRelatedFeatureNum((Integer)arr[0]);
+			e.setRelatedSamplingFeatureCode(""+arr[1]);
+			e.setRelationshipTypeCode(""+arr[2]);
+			list.add(e);
+		}
+		return list;
+	}
+	
+	public static String deleteRelation(Integer relatedFeatureNum) {
+		return DBUtil.update("delete from related_feature where related_feature_num="+relatedFeatureNum);
+	}
+	
+	//------------------------ end of relationship 
 	
 public static List<Sample> getSampleList(String search) {
 		

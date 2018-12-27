@@ -35,6 +35,7 @@ import org.earthChem.db.TephraDB;
 import org.earthChem.model.Annotation;
 import org.earthChem.model.FeatureOfInterest;
 import org.earthChem.model.Method;
+import org.earthChem.model.RelatedFeature;
 import org.earthChem.model.Sample;
 import org.earthChem.model.SamplingFeature;
 import org.earthChem.model.Station;
@@ -60,7 +61,9 @@ public class SampleBean2 implements Serializable {
 		viewAnnList = AnnotationDB.getTephraAnnotationView(sample.getSampleNum());
 		tcList= TephraDB.getTaxonomicClassifier(sample.getSampleNum(), sample.getMaterialNum());
 		getTcOptions();
+		relatedSf = TephraDB.getRelations(sample.getSampleNum());
 	}
+	
 	
 	public SelectItem[] getTcOptions()
 	{
@@ -75,6 +78,7 @@ public class SampleBean2 implements Serializable {
 	public void save() {		
 		String status = TephraDB.update(sample);
 		if(status == null) {
+			getTcOptions();
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
 		} else {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
@@ -130,8 +134,24 @@ public class SampleBean2 implements Serializable {
 		}	
 	}
 	
+	//-------------  relationship ------------------
 	
+	public void lookupRelationship() {
+		sfList = TephraDB.getRelationList(sfTypeNum,  relationshipCode);
+	}
 	
+	public void addRelationship() {
+		
+		TephraDB.saveRelations(sample.getSampleNum(), sfTypeNum, selectedSf);
+		relatedSf = TephraDB.getRelations(sample.getSampleNum());
+	}
+
+	public void deleteRelation(Integer relatedFeatureNum) {
+		TephraDB.deleteRelation(relatedFeatureNum);
+		relatedSf = TephraDB.getRelations(sample.getSampleNum());
+	}
+	
+	//------ get & set ------------------
 	public Sample getSample() {
 		if(sample==null) {
 			sample = new Sample();
@@ -190,7 +210,6 @@ public class SampleBean2 implements Serializable {
 	}
 	
 	public List<TaxonomicClassifier> getTcList() {
-	//   if(sample != null)	tcList= SampleDB.getTaxonomicClassifier(sample.getSampleNum());
 		return tcList;
 	}
 
@@ -218,8 +237,6 @@ public class SampleBean2 implements Serializable {
 		this.citationNum = citationNum;
 	}
 
-	
-
 
 	public List<Annotation> getViewAnnList() {
 		return viewAnnList;
@@ -237,6 +254,57 @@ public class SampleBean2 implements Serializable {
 	public void setTaxonomicClassifier(TaxonomicClassifier taxonomicClassifier) {
 		this.taxonomicClassifier = taxonomicClassifier;
 	}
+	
+
+	public Integer getSfTypeNum() {
+		return sfTypeNum;
+	}
+
+	public void setSfTypeNum(Integer sfTypeNum) {
+		this.sfTypeNum = sfTypeNum;
+	}
+
+	
+
+
+	public String getRelationshipCode() {
+		return relationshipCode;
+	}
+
+	public void setRelationshipCode(String relationshipCode) {
+		this.relationshipCode = relationshipCode;
+	}
+
+	public SelectItem[] getSfList() {
+		return sfList;
+	}
+
+	public void setSfList(SelectItem[] sfList) {
+		this.sfList = sfList;
+	}
+
+	
+
+
+	public List<Integer> getSelectedSf() {
+		return selectedSf;
+	}
+
+	public void setSelectedSf(List<Integer> selectedSf) {
+		this.selectedSf = selectedSf;
+	}
+
+	
+
+
+	public List<RelatedFeature> getRelatedSf() {
+		return relatedSf;
+	}
+
+	public void setRelatedSf(List<RelatedFeature> relatedSf) {
+		this.relatedSf = relatedSf;
+	}
+
 
 
 
@@ -251,5 +319,9 @@ public class SampleBean2 implements Serializable {
 	private List<TaxonomicClassifier> tcList;
 	private TaxonomicClassifier taxonomicClassifier;
 	private SelectItem[] tcOptions;
-	  
+	private Integer sfTypeNum;
+	private String relationshipCode;
+	private SelectItem[] sfList; 
+	private List<Integer> selectedSf;
+	private List<RelatedFeature> relatedSf;
 }
