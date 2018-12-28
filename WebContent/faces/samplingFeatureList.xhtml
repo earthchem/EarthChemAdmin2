@@ -34,7 +34,8 @@
      </p:commandButton>
  </h:panelGroup>
 
- <p:dataTable  widgetVar="sampleTableWidgetVar" var="ct" value="#{sampleBean2.sampleList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+
+ <p:dataTable  widgetVar="sampleTableWidgetVar" var="ct" value="#{sampleBean.sampleList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
 selectionMode="single" selection="#{sampleBean.sample}" rowKey="#{ct.sampleNum}" rendered="#{session.getAttribute('database') eq 'petdb' and sfBean.search.samplingFeatureTypeNum eq 1}">  
   <p:ajax event="rowSelect" listener="#{sampleBean.selectSample}" update=":eca:sampleEditForm"  oncomplete="PF('sampleDialog').show()" /> 
   <f:facet name="header"> Counts: #{sampleBean.sampleList.size()}</f:facet>
