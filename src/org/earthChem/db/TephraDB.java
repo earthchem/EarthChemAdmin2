@@ -25,7 +25,7 @@ public class TephraDB {
 				" from sampling_feature s "+
 				" where s.sampling_feature_type_num = "+type+" and s.sampling_feature_code like '%"+search+"%' "+
 				" order by s.sampling_feature_code";
-		System.out.println("bc-q "+q);
+
 			return DBUtil.getSelectItems(q);
 	}
 	
@@ -35,7 +35,6 @@ public class TephraDB {
 		for(Integer n: list) {
 			String	q = "insert into related_feature ( sampling_feature_num, relationship_type_num, related_sampling_feature_num) values " + 
 				" ("+sfNum+","+relationType+","+n+")";
-			System.out.println("bc-q "+q);
 			queries.add(q);			
 		}
 		return DBUtil.updateList(queries);
@@ -129,7 +128,7 @@ public static Sample getSample(String code) {
 			q = "select s.bridge_num, s.citation_num, t.taxonomic_classifier_name from sampling_feature_taxonomic_classifier s, taxonomic_classifier t " + 
 				" where s.taxonomic_classifier_num = t.taxonomic_classifier_num and s.sampling_feature_num = "+sampleNum+" order by citation_num ";
 		} else {
-			q =	"select s.bridge_num, s.citation_num, concat(t.taxonomic_classifier_name,' (',p.taxonomic_classifier_name,')') "+
+			q =	"select s.bridge_num, s.citation_num, concat(t.taxonomic_classifier_name,' (',tp.taxonomic_classifier_name,')') "+
 				" from sampling_feature_taxonomic_classifier s, taxonomic_classifier t, taxonomic_classifier tp "+
 				" where s.taxonomic_classifier_num = t.taxonomic_classifier_num and tp.taxonomic_classifier_num = t.parent_taxonomic_classifier_num "+
 				" and s.sampling_feature_num = "+sampleNum+" order by citation_num";
@@ -200,7 +199,7 @@ public static Sample getSample(String code) {
 		return error; 		
 	}
 
-	
+	/*
 	private static Integer getTaxonomicClassifierNum(String name, Integer parentNum) {
 		String q ="select c.taxonomic_classifier_num from taxonomic_classifier c where c.taxonomic_classifier_type_cv = 'Rock Class' "+
 				" and c.parent_taxonomic_classifier_num = "+parentNum+" and c.taxonomic_classifier_name ="+name;
@@ -214,7 +213,7 @@ public static Sample getSample(String code) {
 		}
 		return tcNum;
 	}
-	
+	*/
 	private static Integer getIGSN(Integer sampleNum) {
 		return DBUtil.getNumber("select bridge_num from sampling_feature_external_identifier where external_identifier_system_num =  2 and sample_feature_num ="+sampleNum);
 	}

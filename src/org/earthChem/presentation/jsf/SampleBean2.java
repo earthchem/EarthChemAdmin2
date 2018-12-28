@@ -12,39 +12,28 @@ import java.io.IOException;
  * 
  * @author      Bai-Hao Chen 
  * @version     1.0               
- * @since       1.0     (8/23/2017)
+ * @since       1.0     (12/26/2018)
  */
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import org.earthChem.db.AnnotationDB;
 import org.earthChem.db.DBUtil;
 import org.earthChem.db.SampleDB;
-import org.earthChem.db.StationDB;
 import org.earthChem.db.TephraDB;
 import org.earthChem.model.Annotation;
-import org.earthChem.model.FeatureOfInterest;
-import org.earthChem.model.Method;
 import org.earthChem.model.RelatedFeature;
 import org.earthChem.model.Sample;
-import org.earthChem.model.SamplingFeature;
-import org.earthChem.model.Station;
 import org.earthChem.model.TaxonomicClassifier;
-import org.earthChem.presentation.jsf.SampleBean.ColumnModel;
-import org.earthChem.presentation.jsf.theme.Theme;
 import org.primefaces.PrimeFaces;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.CellEditEvent;
+
 
  
 @ManagedBean(name="sampleBean2")
@@ -55,6 +44,8 @@ public class SampleBean2 implements Serializable {
 			sample = new Sample();
 			annotation = new Annotation();
 			annotationList = new ArrayList<String[]>();
+			taxonomicClassifier = new TaxonomicClassifier();
+			tcList = null;
 	}	
 
 	public void selectSample() {

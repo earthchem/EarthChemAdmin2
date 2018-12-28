@@ -31,6 +31,7 @@ import org.earthChem.db.AnnotationDB;
 import org.earthChem.db.DBUtil;
 import org.earthChem.db.SampleDB;
 import org.earthChem.db.StationDB;
+import org.earthChem.db.TephraDB;
 import org.earthChem.model.Annotation;
 import org.earthChem.model.FeatureOfInterest;
 import org.earthChem.model.Method;
@@ -53,6 +54,8 @@ public class SampleBean implements Serializable {
 			annotation = new Annotation();
 			delAnnotation =  new Annotation();
 			annotationList = new ArrayList<String[]>();
+			taxonomicClassifier = new TaxonomicClassifier();
+			tcList= null;
 	}
 	
 	public void lookup() {	
@@ -68,6 +71,11 @@ public class SampleBean implements Serializable {
 	}
 	
 
+	public SelectItem[] getTcOptions()
+	{
+		return  (new HtmlOptions()).getRockTaxonomicClassifiers();
+	}
+	
 	public void findStation(String code) {		
 		if(code != null && !"".equals(code)) {
 			Station tmp = StationDB.getStation(code);
@@ -86,6 +94,7 @@ public class SampleBean implements Serializable {
 			columns = new ArrayList<ColumnModel>();
 			for(String s: annotationHeads) columns.add(new ColumnModel(s,s));
 		}
+		tcList= TephraDB.getTaxonomicClassifier(sample.getSampleNum(), 7);
 	}
 	
 	public void addAnnotation() {
@@ -116,7 +125,32 @@ public class SampleBean implements Serializable {
 		}	
 	}
 	
+	
+	//----------------- tc ----------------
 	public void deleteTc(Integer bridgeNum) {
+		String status = SampleDB.deleteSamplingTaxonomicClassifier(bridgeNum);
+		if(status == null) {
+			tcList= TephraDB.getTaxonomicClassifier(sample.getSampleNum(), 7);
+			taxonomicClassifier = new TaxonomicClassifier();
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
+		}	
+	}
+	
+	public void addTc() {
+		String status = TephraDB.addTaxonomicClassifier(taxonomicClassifier, sample.getSampleNum());
+		if(status == null) {
+			tcList= TephraDB.getTaxonomicClassifier(sample.getSampleNum(), 7);
+			taxonomicClassifier = new TaxonomicClassifier();
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
+		}	
+	}
+	
+	
+	/*public void deleteTc(Integer bridgeNum) {
 		String status = SampleDB.deleteSamplingTaxonomicClassifier(bridgeNum);
 		if(status == null) {
 			tcList= SampleDB.getTaxonomicClassifier(sample.getSampleNum());
@@ -137,7 +171,7 @@ public class SampleBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
 		}	
 	}
-	
+	*/
 	public void update() {
 		String code = sample.getStationName();
 		if(code != null && !"".equals(code)) {
@@ -259,7 +293,6 @@ public class SampleBean implements Serializable {
 
 	
 	public List<TaxonomicClassifier> getTcList() {
-		tcList= SampleDB.getTaxonomicClassifier(sample.getSampleNum());
 		return tcList;
 	}
 
