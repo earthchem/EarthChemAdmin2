@@ -1,0 +1,12 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<h:form id="downloadSheet" enctype="multipart/form-data">
+<p:commandButton id="downloadExcel" value="Download Excel" ajax="false" actionListener="#{fileUploadView.downloadFile2}" />
+</h:form>    
+</ui:composition>
+ 

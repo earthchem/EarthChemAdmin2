@@ -19,10 +19,15 @@ import javax.faces.model.SelectItem;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.common.usermodel.fonts.FontInfo;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.SheetUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.FileOutputStream;
 
 //import org.earthChem.dal.ds.Query;
 import org.primefaces.event.FileUploadEvent;
@@ -40,7 +45,7 @@ public class FileUploadView implements Serializable {
 	private List<IncorrectData> incorrectValues;
 	private String incorrectSamples;
 	private Workbook workbook;
-	private String fileName;
+	private String fileName="bai.xlsx";
 	private SelectItem[] variableOptions;
 	
 //	@PostConstruct
@@ -78,7 +83,7 @@ public class FileUploadView implements Serializable {
 		*/
     } 
 
-	 @SuppressWarnings("unchecked")
+
 	public void handleFileUpload(FileUploadEvent event) {
     	 if (event.getFile().equals(null)) {
     		 	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File is null", null));	 
@@ -108,6 +113,10 @@ public class FileUploadView implements Serializable {
     		} 
     	}
 	}
+	 
+
+	 
+	 
 
 	public void downloadFile()  {
 		try {
@@ -115,7 +124,6 @@ public class FileUploadView implements Serializable {
 	    ExternalContext externalContext = facesContext.getExternalContext();
 	    if(fileName.endsWith("xls")) externalContext.setResponseContentType("application/vnd.ms-excel");
 	    else externalContext.setResponseContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");	 	    
-	    
 	    externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\""+fileName+"\""); 	 
 	    workbook.write(externalContext.getResponseOutputStream());
 	    facesContext.responseComplete();
@@ -124,8 +132,132 @@ public class FileUploadView implements Serializable {
 	        e.printStackTrace();
 	    }
 	}
+
+	 //12/28/18
+	 public void downloadFile2()  {
+	   String[] columns = {"Name", "Email"};
+		   workbook = new XSSFWorkbook();  
+		   Sheet sheet = workbook.createSheet("Bai");
+	    
+		    Font headerFont = workbook.createFont();
+	        headerFont.setBold(true);
+	        headerFont.setFontHeightInPoints((short) 14);
+	        headerFont.setColor(IndexedColors.RED.getIndex());
+	        CellStyle headerCellStyle = workbook.createCellStyle();
+	        headerCellStyle.setFont(headerFont);
+        
+	        Row headerRow = sheet.createRow(0);
+	        for(int i = 0; i < columns.length; i++) {
+	            Cell cell = headerRow.createCell(i);
+	            cell.setCellValue(columns[i]);
+	            cell.setCellStyle(headerCellStyle);
+	        }
+	        Row row = sheet.createRow(1);
+	        row.createCell(0).setCellValue("bai2");
+	        row.createCell(1).setCellValue("bai@gmail.com");
+	        
+	     // Resize all columns to fit the content size
+	        for(int i = 0; i < columns.length; i++) {
+	            sheet.autoSizeColumn(i);
+	        }
+	       
+			try {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+		    ExternalContext externalContext = facesContext.getExternalContext();
+		    externalContext.setResponseContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");	
+		    externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\""+fileName+"\""); 	 
+		    workbook.write(externalContext.getResponseOutputStream());
 	
+		    facesContext.responseComplete();
+		    workbook.close();
+		    
+		    
+			}
+		    catch(Exception e) {
+		        e.printStackTrace();
+		    }
+		} 
+	 
+	 
 	
+	 
+	 
+	 
+	 // example
+/*
+ *   // Create a Workbook
+        Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
+
+      // CreationHelper helps us create instances of various things like DataFormat, 
+     //      Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way 
+        CreationHelper createHelper = workbook.getCreationHelper();
+
+        // Create a Sheet
+        Sheet sheet = workbook.createSheet("Employee");
+
+        // Create a Font for styling header cells
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 14);
+        headerFont.setColor(IndexedColors.RED.getIndex());
+
+        // Create a CellStyle with the font
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFont(headerFont);
+
+        // Create a Row
+        Row headerRow = sheet.createRow(0);
+
+        // Create cells
+        for(int i = 0; i < columns.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columns[i]);
+            cell.setCellStyle(headerCellStyle);
+        }
+
+        // Create Cell Style for formatting Date
+        CellStyle dateCellStyle = workbook.createCellStyle();
+        dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
+
+        // Create Other rows and cells with employees data
+        int rowNum = 1;
+        for(Employee employee: employees) {
+            Row row = sheet.createRow(rowNum++);
+
+            row.createCell(0)
+                    .setCellValue(employee.getName());
+
+            row.createCell(1)
+                    .setCellValue(employee.getEmail());
+
+            Cell dateOfBirthCell = row.createCell(2);
+            dateOfBirthCell.setCellValue(employee.getDateOfBirth());
+            dateOfBirthCell.setCellStyle(dateCellStyle);
+
+            row.createCell(3)
+                    .setCellValue(employee.getSalary());
+        }
+
+		// Resize all columns to fit the content size
+        for(int i = 0; i < columns.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Write the output to a file
+        FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
+        workbook.write(fileOut);
+        fileOut.close();
+
+        // Closing the workbook
+        workbook.close();
+ */
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 	private void findIncorrectData() {
 		incorrectVariables = new ArrayList<IncorrectData>();
 		int i = 0;
