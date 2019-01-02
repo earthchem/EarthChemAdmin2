@@ -27,6 +27,9 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.SheetUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.earthChem.db.DBUtil;
+import org.earthChem.model.StringTable;
+
 import java.io.FileOutputStream;
 
 //import org.earthChem.dal.ds.Query;
@@ -135,7 +138,7 @@ public class FileUploadView implements Serializable {
 
 	 //12/28/18
 	 public void downloadFile2()  {
-	   String[] columns = {"Name", "Email"};
+	/*   String[] columns = {"Name", "Email"};
 		   workbook = new XSSFWorkbook();  
 		   Sheet sheet = workbook.createSheet("Bai");
 	    
@@ -160,7 +163,9 @@ public class FileUploadView implements Serializable {
 	        for(int i = 0; i < columns.length; i++) {
 	            sheet.autoSizeColumn(i);
 	        }
-	       
+	*/
+		 	String q = "select * from method";
+		 	workbook = WorkbookUtil.databaseSheet(DBUtil.download(q), "database");
 			try {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 		    ExternalContext externalContext = facesContext.getExternalContext();

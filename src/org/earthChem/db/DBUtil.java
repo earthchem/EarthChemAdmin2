@@ -13,6 +13,7 @@ import java.util.Map;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -20,6 +21,8 @@ import javax.faces.model.SelectItem;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import org.earthChem.model.StringTable;
 import org.earthChem.presentation.jsf.theme.Theme;
 
 public class DBUtil {
@@ -305,6 +308,45 @@ public class DBUtil {
 	        }
 	    	return records;
 	    }
+	 
+	 public static StringTable download(String query) {
+		 StringTable table = new StringTable();
+		 ArrayList<Object[]> records=new ArrayList<Object[]>();
+	    	Connection con = null;
+	    	Statement stmt = null;
+	    	ResultSet rs = null;
+	    	
+	    	try {
+	    		con = dataSource.getConnection();
+	    		stmt = con.createStatement();
+	            rs = stmt.executeQuery(query);	            
+	            ResultSetMetaData metadata = rs.getMetaData();
+	            int cols = metadata.getColumnCount();
+	            String[] columns = new String[cols];
+	            for (int i = 0; i < cols; i++) {
+	            	columns[i] = metadata.getColumnName(i+1);  
+	            }
+	            table.setHeads(columns);	            
+	            while(rs.next()){
+	            	 Object[] arr = new Object[cols]; 
+	            	 for(int i=0; i<cols; i++){ 
+	            		 arr[i] = rs.getObject(i+1); 
+	            	 } 
+	            	 records.add(arr); }
+	    	} catch (SQLException e) { 
+	       	 	System.err.println(e);
+	        } finally {
+	        	try {
+	        		if(rs != null) rs.close();
+	        		if(stmt != null) stmt.close();
+	        		if(con != null) con.close();   
+	        	} catch (SQLException e) {
+	        		System.err.println(e);
+	        	}
+	        }
+	    	table.setData(records);;
+	    	return table;
+	 }
 	 
 	 public static String listToNumbers(List<Integer> list) {
 		 if(list != null && list.size() > 0) {
