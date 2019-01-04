@@ -212,9 +212,11 @@ public class SampleBean implements Serializable {
 		this.sample = sample;
 	}
 	public List<Sample> getSampleList() {
-
 		String sfCode =(String) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("sfCode");
+		String alias =(String) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("sfAlias");
 		if(sfCode != null) sampleList = SampleDB.getSampleList(sfCode);
+		else if (alias != null) sampleList = SampleDB.getSampleListByAlias(alias);
+	
 		return sampleList;
 	}
 	public void setSampleList(List<Sample> sampleList) {

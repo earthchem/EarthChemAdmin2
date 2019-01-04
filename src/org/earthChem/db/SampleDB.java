@@ -40,6 +40,30 @@ public static List<Sample> getSampleList(String search) {
 		return list;
 	}
 	
+public static List<Sample> getSampleListByAlias(String search) {
+	
+	List<Sample> list = new ArrayList<Sample>();
+	String	q = "select sp.sampling_feature_num, sp.sampling_feature_code, s.sampling_feature_num, s.sampling_feature_code, ei.sampling_feature_external_id "+
+			" from sampling_feature s "+
+			" left join related_feature r on  s.sampling_feature_num = r.sampling_feature_num  "+
+			" left join sampling_feature sp on sp.sampling_feature_num =  r.related_sampling_feature_num "+							
+			" left join sampling_feature_external_identifier ei on ei.sample_feature_num = s.sampling_feature_num and ei.external_identifier_system_num = 2 "+
+			" join sampling_feature_annotation sa on sa.sampling_feature_num = s.sampling_feature_num " + 
+			" join annotation a on a.annotation_num = sa.annotation_num "+
+			" where s.sampling_feature_type_num = 1 and sp.sampling_feature_type_num = 3 and a.annotation_text like '%"+search+"%' "+
+			" order by  s.sampling_feature_code";
+	 List<Object[]> olist = DBUtil.getECList(q);
+	for(Object[] arr: olist) {
+		Sample e = new Sample();
+		if(arr[0] != null) e.setStationNum((Integer)arr[0]);
+		if(arr[1] != null) e.setStationName(""+arr[1]);
+		e.setSampleNum((Integer)arr[2]);
+		e.setSamplingFeatureCode(""+arr[3]);
+		if(arr[4] != null) e.setIgsn(""+arr[4]);
+		list.add(e);
+	}
+	return list;
+}
 
 public static Sample getSample(String code) {
 		String	q = "select s.sampling_feature_num, s.sampling_feature_name, s.sampling_feature_description, ei.sampling_feature_external_id "+

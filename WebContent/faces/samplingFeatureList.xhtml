@@ -26,11 +26,20 @@
    			<f:selectItems value="#{optionBean.samplingFeatureTypes}" /> 
   	  </p:selectOneMenu> <p:spacer width="5" height="10" />
   	 <p:outputLabel value="Code: "/> 
-      <p:inputText value="#{sfBean.search.samplingFeatureCode}" style = "width:150px;"/>
-       <p:commandButton value="Search" process="@form" actionListener="#{sfBean.lookup}" update="sfSearchForm"/>   
+      <p:inputText value="#{sfBean.search.samplingFeatureCode}" style = "width:150px;"/><p:spacer width="5" height="10" />
+      <p:outputLabel value="Name: "/> 
+      <p:inputText value="#{sfBean.search.alias}" style = "width:150px;"/>  
+      
+       <p:commandButton value="Search" process="@form" actionListener="#{sfBean.lookup}" update=":eca:sfSearchForm"  />   
     <p:spacer width="5" height="10" />
-     <p:commandButton value="New" >   
-     	<p:ajax event="click" process="@form" listener="#{sfBean.createNew}" /> 
+     <p:commandButton value="New" rendered="#{sfBean.search.samplingFeatureTypeNum eq 3}">   
+     	<p:ajax event="click" process="@form" listener="#{stationBean.createNew}" update=":eca:stationEditForm" oncomplete="PF('stationDialog').show()" /> 
+     </p:commandButton>
+       <p:commandButton value="New" rendered="#{sfBean.search.samplingFeatureTypeNum eq 1 and sfBean.database eq 'petdb'}">   
+     	<p:ajax event="click" process="@form" listener="#{sampleBean.createNew}" update=":eca:sampleEditForm" oncomplete="PF('sampleDialog').show()"/> 
+     </p:commandButton>
+       <p:commandButton value="New" rendered="#{sfBean.search.samplingFeatureTypeNum eq 1 and sfBean.database eq 'tephra'}">   
+     	<p:ajax event="click" process="@form" listener="#{sampleBean2.createNew}" update=":eca:sampleEditForm2" oncomplete="PF('sampleDialog2').show()"/> 
      </p:commandButton>
  </h:panelGroup>
 

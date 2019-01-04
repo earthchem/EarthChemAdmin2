@@ -85,7 +85,31 @@ public static List<Sample> getSampleList(String search) {
 		}
 		return list;
 	}
+
+public static List<Sample> getSampleListByAlias(String search) {
 	
+	List<Sample> list = new ArrayList<Sample>();				
+	String	q = "select s.sampling_feature_num, s.sampling_feature_code, ei.sampling_feature_external_id, p.material_num "+
+	 " from sampling_feature s 		"+					
+	 " left join sampling_feature_external_identifier ei on ei.sample_feature_num = s.sampling_feature_num and ei.external_identifier_system_num = 2 "+
+	 " left join specimen p on p.sampling_feature_num = s.sampling_feature_num "+
+	 " join sampling_feature_annotation sa on sa.sampling_feature_num = s.sampling_feature_num " + 
+	 " join annotation a on a.annotation_num = sa.annotation_num "+
+	 " where s.sampling_feature_type_num = 1 and a.annotation_text  like upper('%"+search+"%') order by  s.sampling_feature_code";
+	
+	 List<Object[]> olist = DBUtil.getECList(q);
+	for(Object[] arr: olist) {
+		Sample e = new Sample();
+		e.setSampleNum((Integer)arr[0]);
+		e.setSamplingFeatureCode(""+arr[1]);
+		if(arr[2] != null) e.setIgsn(""+arr[2]);
+		e.setMaterialNum((Integer)arr[3]);
+		list.add(e);
+	}
+	return list;
+}
+
+
 
 public static Sample getSample(String code) {
 		String	q = "select s.sampling_feature_num, s.sampling_feature_name, s.sampling_feature_description, ei.sampling_feature_external_id "+

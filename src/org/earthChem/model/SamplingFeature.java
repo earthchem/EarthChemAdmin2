@@ -32,11 +32,17 @@ public class SamplingFeature implements java.io.Serializable {
 	private String parentCode;
 	private Integer relationShipType;
 	private Integer relatedFeatureNum;
+	private String alias;
 	
 	
 	
 	
-	
+	public String getAlias() {
+		return alias;
+	}
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
 	public Integer getParentNum() {
 		return parentNum;
 	}

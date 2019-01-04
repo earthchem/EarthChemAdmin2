@@ -45,7 +45,9 @@ public class SampleBean2 implements Serializable {
 			annotation = new Annotation();
 			annotationList = new ArrayList<String[]>();
 			taxonomicClassifier = new TaxonomicClassifier();
+			viewAnnList = null;
 			tcList = null;
+			relatedSf = null;
 	}	
 
 	public void selectSample() {
@@ -155,7 +157,9 @@ public class SampleBean2 implements Serializable {
 	}
 	public List<Sample> getSampleList() {
 		String sfCode =(String) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("sfCode");
+		String alias =(String) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("sfAlias");
 		if(sfCode != null) sampleList = TephraDB.getSampleList(sfCode);
+		else if (alias != null) sampleList = TephraDB.getSampleListByAlias(alias);
 		return sampleList;
 	}
 	public void setSampleList(List<Sample> sampleList) {
