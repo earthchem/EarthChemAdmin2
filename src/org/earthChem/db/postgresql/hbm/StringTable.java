@@ -2,12 +2,13 @@ package org.earthChem.db.postgresql.hbm;
 
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 public class StringTable implements java.io.Serializable {
 
 	private String[] heads;
 	private ArrayList<Object[]> data;
-	
 	
 	public String[] getHeads() {
 		return heads;
@@ -21,6 +22,8 @@ public class StringTable implements java.io.Serializable {
 	public void setData(ArrayList<Object[]> data) {
 		this.data = data;
 	}
+	
+	
 	
 	
 	

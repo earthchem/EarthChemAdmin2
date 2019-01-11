@@ -148,8 +148,13 @@ public class DBUtil {
 
 	public static Map<String, Integer> getMap(String query){
 		Map<String, Integer> m  =new HashMap <String, Integer>();		
-		List<Object[]> list = list(query);				
-		for(Object[] s: list) m.put((String)s[0], (Integer)s[1]);
+		List<Object[]> list = list(query);		
+			for(Object[] s: list) {
+			Integer num = null;
+			if (s[1] instanceof Long) num = ((Long)s[1]).intValue();
+			else num = (Integer)s[1];
+			m.put((String)s[0], num);
+		}
 		return m;
 	}
 	
@@ -355,4 +360,87 @@ public class DBUtil {
 	    	table.setData(records);;
 	    	return table;
 	 }
+	 
+	 
+	 public static StringTable sampleDownload(String condition) {
+		 String materialCode = "INC";
+		 String materialName = "Inclusion";  //MINERAL
+		 condition = " and array_to_string(m.taxon,',') like '%igneous:volcanic:mafic|BASALT%' ";
+		 String[] heads = {"SAMPLE ID","IGSN","SOURCE","DOI","TITLE",	"JOURNAL","AUTHOR","EXPEDITION ID","LATITUDE","LONGITUDE","MIN AGE","AGE","MAX AGE","METHOD","SAMPLE TYPE","ROCK NAME"};
+		 String select = "select d.specimen_code \"SAMPLE ID\", m.igsn \"IGSN\", 'EARTHCHEMDB' \"SOURCE\", c.doi \"DOI\", c.title \"TITLE\",  c.journal \"JOURNAL\", c.authors \"AUTHOR\", d.expedition_code \"EXPEDITION ID\", " + 
+				"split_part( split_part(split_part(split_part(m.geometry_text,'(',2), ' ', 2), ')', 1), ',',1) \"LATITUDE\", split_part(   split_part(m.geometry_text,'(',2), ' ', 1) \"LONGITUDE\",  " + 
+				" split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',3) \"MIN AGE\", split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',2) \"AGE\", " + 
+				"split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',4) \"MAX AGE\", d.method_code \"METHOD\", '"+materialName+"' \"SAMPLE TYPE\",  " + 
+				"split_part(array_to_string(m.taxon,','),'|',2) \"ROCK NAME\", d.variable_code \"VARIABLE\", d.value_meas \"VALUE\", d.specimen_num " ;
+		 String body = " from mv_dataset_result_summary d, mv_specimen_summary m,  mv_citation_summary c" + 
+		 			" where d.specimen_num=m.specimen_num and d.material_code in ('"+materialCode+"') and d.citation_num = c.citation_num "+condition;
+		
+		 //create column names with variable
+		 Map<String, Integer> map  =new HashMap <String, Integer>();	
+		 String q = "select d.variable_code, d.variable_order "+body+ " group by d.variable_code, d.variable_order order by d.variable_order";
+		 List<Object[]> list = list(q);			
+		 String [] titles = new String[heads.length+list.size()]; 
+		 int k=0; 
+		 for(;k < heads.length; k++) titles[k] = heads[k];
+		 for(Object[] s: list) {
+			 titles[k] = (String)s[0];
+			 map.put((String)s[0], k++);
+		}
+		 
+		 StringTable table = new StringTable();
+		 table.setHeads(titles);
+		 ArrayList<Object[]> records=new ArrayList<Object[]>();
+    	Connection con = null;
+    	Statement stmt = null;
+    	ResultSet rs = null;
+    	System.out.println("bc-q "+select+body);
+   
+    	try {
+    		con = dataSource.getConnection();
+    		stmt = con.createStatement();
+            rs = stmt.executeQuery(select+body+ " order by d.specimen_code, d.specimen_num");	            
+            ResultSetMetaData metadata = rs.getMetaData();
+            int cols = metadata.getColumnCount();
+            int prev= 0;
+            Object[] arr = null;
+            while(rs.next()) {
+            	int current =  (Integer) rs.getObject(heads.length+3);
+        
+            	if(prev==0 || prev != current) {
+            		if(prev != 0) records.add(arr);
+            		arr = new Object[titles.length]; 
+            		 for(int i=0; i<cols; i++){ 
+                		 if(i < heads.length) arr[i] = rs.getObject(i+1); 
+                		 if(i==heads.length) {
+                			 Integer index = map.get((String)rs.getObject(i+1));
+                			 arr[index] = rs.getObject(i+2); 
+                		 }
+            		 }
+            	} else {
+            		for(int i=0; i<cols; i++){ 
+	               		 if(i==heads.length) {
+	               			 Integer index = map.get((String)rs.getObject(i+1));
+	               			 arr[index] = rs.getObject(i+2); 
+	               		 }
+            		}
+            	}
+            	prev =current;
+            }
+            	 records.add(arr);
+    	} catch (SQLException e) { 
+       	 	System.err.println(e);
+        } finally {
+        	try {
+        		if(rs != null) rs.close();
+        		if(stmt != null) stmt.close();
+        		if(con != null) con.close();   
+        	} catch (SQLException e) {
+        		System.err.println(e);
+        	}
+        }
+    	table.setData(records);;
+    	return table;
+	 }
+	 
+	 
 }
