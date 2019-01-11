@@ -322,6 +322,18 @@ public class DBUtil {
 		 return null;		
 	 }
 	 
+	 public static String[] stringArray(String query) {
+		 String[] items = null;
+			List<Object[]> list = list(query);		
+			int size = list.size();
+			items = new String[size];
+			int i = 0;		
+			for(Object[] s: list) {
+				items[i++]=""+ s[0];			
+			}
+			return items;
+	 }
+	 
 	 public static StringTable download(String query) {
 		 StringTable table = new StringTable();
 		 ArrayList<Object[]> records=new ArrayList<Object[]>();
@@ -362,19 +374,25 @@ public class DBUtil {
 	 }
 	 
 	 
-	 public static StringTable sampleDownload(String condition) {
-		 String materialCode = "INC";
-		 String materialName = "Inclusion";  //MINERAL
-		 condition = " and array_to_string(m.taxon,',') like '%igneous:volcanic:mafic|BASALT%' ";
+	 public static StringTable sampleDownload(String materialCode, String condition) {
+		 if("ROCK".equals(materialCode)) {
+			 materialCode = "'LE','GL','ROCK','WR'";
+		 } else {
+			 materialCode = "'"+materialCode+"'";
+		 }
+		 
 		 String[] heads = {"SAMPLE ID","IGSN","SOURCE","DOI","TITLE",	"JOURNAL","AUTHOR","EXPEDITION ID","LATITUDE","LONGITUDE","MIN AGE","AGE","MAX AGE","METHOD","SAMPLE TYPE","ROCK NAME"};
+		
 		 String select = "select d.specimen_code \"SAMPLE ID\", m.igsn \"IGSN\", 'EARTHCHEMDB' \"SOURCE\", c.doi \"DOI\", c.title \"TITLE\",  c.journal \"JOURNAL\", c.authors \"AUTHOR\", d.expedition_code \"EXPEDITION ID\", " + 
 				"split_part( split_part(split_part(split_part(m.geometry_text,'(',2), ' ', 2), ')', 1), ',',1) \"LATITUDE\", split_part(   split_part(m.geometry_text,'(',2), ' ', 1) \"LONGITUDE\",  " + 
 				" split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',3) \"MIN AGE\", split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',2) \"AGE\", " + 
-				"split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',4) \"MAX AGE\", d.method_code \"METHOD\", '"+materialName+"' \"SAMPLE TYPE\",  " + 
+				"split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',4) \"MAX AGE\", d.method_code \"METHOD\", d.material_name \"SAMPLE TYPE\",  " + 
 				"split_part(array_to_string(m.taxon,','),'|',2) \"ROCK NAME\", d.variable_code \"VARIABLE\", d.value_meas \"VALUE\", d.specimen_num " ;
-		 String body = " from mv_dataset_result_summary d, mv_specimen_summary m,  mv_citation_summary c" + 
-		 			" where d.specimen_num=m.specimen_num and d.material_code in ('"+materialCode+"') and d.citation_num = c.citation_num "+condition;
-		
+		 String body = " from mv_dataset_result_summary d, mv_specimen_summary m,  mv_citation_summary c, variable v, variable_type t " + 
+		 			" where d.specimen_num=m.specimen_num and d.material_code in ("+materialCode+") and d.citation_num = c.citation_num "+
+		 			" and d.variable_num = v.variable_num and v.variable_type_num = t.variable_type_num "+ condition+
+		 			" and array_to_string(m.taxon,',') like '%igneous:volcanic:mafic|BASALT%' "+condition;
+
 		 //create column names with variable
 		 Map<String, Integer> map  =new HashMap <String, Integer>();	
 		 String q = "select d.variable_code, d.variable_order "+body+ " group by d.variable_code, d.variable_order order by d.variable_order";
@@ -393,7 +411,6 @@ public class DBUtil {
     	Connection con = null;
     	Statement stmt = null;
     	ResultSet rs = null;
-    	System.out.println("bc-q "+select+body);
    
     	try {
     		con = dataSource.getConnection();
