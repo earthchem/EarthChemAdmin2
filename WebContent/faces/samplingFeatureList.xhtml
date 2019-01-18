@@ -35,17 +35,17 @@
      <p:commandButton value="New" rendered="#{sfBean.search.samplingFeatureTypeNum eq 3}">   
      	<p:ajax event="click" process="@form" listener="#{stationBean.createNew}" update=":eca:stationEditForm" oncomplete="PF('stationDialog').show()" /> 
      </p:commandButton>
-       <p:commandButton value="New" rendered="#{sfBean.search.samplingFeatureTypeNum eq 1 and sfBean.database eq 'petdb'}">   
+       <p:commandButton value="New" rendered="#{sfBean.search.samplingFeatureTypeNum eq 1 and sfBean.database eq 'Petdb'}">   
      	<p:ajax event="click" process="@form" listener="#{sampleBean.createNew}" update=":eca:sampleEditForm" oncomplete="PF('sampleDialog').show()"/> 
      </p:commandButton>
-       <p:commandButton value="New" rendered="#{sfBean.search.samplingFeatureTypeNum eq 1 and sfBean.database eq 'tephra'}">   
+       <p:commandButton value="New" rendered="#{sfBean.search.samplingFeatureTypeNum eq 1 and sfBean.database eq 'Tephra'}">   
      	<p:ajax event="click" process="@form" listener="#{sampleBean2.createNew}" update=":eca:sampleEditForm2" oncomplete="PF('sampleDialog2').show()"/> 
      </p:commandButton>
  </h:panelGroup>
 
 
  <p:dataTable  widgetVar="sampleTableWidgetVar" var="ct" value="#{sampleBean.sampleList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
-selectionMode="single" selection="#{sampleBean.sample}" rowKey="#{ct.sampleNum}" rendered="#{session.getAttribute('database') eq 'petdb' and sfBean.search.samplingFeatureTypeNum eq 1}">  
+selectionMode="single" selection="#{sampleBean.sample}" rowKey="#{ct.sampleNum}" rendered="#{session.getAttribute('database') eq 'Petdb' and sfBean.search.samplingFeatureTypeNum eq 1}">  
   <p:ajax event="rowSelect" listener="#{sampleBean.selectSample}" update=":eca:sampleEditForm"  oncomplete="PF('sampleDialog').show()" /> 
   <f:facet name="header"> Counts: #{sampleBean.sampleList.size()}</f:facet>
     	    <p:column headerText="Number" sortBy="#{ct.sampleNum}" filterBy="#{ct.sampleNum}"> <h:outputText value="#{ct.sampleNum}"/></p:column>     
@@ -55,7 +55,7 @@ selectionMode="single" selection="#{sampleBean.sample}" rowKey="#{ct.sampleNum}"
 
 
  <p:dataTable  widgetVar="sampleTableWidgetVar2" var="ct" value="#{sampleBean2.sampleList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
-selectionMode="single" selection="#{sampleBean2.sample}" rowKey="#{ct.sampleNum}" rendered="#{session.getAttribute('database') eq 'tephra' and sfBean.search.samplingFeatureTypeNum eq 1}">  
+selectionMode="single" selection="#{sampleBean2.sample}" rowKey="#{ct.sampleNum}" rendered="#{session.getAttribute('database') eq 'Tephra' and sfBean.search.samplingFeatureTypeNum eq 1}">  
   <p:ajax event="rowSelect" listener="#{sampleBean2.selectSample}" update=":eca:sampleEditForm2  :eca:sampleEditForm2:moreInfo"  oncomplete="PF('sampleDialog2').show()" /> 
   <f:facet name="header"> Counts: #{sampleBean2.sampleList.size()}</f:facet>
     	    <p:column headerText="Number" sortBy="#{ct.sampleNum}" filterBy="#{ct.sampleNum}"> <h:outputText value="#{ct.sampleNum}"/></p:column>     

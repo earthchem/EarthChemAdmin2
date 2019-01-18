@@ -9,7 +9,21 @@
         <title>EarthChemDBAdmin</title>
    	<link href="#{request.contextPath}/css/basic.css" rel="stylesheet"></link>	
     </h:head>
-    <h:body> 
+     <h:body rendered="#{facesContext.externalContext.isUserInRole(database) eq 'false' and  facesContext.externalContext.isUserInRole('Admin') eq 'false'}">
+     <h:form>
+     	<h3> Permission denied!</h3>  
+ 	<h:panelGrid columns="2" style="margin-top:10px" cellpadding="3">           
+        <p:outputLabel value="Database:" />     <p:outputLabel value="#{database}" />   
+        <p:outputLabel value="User Role:" />  
+    <p:outputLabel value="Petdb" rendered="#{facesContext.externalContext.isUserInRole('Petdb')}"/>  
+         <p:outputLabel value="Tephra" rendered="#{facesContext.externalContext.isUserInRole('Tephra')}"/>  
+    
+     	</h:panelGrid>
+    
+     	<p:commandButton value="Try again!" action="/login.xhtml?faces-redirect=true"  />
+     	</h:form>	
+     </h:body> 
+    <h:body rendered="#{facesContext.externalContext.isUserInRole(database) or facesContext.externalContext.isUserInRole('Admin')}"> 
   <p:messages id="mainMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
 
 <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">

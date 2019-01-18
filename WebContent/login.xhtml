@@ -52,8 +52,8 @@
     <h:panelGrid columns="2">
                 <p:outputLabel for="database" value="Database:"/> 
        <p:selectOneRadio id="database" value="#{homeBean.database}" required="true">
-            <f:selectItem itemLabel="petdb" itemValue="petdb" />
-            <f:selectItem itemLabel="tephra" itemValue="tephra" />
+            <f:selectItem itemLabel="petdb" itemValue="Petdb" />
+            <f:selectItem itemLabel="tephra" itemValue="Tephra" />
           <p:ajax event="valueChange" process="@this" listener="#{homeBean.selectDatabase}"/>
         </p:selectOneRadio>
         <p:outputLabel for="j_username" value="Username" />

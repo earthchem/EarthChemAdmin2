@@ -46,7 +46,6 @@ public class SamplingFeatureBean implements Serializable {
 	public void lookup() {
 		String code = search.getSamplingFeatureCode();
 		String alias = search.getAlias();
-		System.out.println("bc-look "+code+":"+alias);
 		if(!"".equals(code.trim())) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("sfCode",code);
 		else if	(!"".equals(alias.trim())) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("sfAlias",alias);
 		else FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("WARN!",  "The code is required!") );
@@ -57,7 +56,7 @@ public class SamplingFeatureBean implements Serializable {
 	public void createNew() {
    
 		if(search.getSamplingFeatureTypeNum() == 1) {
-			if("petdb".equals(database))
+			if("Petdb".equals(database))
 				PrimeFaces.current().executeScript("PF('sampleDialog').show()");
 			else 
 				PrimeFaces.current().executeScript("PF('sampleDialog2').show()");
