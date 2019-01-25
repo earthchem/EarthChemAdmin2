@@ -381,10 +381,10 @@ public class DBUtil {
 			 materialCode = "'"+materialCode+"'";
 		 }
 		 
-		 String[] heads = {"SAMPLE ID","IGSN","SOURCE","DOI","TITLE",	"JOURNAL","AUTHOR","EXPEDITION ID","LATITUDE","LONGITUDE","MIN AGE","AGE","MAX AGE","METHOD","SAMPLE TYPE","ROCK NAME"};
+		 String[] heads = {"SAMPLE ID","IGSN","SOURCE","DOI","TITLE","JOURNAL","AUTHOR","EXPEDITION ID","LATITUDE","LONGITUDE","ELEVATION_MIN","ELEVATION_MAX","MIN AGE","AGE","MAX AGE","METHOD","SAMPLE TYPE","ROCK NAME"};
 		
 		 String select = "select d.specimen_code \"SAMPLE ID\", m.igsn \"IGSN\", 'EARTHCHEMDB' \"SOURCE\", c.doi \"DOI\", c.title \"TITLE\",  c.journal \"JOURNAL\", c.authors \"AUTHOR\", d.expedition_code \"EXPEDITION ID\", " + 
-				"split_part( split_part(split_part(split_part(m.geometry_text,'(',2), ' ', 2), ')', 1), ',',1) \"LATITUDE\", split_part(   split_part(m.geometry_text,'(',2), ' ', 1) \"LONGITUDE\",  " + 
+				"split_part( split_part(split_part(split_part(m.geometry_text,'(',2), ' ', 2), ')', 1), ',',1) \"LATITUDE\", split_part(   split_part(m.geometry_text,'(',2), ' ', 1) \"LONGITUDE\",  m.elevation_min, m.elevation_max, " + 
 				" split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',3) \"MIN AGE\", split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',2) \"AGE\", " + 
 				"split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',4) \"MAX AGE\", d.method_code \"METHOD\", d.material_name \"SAMPLE TYPE\",  " + 
 				"split_part(array_to_string(m.taxon,','),'|',2) \"ROCK NAME\", d.variable_code \"VARIABLE\", d.value_meas \"VALUE\", d.specimen_num " ;
