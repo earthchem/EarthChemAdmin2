@@ -82,7 +82,7 @@
   <p:commandLink onclick="PF('organizationDialog').show();"  >
         			<h:outputText  style="font-size:14px;" value="Add New Organization" actionListener="#{expeditionBean.createOrganization}"/>
   </p:commandLink>
-  <p:outputLabel value="Begin Date: "/> 
+  <p:outputLabel value="Begin Date*: "/> 
   <p:calendar value="#{expeditionBean.expedition.beginDateTime}" pattern="yyyy-MM-dd"/><p:outputLabel value=" (yyyy-mm-dd)"/> 
   <p:outputLabel value="End Date: "/> <p:calendar value="#{expeditionBean.expedition.endDateTime}" pattern="yyyy-MM-dd"/> <p:outputLabel value=" (yyyy-mm-dd)"/>
   <p:outputLabel value="Equipment: "/> 

@@ -139,7 +139,7 @@ public class CheckViewBean implements Serializable {
 		String q = "select r.related_feature_num, c.sampling_feature_num, c.sampling_feature_code, p.sampling_feature_num, p.sampling_feature_code, r.relationship_type_num " + 
 				" from related_feature r, sampling_feature c, sampling_feature p " + 
 				" where r.sampling_feature_num = c.sampling_feature_num and p.sampling_feature_num = r.related_sampling_feature_num and c.sampling_feature_num in" + 
-				" (select sampling_feature_num from related_feature where relationship_type_num = 22 group by sampling_feature_num having count(*) > 1)";
+				" (select sampling_feature_num from related_feature where relationship_type_num = 22 group by sampling_feature_num having count(*) > 1) order by c.sampling_feature_num";
 		List<SamplingFeature> list =  new ArrayList<SamplingFeature>();
 		List<Object[]> olist = DBUtil.getECList(q);
 		for(Object[] i: olist) {
