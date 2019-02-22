@@ -18,7 +18,9 @@ import org.earthChem.presentation.jsf.theme.Theme;
 @ApplicationScoped
 public class RockclassService{
 
- private static String query= "select taxonomic_classifier_num, taxonomic_classifier_common_name, taxonomic_classifier_common_name from taxonomic_classifier where taxonomic_classifier_type_cv = 'Rock Class' order by taxonomic_classifier_name";
+ private static String query= "select taxonomic_classifier_num, taxonomic_classifier_common_name, taxonomic_classifier_common_name from taxonomic_classifier "+
+		 " where taxonomic_classifier_type_cv = 'Rock Type' order by taxonomic_classifier_name";
+
  private static Map<Integer,Theme> themeMap;
   
   public static List<Theme> getThemes() {

@@ -18,8 +18,12 @@
 <h:panelGrid columns = "3" border = "0" cellpadding = "2" cellspacing = "2"> 	
       <p:outputLabel value="DOI: "/> 
       <p:inputText value="#{citationBean2.citation.doi}" style = "width:400px;"/>
-       <p:commandButton value="Lookup" actionListener="#{citationBean2.searchDOI('doi')}" rendered="#{citationBean2.new}" update="citationEditForm :eca:citationEditForm:citationAL:authors"/>  
-		<h:panelGroup rendered="#{not citationBean2.new}"/>    
+       <p:commandButton value="Lookup" actionListener="#{citationBean2.searchDOI('doi')}" rendered="#{citationBean2.new}" update="citationEditForm :eca:citationEditForm:citationAL:authors"/>   
+		
+		<p:commandButton value="Update DOI" rendered="#{not citationBean2.new}" actionListener="#{citationBean2.updateDOI()}"> 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+	 
 		  <p:outputLabel value="Title*: "/> 
       <p:inputText  value="#{citationBean2.citation.title}" style = "width:400px;"/><h:panelGroup/>
 <p:outputLabel value="Publication Year*: "/> 
@@ -59,7 +63,7 @@
 	</h:panelGrid>
 </p:tab>
 
-<p:tab title="Author List (do not use 'Save' or 'Cancel' button for Author List)"  rendered="#{not citationBean2.new}">  <!-- rendered="#{not citationBean2.new}" -->
+<p:tab title="Author List (do not use 'Save' or 'Cancel' button for Author List)"  rendered="#{not citationBean2.new}"> 
 
 <ui:fragment><ui:include src="authorList2.xhtml" /></ui:fragment>
 
@@ -70,10 +74,8 @@
 
 
 <h:panelGrid columns = "4" border = "0" cellpadding = "2" cellspacing = "2">
-	<p:commandButton value="Save"  actionListener="#{citationBean2.updateCitation}" update=":eca:citationEditForm:confirmMsg :eca:citationEditForm:authorListMsg  :eca:citationEditForm:citationAL" oncomplete="PF('citationDialog').hide();"> <!-- :AuthorAP -->
-		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
-	</p:commandButton>
-	<p:commandButton value="Cancel" process="@this" actionListener="#{citationBean2.cancelEdit}" update="citationEditForm"  oncomplete="PF('citationDialog').hide();">
+	
+<p:commandButton value="Cancel" process="@this" actionListener="#{citationBean2.cancelEdit}" update="citationEditForm"  oncomplete="PF('citationDialog').hide();">
 		<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
 	</p:commandButton>	
 	<p:commandButton value="Purge" actionListener="#{citationBean2.purge}" update="confirmMsg"  oncomplete="PF('citationDialog').hide();">

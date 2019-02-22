@@ -159,6 +159,11 @@ public class CitationDB {
 		return st;		
 	}
 	
+	public static void updateDOI(Citation c) {
+		String q = "update citation_external_identifier set citation_external_identifier ='"+c.getDoi()+"' where citation_num ="+c.getCitationNum();
+		DBUtil.update(q);
+	}
+	
 	
 	public static SelectItem[] getSearchResult(String type, String value) {
 		String q = null;

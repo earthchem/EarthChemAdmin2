@@ -53,6 +53,29 @@ public class CitationBean2 implements Serializable {
 		
 	}
 	
+	public void updateDOI() {	
+		String doi = citation.getDoi();
+				try
+				{
+					if(new CitationRest().getCitationByDoi(doi) != null) 
+					CitationDB.updateDOI(citation);
+				}
+				catch (InvalidDoiException ie)
+				{
+					FacesContext.getCurrentInstance().addMessage("citationEdiMsg", 
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Validation Error:", "Entered Invalid DOI"));
+				} 
+				catch (Exception ex)
+				{
+					FacesContext.getCurrentInstance().addMessage("citationEdiMsg", 
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"System Error:", ex.getMessage()));
+				}
+		
+	}
+	
+	
 	public void searchDOI(String d) {	
 		String doi = citation.getDoi();
 		String q = "select citation_num from citation_external_identifier where citation_external_identifier ='"+doi+"'";

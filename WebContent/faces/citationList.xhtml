@@ -6,6 +6,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"> 
 
 <p:dialog header="" widgetVar="citationDialog" width="900" height="500"  resizable="false"> 
+  <p:ajax event="close" listener="#{citationBean2.selectStatus}" update=":eca:viewForm"/>
  <ui:fragment><ui:include src="citationDialog.xhtml" /></ui:fragment>
 </p:dialog>
 
