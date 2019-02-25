@@ -30,9 +30,12 @@ public class DownloadFile implements Serializable {
 				condition =	" and array_to_string(m.taxon,',') like '%igneous:volcanic:mafic|BASALT%' ";  //BASALT
 			} else if (query.equals("Ophiolite")) {
 				condition =	" and array_to_string(m.tectonic_settings,',') like '%OPHIOLITE%' ";
-			}
-				
-		
+			} else if(query.equals("EastPacificRise")) {
+				condition =	" and array_to_string(m.geographic_location,',') like '%EAST PACIFIC RISE%' ";
+			} else if(query.equals("MantleXenoliths")) {
+				condition =	" and array_to_string(m.rock_textures,',') SIMILAR TO '%PERIDOTITE%|%ECLOGITE%|%DUNITE%|%WEBSTERITE%|%WEHRLITE%|%LHERZOLITE%|%HARZBURGITE%|%PYROXENITE%' ";
+			} 
+
 			if(selectedVariableTypeCodes.length > 0) {
 				String codes = "";
 				for(int i= 0; i < selectedVariableTypeCodes.length; i++) {
