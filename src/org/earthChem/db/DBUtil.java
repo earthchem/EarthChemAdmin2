@@ -373,14 +373,7 @@ public class DBUtil {
 	    	return table;
 	 }
 	 
-	 
-	 public static StringTable sampleDownload(String materialCode, String condition) {
-		 if("ROCK".equals(materialCode)) {
-			 materialCode = "'LE','GL','ROCK','WR'";
-		 } else {
-			 materialCode = "'"+materialCode+"'";
-		 }
-		 
+	 public static StringTable sampleDownload(String materialCode, String variableType, String condition) {	 
 		 String[] heads = {"SAMPLE ID","IGSN","SOURCE","DOI","TITLE","JOURNAL","AUTHOR","EXPEDITION ID","LATITUDE","LONGITUDE","ELEVATION_MIN","ELEVATION_MAX","MIN AGE","AGE","MAX AGE","METHOD","SAMPLE TYPE","ROCK NAME"};
 		
 		 String select = "select d.specimen_code \"SAMPLE ID\", m.igsn \"IGSN\", 'EARTHCHEMDB' \"SOURCE\", c.doi \"DOI\", c.title \"TITLE\",  c.journal \"JOURNAL\", c.authors \"AUTHOR\", d.expedition_code \"EXPEDITION ID\", " + 
@@ -389,13 +382,14 @@ public class DBUtil {
 				"split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',4) \"MAX AGE\", d.method_code \"METHOD\", d.material_name \"SAMPLE TYPE\",  " + 
 				"split_part(array_to_string(m.taxon,','),'|',2) \"ROCK NAME\", d.variable_code \"VARIABLE\", d.value_meas \"VALUE\", d.specimen_num " ;
 		 String body = " from mv_dataset_result_summary d, mv_specimen_summary m,  mv_citation_summary c, variable v, variable_type t " + 
-		 			" where d.specimen_num=m.specimen_num and d.material_code in ("+materialCode+") and d.citation_num = c.citation_num "+
-		 			" and d.variable_num = v.variable_num and v.variable_type_num = t.variable_type_num "+ condition+
-		 			" and array_to_string(m.taxon,',') like '%igneous:volcanic:mafic|BASALT%' "+condition;
+		 			" where d.specimen_num=m.specimen_num " +materialCode+" and d.citation_num = c.citation_num "+
+		 			" and d.variable_num = v.variable_num and v.variable_type_num = t.variable_type_num "+ variableType+
+		 			condition+variableType;
 
 		 //create column names with variable
 		 Map<String, Integer> map  =new HashMap <String, Integer>();	
 		 String q = "select d.variable_code, d.variable_order "+body+ " group by d.variable_code, d.variable_order order by d.variable_order";
+		System.out.println("bc-q "+q);
 		 List<Object[]> list = list(q);			
 		 String [] titles = new String[heads.length+list.size()]; 
 		 int k=0; 

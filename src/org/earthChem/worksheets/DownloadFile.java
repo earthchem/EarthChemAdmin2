@@ -19,20 +19,38 @@ public class DownloadFile implements Serializable {
 	
 	private String materialType;
 	private String [] selectedVariableTypeCodes;
+	private String query;
 	
 	public void download() {
-			String fileName=materialType+".xlsx";			
-			String condition = "";
-			if(selectedVariableTypeCodes!=null && selectedVariableTypeCodes.length >0) {
+			String fileName=query+"_"+materialType+".xlsx";			
+			String variableType = "";
+			
+			String condition = null;
+			if(query.equals("Basalt")) {
+				condition =	" and array_to_string(m.taxon,',') like '%igneous:volcanic:mafic|BASALT%' ";  //BASALT
+			} else if (query.equals("Ophiolite")) {
+				condition =	" and array_to_string(m.tectonic_settings,',') like '%OPHIOLITE%' ";
+			}
+				
+		
+			if(selectedVariableTypeCodes.length > 0) {
 				String codes = "";
 				for(int i= 0; i < selectedVariableTypeCodes.length; i++) {
 					if(i != 0) codes +=",";
 					codes +="'"+selectedVariableTypeCodes[i]+"'";
 				}
-				condition = " and t.variable_type_code in ("+codes+") ";
+				variableType = " and t.variable_type_code in ("+codes+") ";
 			}
-		
-			createFile(DBUtil.sampleDownload(materialType, condition), fileName);
+			
+			 if("ROCK".equals(materialType)) {
+				 materialType = " and d.material_code in ('LE','GL','ROCK','WR')";
+			 } else if("ALL".equals(materialType)){
+				 materialType = "";
+			 } else {
+				 materialType = " and d.material_code in ('"+materialType+"')";
+			 }
+
+			createFile(DBUtil.sampleDownload(materialType, variableType, condition), fileName);
 	}
 
 	
@@ -81,6 +99,18 @@ public class DownloadFile implements Serializable {
 	}
 
 
+
+	public String getQuery() {
+		return query;
+	}
+
+
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
+	
 	
 
 }
