@@ -7,6 +7,17 @@
 
 <h:form id="downloadSheet" enctype="multipart/form-data">
   <h:panelGrid columns="2" cellpadding="5">
+  <p:outputLabel value="Query:" />
+ <p:selectOneMenu value="#{downloadFile.query}"> 
+	         <f:selectItem itemLabel="Select One" itemValue="#{null}" />
+		      <f:selectItem itemLabel="Basalt" itemValue="Basalt" />
+		      <f:selectItem itemLabel="Aleutians" itemValue="Aleutians" />
+             <f:selectItem itemLabel="Ophiolite" itemValue="Ophiolite" />
+                <f:selectItem itemLabel="Melt Inclusions" itemValue="MeltInclusions" />
+                   <f:selectItem itemLabel="East Pacific Rise" itemValue="EastPacificRise" />
+                      <f:selectItem itemLabel="Mantle xenoliths" itemValue="Mantlexenoliths" />
+		  </p:selectOneMenu> 	
+  
 <p:outputLabel value="Material:" />
  <p:selectOneMenu value="#{downloadFile.materialType}"> 
 	         <f:selectItem itemLabel="Select One" itemValue="#{null}" />
