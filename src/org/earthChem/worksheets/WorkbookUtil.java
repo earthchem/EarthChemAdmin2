@@ -48,7 +48,7 @@ public class WorkbookUtil {
      
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
-   //     headerCellStyle.setFillForegroundColor(IndexedColors.BLACK.getIndex());
+
  
 		Row headerRow = sheet.createRow(0);
 	    for(int i = 0; i < columns.length; i++) {
@@ -60,6 +60,7 @@ public class WorkbookUtil {
 	     int r = 1;
 	     for(Object[] a: list) {
 	    	  Row row = sheet.createRow(r++);
+	    	  if(a != null)
 	    	  for(int i = 0; i< a.length; i++) {
 	    		  if(a[i] !=  null) row.createCell(i).setCellValue(""+a[i]);
 	    	  }
