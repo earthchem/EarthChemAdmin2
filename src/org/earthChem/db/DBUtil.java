@@ -389,7 +389,6 @@ public class DBUtil {
 		 //create column names with variable
 		 Map<String, Integer> map  =new HashMap <String, Integer>();	
 		 String q = "select d.variable_code, d.variable_order "+body+ " group by d.variable_code, d.variable_order order by d.variable_order";
-		System.out.println("bc-q "+q);
 		 List<Object[]> list = list(q);			
 		 String [] titles = new String[heads.length+list.size()]; 
 		 int k=0; 

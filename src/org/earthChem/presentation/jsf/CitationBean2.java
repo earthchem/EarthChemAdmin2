@@ -57,8 +57,11 @@ public class CitationBean2 implements Serializable {
 		String doi = citation.getDoi();
 				try
 				{
-					if(new CitationRest().getCitationByDoi(doi) != null) 
-					CitationDB.updateDOI(citation);
+					System.out.println("bc-doi "+doi);
+					if(new CitationRest().getCitationByDoi(doi) != null) {
+						System.out.println("bc-doi2 "+doi);
+						CitationDB.updateDOI(citation);
+					}
 				}
 				catch (InvalidDoiException ie)
 				{

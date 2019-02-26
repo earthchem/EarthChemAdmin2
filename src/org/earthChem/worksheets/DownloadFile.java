@@ -28,13 +28,19 @@ public class DownloadFile implements Serializable {
 			String condition = null;
 			if(query.equals("Basalt")) {
 				condition =	" and array_to_string(m.taxon,',') like '%igneous:volcanic:mafic|BASALT%' ";  //BASALT
+			} else if (query.equals("Aleutians")) {
+				condition =	" and array_to_string(m.geographic_location,',') SIMILAR TO '%ALEUTIAN%|%KAMCHATKA%|%ALASKAN%' ";
 			} else if (query.equals("Ophiolite")) {
 				condition =	" and array_to_string(m.tectonic_settings,',') like '%OPHIOLITE%' ";
+			} else if(query.equals("MeltInclusions")) {
+				condition =	" and d.inclusion_type = 'GLASS' ";
 			} else if(query.equals("EastPacificRise")) {
 				condition =	" and array_to_string(m.geographic_location,',') like '%EAST PACIFIC RISE%' ";
 			} else if(query.equals("MantleXenoliths")) {
-				condition =	" and array_to_string(m.rock_textures,',') SIMILAR TO '%PERIDOTITE%|%ECLOGITE%|%DUNITE%|%WEBSTERITE%|%WEHRLITE%|%LHERZOLITE%|%HARZBURGITE%|%PYROXENITE%' ";
+				condition =	" and array_to_string(m.taxon,',') SIMILAR TO '%PERIDOTITE%|%ECLOGITE%|%DUNITE%|%WEBSTERITE%|%WEHRLITE%|%LHERZOLITE%|%HARZBURGITE%|%PYROXENITE%' ";
 			} 
+			
+			
 
 			if(selectedVariableTypeCodes.length > 0) {
 				String codes = "";

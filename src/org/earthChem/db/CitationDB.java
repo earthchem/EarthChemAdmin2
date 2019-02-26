@@ -160,7 +160,16 @@ public class CitationDB {
 	}
 	
 	public static void updateDOI(Citation c) {
-		String q = "update citation_external_identifier set citation_external_identifier ='"+c.getDoi()+"' where citation_num ="+c.getCitationNum();
+
+		String q = "select citation_num from citation_external_identifier where citation_num = "+c.getCitationNum();
+		if(DBUtil.getNumber(q)==null) {
+			q ="INSERT INTO citation_external_identifier values (nextval('citation_external_identifier_bridge_num_seq'),"+
+					c.getCitationNum()+",3,'"+c.getDoi()+"','http://doi.org/"+c.getDoi()+"')";
+		}
+		else {
+			q = "update citation_external_identifier set citation_external_identifier ='"+c.getDoi()+"' where citation_num ="+c.getCitationNum();			
+		}
+		System.out.println("bc-u "+q);
 		DBUtil.update(q);
 	}
 	

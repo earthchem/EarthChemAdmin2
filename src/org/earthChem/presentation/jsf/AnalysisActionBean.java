@@ -52,10 +52,7 @@ public class AnalysisActionBean implements Serializable {
 	
 
 	public void lookup() {
-	//	actionList = ActionDB.getActionList(citationNum);
-		
-		
-		actionList = new ArrayList<Action>();
+			actionList = new ArrayList<Action>();
 		
 			Action ac = new Action();
 			ac.setMethodNum(3);
