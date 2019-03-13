@@ -6,6 +6,15 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"> 
 
 <h:form id="downloadSheet" enctype="multipart/form-data">
+  <h:panelGrid columns="6">
+<h4>GMA Download:</h4>
+	<p:commandButton process="@form" value="item_codeA_new" ajax="false" actionListener="#{downloadFile.download_item_codeA_new}" />
+	<p:commandButton process="@form" value="stations_new" ajax="false" actionListener="#{downloadFile.download_stations_new}" />
+	<p:commandButton process="@form" value="expeditions_new" ajax="false" actionListener="#{downloadFile.download_expeditions_new}" />
+	<p:commandButton process="@form" value="pdb_dataC_new" ajax="false" actionListener="#{downloadFile.download_pdb_dataC_new}" />
+	<p:commandButton process="@form" value="locations_new" ajax="false" actionListener="#{downloadFile.download_locations_new}" />
+</h:panelGrid>
+	
   <h:panelGrid columns="2" cellpadding="5">
   <p:outputLabel value="Query:" />
  <p:selectOneMenu value="#{downloadFile.query}"> 

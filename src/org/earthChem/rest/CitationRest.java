@@ -29,7 +29,8 @@ import org.earthChem.db.postgresql.hbm.Citation;
  */
 @SuppressWarnings("deprecation")
 public class CitationRest {
-	public static final String DOI_SERVER="http://dx.doi.org/";
+//	public static final String DOI_SERVER="http://dx.doi.org/";
+	public static final String DOI_SERVER="https://api.crossref.org/works/doi/";
 	public static final String VOLUME="volume";
 	public static final String ISSUE="issue";
 	public static final String DOI="DOI";
@@ -51,35 +52,41 @@ public class CitationRest {
 	public Citation getCitationByDoi(String doi) throws InvalidDoiException {
 		Citation result=new Citation();
 		String json=this.getDataFromDoiServer(doi);
-
+		System.out.println("bc-j "+json);
 		if (json == null)
-			return null;
-		JSONObject jo = null;
+			return null;		
+		
 		try
 		{
-			jo = new JSONObject(json.trim());
-			if (jo.has(TITLE))
-				result.setTitle(jo.getString(TITLE).toUpperCase());
+			
+			JSONObject rjo = new JSONObject(json.trim());
+			JSONObject jo = null;
+			String json2 = rjo.getString("message");
+
+			jo = new JSONObject(json2.trim());
+			if (jo.has(TITLE)) {
+				String tt = jo.getString(TITLE).toUpperCase();
+				tt = tt.substring(2, tt.length()-2);
+				result.setTitle(tt.toUpperCase());
+			//	result.setTitle(jo.getString(TITLE).toUpperCase());
+			}
 			if (jo.has(DOI))
 				result.setDoi(jo.getString(DOI));
 			if (jo.has(VOLUME))
 				result.setVolume(jo.getString(VOLUME));
 			if (jo.has(ISSUE))
 				result.setIssue(jo.getString(ISSUE));
-			if (jo.has(CONTAINER_TITLE))
-				result.setJournal(jo.getString(CONTAINER_TITLE).toUpperCase());
+			if (jo.has(CONTAINER_TITLE)) {
+				String tt = jo.getString(CONTAINER_TITLE).toUpperCase();
+				tt = tt.substring(2, tt.length()-2);
+				result.setJournal(tt.toUpperCase());
+			//	result.setJournal(jo.getString(CONTAINER_TITLE).toUpperCase());
+			}
 			if (jo.has(PUBLISHER))
 				result.setPublisher(jo.getString(PUBLISHER));
 			if (jo.has(PAGE))
 			{
 				String pages=jo.getString(PAGE);		
-		/*		if(page.indexOf('-') != -1) {
-				String startPage=page.substring(0, page.indexOf('-'));
-				if(isNumeric(startPage)) result.setFirstPage(new Integer(startPage));	
-				String endPage=page.substring(page.indexOf('-') + 1);
-				if(isNumeric(endPage)) result.setLastPage(new Integer(endPage));
-				} else result.setFirstPage(new Integer(page));
-				*/
 				result.setPages(pages);
 			}
 		
@@ -111,7 +118,6 @@ public class CitationRest {
 				}
 			}
 			
-
 			if(jo.has(AUTHOR)) {
 				JSONArray jsonarray = new JSONArray(jo.getString(AUTHOR));
 					String authors = "";
@@ -175,8 +181,10 @@ public class CitationRest {
 			
 			
 			HttpGet getRequest = new HttpGet(DOI_SERVER +URLEncoder.encode(doi, "UTF-8")); 
-			getRequest.addHeader("accept","application/vnd.citationstyles.csl+json;q=1.0");
-			
+
+		//	getRequest.addHeader("accept","application/vnd.citationstyles.csl+json;q=1.0");
+		
+
 			HttpResponse response = httpClient.execute(getRequest);			
 			
 			if (response.getStatusLine().getStatusCode() == 404) {

@@ -389,6 +389,7 @@ public class DBUtil {
 		 //create column names with variable
 		 Map<String, Integer> map  =new HashMap <String, Integer>();	
 		 String q = "select d.variable_code, d.variable_order "+body+ " group by d.variable_code, d.variable_order order by d.variable_order";
+		
 		 List<Object[]> list = list(q);			
 		 String [] titles = new String[heads.length+list.size()]; 
 		 int k=0; 
@@ -408,6 +409,7 @@ public class DBUtil {
     	try {
     		con = dataSource.getConnection();
     		stmt = con.createStatement();
+    		System.out.println("download query: "+select+body+ " order by d.specimen_code, d.specimen_num");
             rs = stmt.executeQuery(select+body+ " order by d.specimen_code, d.specimen_num");	            
             ResultSetMetaData metadata = rs.getMetaData();
             int cols = metadata.getColumnCount();

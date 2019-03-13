@@ -9,6 +9,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.earthChem.db.DBUtil;
+import org.earthChem.db.GMADB;
 import org.earthChem.db.postgresql.hbm.StringTable;
 //import org.earthChem.dal.ds.Query;
 import org.primefaces.event.FileUploadEvent;
@@ -16,10 +17,31 @@ import org.primefaces.event.FileUploadEvent;
 @ManagedBean(name="downloadFile")
 @SessionScoped
 public class DownloadFile implements Serializable {
-	
+	//convert to text file: org.apache.poi.xssf.extractor.XSSFExcelExtractor
 	private String materialType;
 	private String [] selectedVariableTypeCodes;
 	private String query;
+	
+	public void download_item_codeA_new() {		
+		createFile(GMADB.item_codeA_new(), "item_codeA_new.xlsx"); 
+	} 
+	
+	public void download_stations_new() {
+		createFile(GMADB.stations_new(), "stations_new.xlsx"); 
+	}
+	
+	public void download_expeditions_new() {
+		createFile(GMADB.expeditions_new(), "expeditions_new.xlsx"); 
+	}
+	
+	public void download_pdb_dataC_new() {
+		createFile(GMADB.pdb_dataC_new(), "pdb_dataC_new.xlsx"); 
+	}
+	
+	public void download_locations_new() {
+		createFile(GMADB.locations_new(), "locations_new.xlsx"); 
+	}
+	
 	
 	public void download() {
 			String fileName=query+"_"+materialType+".xlsx";			
