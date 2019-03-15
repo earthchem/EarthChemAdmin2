@@ -42,19 +42,24 @@ public class GMADB {
 		 	 from mv_specimen_summary ss, sampling_feature_taxonomic_classifier ftc, taxonomic_classifier tc,  taxonomic_classifier tcp 
 		 	 where ss.specimen_num = ftc.sampling_feature_num and ftc.taxonomic_classifier_num = tc.taxonomic_classifier_num  
 		 	 and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num ) rt on rt.station_num = st.station_num ;
-		 
 
-select drs.specimen_num, drs.station_num, drs.specimen_code, rt.taxonomic_classifier_name, mat.material_num,  drs.citation_num, 0 as "DATA_QUALITY_NUM",
-v.variable_code, vt.variable_type_code, drs.unit, drs.value_meas, null as "STDEV"
+		 	 
+query for pdb_dataC_new
+
+select distinct drs.specimen_num, drs.station_num, drs.specimen_code, rt.taxonomic_classifier_name, mat.material_num,  drs.citation_num, 0 as "DATA_QUALITY_NUM",
+v.variable_code, vt.variable_type_code, drs.unit, drs.value_meas, 'null' as "STDEV"
 from mv_dataset_result_summary drs  
 join variable v on v.variable_num = drs.variable_num 
 join variable_type vt on  v.variable_type_num = vt.variable_type_num
-join material mat on mat.material_code = drs.material_code
+join material mat on mat.material_code = drs.material_code and mat.material_num in (3,7,8) 
 left join (select distinct ss.specimen_num, tcp.taxonomic_classifier_name 
 		 	 from mv_specimen_summary ss, sampling_feature_taxonomic_classifier ftc, taxonomic_classifier tc,  taxonomic_classifier tcp 
 		 	 where ss.specimen_num = ftc.sampling_feature_num and ftc.taxonomic_classifier_num = tc.taxonomic_classifier_num  
 		 	 and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num ) rt on rt.specimen_num = drs.specimen_num
-order by drs.specimen_num 	 			 	 
+where  drs.specimen_num between 76001 and 80000
+order by drs.specimen_num;
+
+		 	 
 */
 	
 	
@@ -110,18 +115,7 @@ order by drs.specimen_num
     	 table.setData(listWithRowNum(q));
     	 return table;
     }
-    
-/*    String q = "select st.station_num, st.station_code, st.expedition_num, st.station_num, sc.ct, sc.specimen_nums, stc.method_num, mt.material_codes, mt.variable_types, rt.type_arr "+
- 			" from mv_station_summary st "+
- 			" left join (select station_num, count(*) ct, array_agg(specimen_num) specimen_nums from mv_specimen_summary group by station_num) sc on st.station_num= sc.station_num "+
- 			" left join (select distinct ss.station_num, m.method_num from mv_specimen_summary ss, method m where m.method_code = ss.sampling_technique_code) stc on stc.station_num= st.station_num "+
- 			" left join (select station_num, array_agg(distinct m.material_num) material_codes, array_agg(distinct v.variable_type_num) variable_types from mv_dataset_result_summary drs, material m, variable v "+
- 			 	" where drs.material_code = m.material_code and v.variable_num = drs.variable_num group by station_num) mt on st.station_num= mt.station_num "+
- 		 	 " left join (select distinct ss.station_num, array_agg(distinct tc.parent_taxonomic_classifier_num) type_arr from mv_specimen_summary ss, sampling_feature_taxonomic_classifier ftc, taxonomic_classifier tc "+
- 			 	" where ss.specimen_num = ftc.sampling_feature_num and ftc.taxonomic_classifier_num = tc.taxonomic_classifier_num "+
- 			 	" and tc.taxonomic_classifier_type_cv = 'Rock Class' group by ss.station_num) rt on rt.station_num = st.station_num ";
-*/
-    
+  
       
     public static StringTable stations_new( ) {    	
 	   	 String[] heads = {"station num","station id","expedition number","location number","total samples","sample number list",
@@ -204,10 +198,21 @@ order by drs.specimen_num
    }
     
     public static StringTable pdb_dataC_new( ) {    	
-      	 String[] heads = {"LOCATION_NUM","LONGITUDE","LATITUDE","ELEVATION_MIN","ELEVATION_MAX"};    	 
+      	 String[] heads = {"specimen_num","station_num","specimen_code","rockclass","material_num","citation_num","DATA_QUALITY","variable_code","variable_type_code","unit","value_meas","STDEV"};    	 
       	 StringTable table = new StringTable();
       	 table.setHeads(heads);
-     	 String q = "select distinct s.station_num, split_part( split_part(split_part(split_part(s.geometry_text,'(',2), ' ', 2), ')', 1), ',',1) \"LATITUDE\", split_part(split_part(s.geometry_text,'(',2), ' ', 1) \"LONGITUDE\", s.elevation_min, s.elevation_max from mv_station_summary s order by s.station_num";     	
+    	 String q = "select distinct drs.specimen_num, drs.station_num, drs.specimen_code, rt.taxonomic_classifier_name, mat.material_num,  drs.citation_num, 0 as DATA_QUALITY, "+
+    			 " v.variable_code, vt.variable_type_code, drs.unit, drs.value_meas, 'null' as STDEV "+
+    			 " from mv_dataset_result_summary drs  "+
+    			 " join variable v on v.variable_num = drs.variable_num "+ 
+    			 " join variable_type vt on  v.variable_type_num = vt.variable_type_num "+
+    			 " join material mat on mat.material_code = drs.material_code and mat.material_num in (3,7,8) "+ 
+    			 " left join (select distinct ss.specimen_num, tcp.taxonomic_classifier_name "+
+    			 	"  from mv_specimen_summary ss, sampling_feature_taxonomic_classifier ftc, taxonomic_classifier tc,  taxonomic_classifier tcp "+
+    				"  where ss.specimen_num = ftc.sampling_feature_num and ftc.taxonomic_classifier_num = tc.taxonomic_classifier_num  "+
+    			 	"  and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num ) rt on rt.specimen_num = drs.specimen_num "+
+    			" where  drs.specimen_num < 50000 "+
+    			 	" order by drs.specimen_num";
      	 table.setData((ArrayList<Object[]>) list(q));
       	 return table;
       }
@@ -216,7 +221,7 @@ order by drs.specimen_num
      	 String[] heads = {"LOCATION_NUM","LONGITUDE","LATITUDE","ELEVATION_MIN","ELEVATION_MAX"};    	 
      	 StringTable table = new StringTable();
      	 table.setHeads(heads);
-    	 String q = "select distinct s.station_num, split_part( split_part(split_part(split_part(s.geometry_text,'(',2), ' ', 2), ')', 1), ',',1) \"LATITUDE\", split_part(split_part(s.geometry_text,'(',2), ' ', 1) \"LONGITUDE\", s.elevation_min, s.elevation_max from mv_station_summary s order by s.station_num";     	
+    	 String q = "select distinct s.station_num, split_part(split_part(s.geometry_text,'(',2), ' ', 1) \"LONGITUDE\", split_part( split_part(split_part(split_part(s.geometry_text,'(',2), ' ', 2), ')', 1), ',',1) \"LATITUDE\", s.elevation_min, s.elevation_max from mv_station_summary s order by s.station_num";     	
     	 table.setData((ArrayList<Object[]>) list(q));
      	 return table;
      }
