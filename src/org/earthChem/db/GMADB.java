@@ -28,11 +28,15 @@ public class GMADB {
 	private static Map<String, Integer> variableTypeMap = new HashMap<String, Integer>();
 	private static Map<String, Integer> materialMap = new HashMap<String, Integer>();
 	private static Map<String, Integer> rockclassMap = new HashMap<String, Integer>();
-/*	
- 
- select station_num, count(*) ct, array_to_string(array_agg(specimen_num),',') specimen_nums from mv_specimen_summary group by station_num
 
-	 select st.station_num, st.station_code, st.expedition_num, st.station_num, 0 as "samp_technique_num",  mat.material_code, vt.variable_type_code, 0 as "ALTERATION_NUM", rt.taxonomic_classifier_name
+	
+	
+/*	
+Query for stations_new pl part 1:
+select station_num, count(*) ct, array_to_string(array_agg(specimen_num),',') specimen_nums from mv_specimen_summary group by station_num
+
+Query for stations_new pl part 2:
+select st.station_num, st.station_code, st.expedition_num, st.station_num, 0 as "samp_technique_num",  mat.material_code, vt.variable_type_code, 0 as "ALTERATION_NUM", rt.taxonomic_classifier_name
 		 from mv_station_summary st 
 		 left join (select  distinct station_num,material_code from mv_dataset_result_summary where material_code in ('ROCK','WR','GL','MIN')) mat  on mat.station_num= st.station_num  
 	 	 left join (select distinct station_num, vt.variable_type_code from mv_dataset_result_summary drs,  variable v, variable_type vt  
@@ -44,8 +48,7 @@ public class GMADB {
 		 	 and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num ) rt on rt.station_num = st.station_num ;
 
 		 	 
-query for pdb_dataC_new
-
+Query for pdb_dataC_new pl:
 select distinct drs.specimen_num, drs.station_num, drs.specimen_code, rt.taxonomic_classifier_name, mat.material_num,  drs.citation_num, 0 as "DATA_QUALITY_NUM",
 v.variable_code, vt.variable_type_code, drs.unit, drs.value_meas, 'null' as "STDEV"
 from mv_dataset_result_summary drs  
@@ -58,13 +61,8 @@ left join (select distinct ss.specimen_num, tcp.taxonomic_classifier_name
 		 	 and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num ) rt on rt.specimen_num = drs.specimen_num
 where  drs.specimen_num between 76001 and 80000
 order by drs.specimen_num;
-
 		 	 
 */
-	
-	
-	
-	
 	
 	private static DataSource dataSource;
 
