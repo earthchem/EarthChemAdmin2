@@ -89,6 +89,8 @@ public class SampleBean2 implements Serializable {
 		if(status == null) {
 			viewAnnList = AnnotationDB.getTephraAnnotationView(sample.getSampleNum());
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
+			citationNum = null;
+			
 		} else {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
 		}	
@@ -137,6 +139,10 @@ public class SampleBean2 implements Serializable {
 		
 		TephraDB.saveRelations(sample.getSampleNum(), sfTypeNum, selectedSf);
 		relatedSf = TephraDB.getRelations(sample.getSampleNum());
+		sfTypeNum = null;
+		relationshipCode = null;
+		selectedSf = null;
+		sfList = null;
 	}
 
 	public void deleteRelation(Integer relatedFeatureNum) {
@@ -158,8 +164,12 @@ public class SampleBean2 implements Serializable {
 	public List<Sample> getSampleList() {
 		String sfCode =(String) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("sfCode");
 		String alias =(String) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("sfAlias");
-		if(sfCode != null) sampleList = TephraDB.getSampleList(sfCode);
-		else if (alias != null) sampleList = TephraDB.getSampleListByAlias(alias);
+		if(sfCode != null) {
+			sampleList = TephraDB.getSampleList(sfCode);
+		}
+		else if (alias != null) {
+			sampleList = TephraDB.getSampleListByAlias(alias);
+		}
 		return sampleList;
 	}
 	public void setSampleList(List<Sample> sampleList) {

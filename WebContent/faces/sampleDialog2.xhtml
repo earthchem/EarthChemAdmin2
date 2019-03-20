@@ -48,7 +48,7 @@
 	    <p:column headerText="Annotation Type"> <h:outputText value="#{e.annotationTypeName}"/></p:column>     
 	    <p:column headerText="Annotation Text"> <h:inputText value="#{e.annotationText}"/></p:column>     
 </p:dataTable>	
-<p:commandButton value="Add"  actionListener="#{sampleBean2.addAnnotation}" update="annotationView"> 
+<p:commandButton value="Add"  actionListener="#{sampleBean2.addAnnotation}" update="moreInfo annotationView"> 
 		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
 </p:commandButton>
       
@@ -62,7 +62,7 @@
      	<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		
      </p:commandButton>   </p:column>
 </p:dataTable>	<br/>
-<h:panelGroup >
+<h:panelGroup id="editTC">
   <p:outputLabel value="Citation Num: "/>
  <p:inputText  value="#{sampleBean2.taxonomicClassifier.citationNum}" style = "width:80px;"/>   
  <p:spacer width="10" height="10" />
@@ -71,7 +71,7 @@
    			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
    			<f:selectItems value="#{sampleBean2.tcOptions}" /> 
  </p:selectOneMenu><p:spacer width="5" height="10" />
- <p:commandButton value="Add"  actionListener="#{sampleBean2.addTc}" update="tcTable" > 
+ <p:commandButton value="Add"  actionListener="#{sampleBean2.addTc}" update="tcTable editTC" > 
 		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
 </p:commandButton>
 </h:panelGroup>    
