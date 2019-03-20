@@ -90,6 +90,8 @@
       <auth-constraint>
          <role-name>Manager</role-name>
          <role-name>Admin</role-name>
+           <role-name>Petdb</role-name>
+             <role-name>Tephra</role-name>
       </auth-constraint>
       
       <user-data-constraint>
@@ -107,6 +109,12 @@
     </security-role>
     <security-role>
       <role-name>Admin</role-name>
+    </security-role>
+    <security-role>
+      <role-name>Petdb</role-name>
+    </security-role>
+    <security-role>
+      <role-name>Tephra</role-name>
     </security-role>
    <session-config>
      <session-timeout>-1</session-timeout>

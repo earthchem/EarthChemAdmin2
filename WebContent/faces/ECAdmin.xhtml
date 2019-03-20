@@ -9,7 +9,21 @@
         <title>EarthChemDBAdmin</title>
    	<link href="#{request.contextPath}/css/basic.css" rel="stylesheet"></link>	
     </h:head>
-    <h:body> 
+     <h:body rendered="#{facesContext.externalContext.isUserInRole(database) eq 'false' and  facesContext.externalContext.isUserInRole('Admin') eq 'false'}">
+     <h:form>
+     	<h3> Permission denied!</h3>  
+ 	<h:panelGrid columns="2" style="margin-top:10px" cellpadding="3">           
+        <p:outputLabel value="Database:" />     <p:outputLabel value="#{database}" />   
+        <p:outputLabel value="User Role:" />  
+    <p:outputLabel value="Petdb" rendered="#{facesContext.externalContext.isUserInRole('Petdb')}"/>  
+         <p:outputLabel value="Tephra" rendered="#{facesContext.externalContext.isUserInRole('Tephra')}"/>  
+    
+     	</h:panelGrid>
+    
+     	<p:commandButton value="Try again!" action="/login.xhtml?faces-redirect=true"  />
+     	</h:form>	
+     </h:body> 
+    <h:body rendered="#{facesContext.externalContext.isUserInRole(database) or facesContext.externalContext.isUserInRole('Admin')}"> 
   <p:messages id="mainMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
 
 <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
@@ -79,11 +93,10 @@
         <p:tab titletip="Analysis Action" title="Analysis">
           <ui:fragment><ui:include src="analysisActionList.xhtml" /></ui:fragment>
         </p:tab> 
-    
+       
         <p:tab titletip="Classification" title="Classification">
           <ui:fragment><ui:include src="rockclassList.xhtml" /></ui:fragment>
         </p:tab>  
-
          <p:tab titletip="Variable" title="Variable">
           <ui:fragment><ui:include src="variableList.xhtml" /></ui:fragment>
         </p:tab>     
@@ -99,12 +112,9 @@
          <p:tab titletip="Statistics.xhtml" title="Statistics">
           <ui:fragment><ui:include src="entityStatisticsList.xhtml" /></ui:fragment>     
         </p:tab> 
-       
-        <p:tab titletip="Download Sheet" title="Download">
+      <p:tab titletip="Download Sheet" title="Download" rendered="#{!(facesContext.externalContext.isUserInRole('Tephra'))}">
           <ui:fragment><ui:include src="downloadSheet.xhtml" /></ui:fragment>     
         </p:tab> 
-  
-       
     </p:tabView>
  
         <p:confirmDialog global="true">

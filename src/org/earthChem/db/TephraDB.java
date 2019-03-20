@@ -6,64 +6,110 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import org.earthChem.db.postgresql.hbm.FeatureOfInterest;
 import org.earthChem.db.postgresql.hbm.Organization;
+import org.earthChem.db.postgresql.hbm.RelatedFeature;
 import org.earthChem.db.postgresql.hbm.Sample;
 import org.earthChem.db.postgresql.hbm.SamplingFeature;
 import org.earthChem.db.postgresql.hbm.Station;
 import org.earthChem.db.postgresql.hbm.TaxonomicClassifier;
 import org.earthChem.presentation.jsf.SampleBean.ColumnModel;
 
-public class SampleDB {
+public class TephraDB {
 	
-public static List<Sample> getSampleList(String search) {
-		
-		List<Sample> list = new ArrayList<Sample>();
-		String	q = "select sp.sampling_feature_num, sp.sampling_feature_code, s.sampling_feature_num, s.sampling_feature_code, ei.sampling_feature_external_id "+
+//------ relationship -------------------	
+	public static SelectItem[] getRelationList(Integer type, String search) {
+		String	q = "select s.sampling_feature_num, s.sampling_feature_code "+
 				" from sampling_feature s "+
-				" left join related_feature r on  s.sampling_feature_num = r.sampling_feature_num  "+
-				" left join sampling_feature sp on sp.sampling_feature_num =  r.related_sampling_feature_num "+							
-				" left join sampling_feature_external_identifier ei on ei.sample_feature_num = s.sampling_feature_num and ei.external_identifier_system_num = 2 "+
-				" where s.sampling_feature_type_num = 1 and sp.sampling_feature_type_num = 3 and s.sampling_feature_code like '%"+search+"%' "+
-				" order by  s.sampling_feature_code";
-		 List<Object[]> olist = DBUtil.getECList(q);
+				" where s.sampling_feature_type_num = "+type+" and s.sampling_feature_code like '%"+search+"%' "+
+				" order by s.sampling_feature_code";
+
+			return DBUtil.getSelectItems(q);
+	}
+	
+	public static String saveRelations(Integer sfNum, Integer sfType, List<Integer> list) {
+		Integer relationType = (sfType == 3)? 22:14;
+		List<String> queries = new ArrayList<String>();
+		for(Integer n: list) {
+			String	q = "insert into related_feature ( sampling_feature_num, relationship_type_num, related_sampling_feature_num) values " + 
+				" ("+sfNum+","+relationType+","+n+")";
+			queries.add(q);			
+		}
+		return DBUtil.updateList(queries);
+	}
+	
+	
+	public static List<RelatedFeature> getRelations(Integer num) {
+		
+		List<RelatedFeature> list = new ArrayList<RelatedFeature>();				
+		String	q = "  select r.related_feature_num, sp.sampling_feature_code, t.relationship_type_name" + 
+				" from related_feature r, sampling_feature sp, relationship_type t  where r.sampling_feature_num = " + num+
+				" and t.relationship_type_num = r.relationship_type_num and sp.sampling_feature_num = r.related_sampling_feature_num "+
+				" order by  r.relationship_type_num ";		
+		List<Object[]> olist = DBUtil.getECList(q);
 		for(Object[] arr: olist) {
-			Sample e = new Sample();
-			if(arr[0] != null) e.setStationNum((Integer)arr[0]);
-			if(arr[1] != null) e.setStationName(""+arr[1]);
-			e.setSampleNum((Integer)arr[2]);
-			e.setSamplingFeatureCode(""+arr[3]);
-			if(arr[4] != null) e.setIgsn(""+arr[4]);
+			RelatedFeature e = new RelatedFeature();
+			e.setRelatedFeatureNum((Integer)arr[0]);
+			e.setRelatedSamplingFeatureCode(""+arr[1]);
+			e.setRelationshipTypeCode(""+arr[2]);
 			list.add(e);
 		}
 		return list;
 	}
 	
+	public static String deleteRelation(Integer relatedFeatureNum) {
+		return DBUtil.update("delete from related_feature where related_feature_num="+relatedFeatureNum);
+	}
+	
+	//------------------------ end of relationship 
+	
+public static List<Sample> getSampleList(String search) {
+		
+		List<Sample> list = new ArrayList<Sample>();				
+		String	q = "select s.sampling_feature_num, s.sampling_feature_code, ei.sampling_feature_external_id, p.material_num "+
+		 " from sampling_feature s 		"+					
+		 " left join sampling_feature_external_identifier ei on ei.sample_feature_num = s.sampling_feature_num and ei.external_identifier_system_num = 2 "+
+		 " left join specimen p on p.sampling_feature_num = s.sampling_feature_num "+
+		 " where s.sampling_feature_type_num = 1 and s.sampling_feature_code like upper('%"+search+"%') order by  s.sampling_feature_code";
+		
+		 List<Object[]> olist = DBUtil.getECList(q);
+		for(Object[] arr: olist) {
+			Sample e = new Sample();
+			e.setSampleNum((Integer)arr[0]);
+			e.setSamplingFeatureCode(""+arr[1]);
+			if(arr[2] != null) e.setIgsn(""+arr[2]);
+			e.setMaterialNum((Integer)arr[3]);
+			list.add(e);
+		}
+		return list;
+	}
+
 public static List<Sample> getSampleListByAlias(String search) {
 	
-	List<Sample> list = new ArrayList<Sample>();
-	String	q = "select sp.sampling_feature_num, sp.sampling_feature_code, s.sampling_feature_num, s.sampling_feature_code, ei.sampling_feature_external_id "+
-			" from sampling_feature s "+
-			" left join related_feature r on  s.sampling_feature_num = r.sampling_feature_num  "+
-			" left join sampling_feature sp on sp.sampling_feature_num =  r.related_sampling_feature_num "+							
-			" left join sampling_feature_external_identifier ei on ei.sample_feature_num = s.sampling_feature_num and ei.external_identifier_system_num = 2 "+
-			" join sampling_feature_annotation sa on sa.sampling_feature_num = s.sampling_feature_num " + 
-			" join annotation a on a.annotation_num = sa.annotation_num "+
-			" where s.sampling_feature_type_num = 1 and sp.sampling_feature_type_num = 3 and a.annotation_text like '%"+search+"%' "+
-			" order by  s.sampling_feature_code";
+	List<Sample> list = new ArrayList<Sample>();				
+	String	q = "select s.sampling_feature_num, s.sampling_feature_code, ei.sampling_feature_external_id, p.material_num "+
+	 " from sampling_feature s 		"+					
+	 " left join sampling_feature_external_identifier ei on ei.sample_feature_num = s.sampling_feature_num and ei.external_identifier_system_num = 2 "+
+	 " left join specimen p on p.sampling_feature_num = s.sampling_feature_num "+
+	 " join sampling_feature_annotation sa on sa.sampling_feature_num = s.sampling_feature_num " + 
+	 " join annotation a on a.annotation_num = sa.annotation_num "+
+	 " where s.sampling_feature_type_num = 1 and a.annotation_text  like upper('%"+search+"%') order by  s.sampling_feature_code";
+	
 	 List<Object[]> olist = DBUtil.getECList(q);
 	for(Object[] arr: olist) {
 		Sample e = new Sample();
-		if(arr[0] != null) e.setStationNum((Integer)arr[0]);
-		if(arr[1] != null) e.setStationName(""+arr[1]);
-		e.setSampleNum((Integer)arr[2]);
-		e.setSamplingFeatureCode(""+arr[3]);
-		if(arr[4] != null) e.setIgsn(""+arr[4]);
+		e.setSampleNum((Integer)arr[0]);
+		e.setSamplingFeatureCode(""+arr[1]);
+		if(arr[2] != null) e.setIgsn(""+arr[2]);
+		e.setMaterialNum((Integer)arr[3]);
 		list.add(e);
 	}
 	return list;
 }
+
+
 
 public static Sample getSample(String code) {
 		String	q = "select s.sampling_feature_num, s.sampling_feature_name, s.sampling_feature_description, ei.sampling_feature_external_id "+
@@ -99,19 +145,24 @@ public static Sample getSample(String code) {
 		}
 	}
 	
-	public static List<TaxonomicClassifier> getTaxonomicClassifier(Integer sampleNum) {		
+	public static List<TaxonomicClassifier> getTaxonomicClassifier(Integer sampleNum, Integer materialNum) {		
 		List<TaxonomicClassifier> list = new ArrayList<TaxonomicClassifier>();
-		String q = "select s.bridge_num, s.citation_num, t.taxonomic_classifier_name, tp.taxonomic_classifier_name "+
+		String q = null;
+		if(materialNum == 6) {
+			q = "select s.bridge_num, s.citation_num, t.taxonomic_classifier_name from sampling_feature_taxonomic_classifier s, taxonomic_classifier t " + 
+				" where s.taxonomic_classifier_num = t.taxonomic_classifier_num and s.sampling_feature_num = "+sampleNum+" order by citation_num ";
+		} else {
+			q =	"select s.bridge_num, s.citation_num, concat(t.taxonomic_classifier_name,' (',tp.taxonomic_classifier_name,')') "+
 				" from sampling_feature_taxonomic_classifier s, taxonomic_classifier t, taxonomic_classifier tp "+
 				" where s.taxonomic_classifier_num = t.taxonomic_classifier_num and tp.taxonomic_classifier_num = t.parent_taxonomic_classifier_num "+
 				" and s.sampling_feature_num = "+sampleNum+" order by citation_num";
+		}
 		List<Object[]> olist = DBUtil.getECList(q);
 		for(Object[] arr: olist) {	
 			TaxonomicClassifier t = new TaxonomicClassifier();
 			t.setBridgeNum((Integer)arr[0]);
 			t.setCitationNum((Integer)arr[1]);
 			t.setClassifierName(""+arr[2]);
-			t.setParentName(""+arr[3]);
 			list.add(t);
 		}
 		
@@ -125,13 +176,8 @@ public static Sample getSample(String code) {
 	
 	public static String addTaxonomicClassifier(TaxonomicClassifier t, Integer sampleNum) {		
 		String error = null;
-		String q ="delete from sampling_feature_taxonomic_classifier s where s.sampling_feature_num = "+sampleNum+" and s.citation_num ="+t.getCitationNum();
-		error = DBUtil.update(q);
-		if(error != null) return error; 
-		Integer	tcNum = getTaxonomicClassifierNum(DBUtil.StringValue(t.getClassifierName()), t.getParentNum());		
-		q = "INSERT INTO sampling_feature_taxonomic_classifier "+
-			" (bridge_num, sampling_feature_num, taxonomic_classifier_num, citation_num) "+
-			" VALUES (nextVal('sampling_feature_taxonomic_classifier_bridge_num_seq'),"+sampleNum+","+tcNum+","+t.getCitationNum()+")";
+		String q = "INSERT INTO sampling_feature_taxonomic_classifier (sampling_feature_num, taxonomic_classifier_num, citation_num) "+
+			" VALUES ("+sampleNum+","+t.getClassifierNum()+","+t.getCitationNum()+")";
 		error = DBUtil.update(q);
 		if(error != null) return error; 
 		return DBUtil.update("");
@@ -141,42 +187,28 @@ public static Sample getSample(String code) {
 		String error = null;
 		Integer num = e.getSampleNum(); 
 		String code = DBUtil.StringValue(e.getSamplingFeatureCode());
-		String name = DBUtil.StringValue(e.getSamplingFeatureName());
-		String desc = DBUtil.StringValue(e.getSamplingFeatureDescription());
 		String igsn = DBUtil.StringValue(e.getIgsn());
-		Integer stationNum = e.getStationNum();
-		String aliasText = DBUtil.StringValue(e.getAliasText());
-		String sampleCommentText = DBUtil.StringValue(e.getSampleCommentText());
-		String rockclassDetailText = DBUtil.StringValue(e.getRockclassDetailText());
-		String rocktextureText = DBUtil.StringValue(e.getRocktextureText());
-		String geologicAgeText = DBUtil.StringValue(e.getGeologicAgeText());
-		String alterationText = DBUtil.StringValue(e.getAlterationText());
-		String alterationTypeText = DBUtil.StringValue(e.getAlterationTypeText());
 		if(num == null) {
 			num = DBUtil.getNumber("select nextVal('sampling_feature_sampling_feature_num_seq')");
-			String q = "insert into sampling_feature (sampling_feature_num, sampling_feature_type_num, sampling_feature_code, sampling_feature_name, sampling_feature_description) "+
-					" VALUES ("+num+",1,"+code+","+name+","+desc+")";
+			String q = "insert into sampling_feature (sampling_feature_num, sampling_feature_type_num, sampling_feature_code) VALUES ("+num+",1,"+code+")";
 			error = DBUtil.update(q);
 			if(error != null) return error;
 			
-			q = "INSERT INTO specimen values ("+num+",7)";
+			q = "INSERT INTO specimen values ("+num+","+e.getMaterialNum()+")";
 			error = DBUtil.update(q);		
 			if(error != null) return error; 
-			
-			
-			if(stationNum != null) {
-				q = "insert into related_feature (related_feature_num, sampling_feature_num, relationship_type_num, related_sampling_feature_num) values "+
-						" (nextVal('related_feature_related_feature_num_seq'),"+num+",22,"+stationNum+")";
-					error = DBUtil.update(q);
-			}
-
 			if(igsn != null) error = insertIGSN(igsn,num) ;
 		} 	
 		else { 	
 			String q = "UPDATE sampling_feature set sampling_feature_code ="+code+" where sampling_feature_num="+num;	
 			error = DBUtil.update(q);
-			if(error != null) return error; 		
+			if(error != null) return error; 	
 			
+			if(e.getMaterialNum() != null) 
+				q = "UPDATE specimen set material_num ="+e.getMaterialNum()+" where sampling_feature_num="+num;
+		 	error = DBUtil.update(q);
+		 	
+			if(error != null) return error; 
 			if(igsn != null) {
 				Integer igsnBridgeNum = getIGSN(num);
 				if(igsnBridgeNum == null) error = insertIGSN(igsn,num) ;
@@ -187,25 +219,11 @@ public static Sample getSample(String code) {
 					if(error != null) return error; 		
 				}					
 			}
-			
-			if(stationNum != null){
-				q = null;
-				Integer relatedNum = DBUtil.getNumber("SELECT related_feature_num FROM related_feature where  relationship_type_num = 22 and sampling_feature_num ="+num);
-				if(relatedNum==null) {
-					q = "insert into related_feature (related_feature_num, sampling_feature_num, relationship_type_num, related_sampling_feature_num) values "+
-							" (nextVal('related_feature_related_feature_num_seq'),"+num+",22,"+stationNum+")";
-					error = DBUtil.update(q);
-				}
-				else {
-					q = "UPDATE related_feature SET related_sampling_feature_num = "+stationNum+" WHERE related_feature_num ="+num;
-				}
-				error = DBUtil.update(q);				
-			}
 		}
 		return error; 		
 	}
 
-	
+	/*
 	private static Integer getTaxonomicClassifierNum(String name, Integer parentNum) {
 		String q ="select c.taxonomic_classifier_num from taxonomic_classifier c where c.taxonomic_classifier_type_cv = 'Rock Class' "+
 				" and c.parent_taxonomic_classifier_num = "+parentNum+" and c.taxonomic_classifier_name ="+name;
@@ -219,7 +237,7 @@ public static Sample getSample(String code) {
 		}
 		return tcNum;
 	}
-	
+	*/
 	private static Integer getIGSN(Integer sampleNum) {
 		return DBUtil.getNumber("select bridge_num from sampling_feature_external_identifier where external_identifier_system_num =  2 and sample_feature_num ="+sampleNum);
 	}
@@ -287,4 +305,7 @@ public static Sample getSample(String code) {
 		slist.add(s);
 		return slist;
 	} 
+
+	
+
 }

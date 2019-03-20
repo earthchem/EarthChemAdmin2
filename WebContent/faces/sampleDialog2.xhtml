@@ -1,0 +1,119 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<h:form id="sampleEditForm2">	
+ 
+<p:messages for="sampleEditMsg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
+<h:panelGrid columns = "2" border = "0" cellpadding = "2" cellspacing = "2"> 	
+    <p:outputLabel value="Sample Code*: "/>       
+      <p:inputText  value="#{sampleBean2.sample.samplingFeatureCode}" style = "width:400px;"/>     
+       <p:outputLabel value="IGSN: "/> 
+      <p:inputText  value="#{sampleBean2.sample.igsn}" style = "width:400px;"/>
+
+    <p:outputLabel value="Material: "/> 
+  <p:selectOneMenu value="#{sampleBean2.sample.materialNum}" >    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItems value="#{optionBean.materials}" /> 
+ </p:selectOneMenu>
+    </h:panelGrid>  
+     <h:panelGrid columns = "4" border = "0" cellpadding = "2" cellspacing = "2">
+	<p:commandButton value="Save"  actionListener="#{sampleBean2.save}" > 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>
+	<p:commandButton value="Cancel"  process="@this" actionListener="#{sampleBean2.cancel}" >
+		<p:confirm header="Confirmation" message="Are you sure you want to discard the changes?" icon="ui-icon-alert"/>		  
+	</p:commandButton>	
+</h:panelGrid>
+
+ 
+<p:accordionPanel id="moreInfo" activeIndex="null">
+<p:tab title="Extra Metadata"> 
+<p:dataTable id="annotationView" var="e" value="#{sampleBean2.viewAnnList}"  scrollable="true" scrollHeight="100" cellpadding = "0" cellspacing = "0">   
+	    <p:column headerText="Citation Num"> <h:outputText value="#{e.dataSourceNum}"/></p:column>     
+	    <p:column headerText="Annotation Type"> <h:outputText value="#{e.annotationTypeName}"/></p:column>     
+	    <p:column headerText="Annotation Text"> <h:outputText value="#{e.annotationText}"/></p:column>  
+	    <p:column style = "width:50px;">
+			<p:commandButton value="delete"><p:ajax listener="#{sampleBean2.deleteAnnotation(e.sfAnnotationNum)}"  update="annotationView" />	
+			<p:confirm header="Confirmation" message="Are you sure you want to delete this annotation?" icon="ui-icon-alert"/></p:commandButton>   
+	   </p:column> 
+</p:dataTable>	
+<h:panelGrid columns = "2">
+<p:outputLabel value="Citation Num: "/> <p:inputText  value="#{sampleBean2.citationNum}" style = "width:80px;"/> 
+</h:panelGrid>
+ <p:dataTable var="e" value="#{sampleBean2.editedAnnList}"  scrollable="true" scrollHeight="150" cellpadding = "0" cellspacing = "0">   
+	    <p:column headerText="Annotation Type"> <h:outputText value="#{e.annotationTypeName}"/></p:column>     
+	    <p:column headerText="Annotation Text"> <h:inputText value="#{e.annotationText}"/></p:column>     
+</p:dataTable>	
+<p:commandButton value="Add"  actionListener="#{sampleBean2.addAnnotation}" update="annotationView"> 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+</p:commandButton>
+      
+</p:tab>
+
+<p:tab title="Taxonomic Classifiers"> 
+<p:dataTable id="tcTable" var="t" value="#{sampleBean2.tcList}"  scrollable="true"  cellpadding = "0" cellspacing = "0">   
+	    <p:column headerText="Citation Num"> <h:outputText value="#{t.citationNum}"/></p:column>     
+	    <p:column headerText="Taxonomic Classifiers"> <h:outputText value="#{t.classifierName}"/></p:column>     
+    	<p:column><p:commandButton value="Delete" actionListener="#{sampleBean2.deleteTc(t.bridgeNum)}"  update="tcTable">   
+     	<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		
+     </p:commandButton>   </p:column>
+</p:dataTable>	<br/>
+<h:panelGroup >
+  <p:outputLabel value="Citation Num: "/>
+ <p:inputText  value="#{sampleBean2.taxonomicClassifier.citationNum}" style = "width:80px;"/>   
+ <p:spacer width="10" height="10" />
+ <p:outputLabel value="Taxonomic Classifiers: "/>
+  <p:selectOneMenu value="#{sampleBean2.taxonomicClassifier.classifierNum}" >    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItems value="#{sampleBean2.tcOptions}" /> 
+ </p:selectOneMenu><p:spacer width="5" height="10" />
+ <p:commandButton value="Add"  actionListener="#{sampleBean2.addTc}" update="tcTable" > 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+</p:commandButton>
+</h:panelGroup>    
+</p:tab>		
+
+<p:tab title="Relationships"> 
+<h:panelGroup id ="relationship">
+<p:dataTable var="t" value="#{sampleBean2.relatedSf}"  scrollable="true"  cellpadding = "0" cellspacing = "0">   
+	    <p:column headerText="Related Feature"> <h:outputText value="#{t.relatedSamplingFeatureCode}"/></p:column>     
+	    <p:column headerText="Relationship Type"> <h:outputText value="#{t.relationshipTypeCode}"/></p:column>     
+    	<p:column><p:commandButton value="Delete" actionListener="#{sampleBean2.deleteRelation(t.relatedFeatureNum)}"  update=":eca:sampleEditForm2:moreInfo:relationship">   
+     	<p:confirm header="Confirmation" message="Are you sure you want to delete it?" icon="ui-icon-alert"/>		
+     </p:commandButton>   </p:column>
+</p:dataTable>	
+<br/>
+  <p:outputLabel value="Relationship Type*: "/>
+   <p:selectOneMenu value="#{sampleBean2.sfTypeNum}" >    
+   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+   			<f:selectItem itemLabel="Station" itemValue="3" />
+   			<f:selectItem itemLabel="Specimen" itemValue="1" />
+ </p:selectOneMenu><p:spacer width="5" height="10" />
+   <p:outputLabel value="Sampling Feature*: "/>
+ <p:inputText  value="#{sampleBean2.relationshipCode}" style = "width:120px;"/>   
+ <p:commandButton value="Lookup"  actionListener="#{sampleBean2.lookupRelationship}" update=":eca:sampleEditForm2:moreInfo:relationship"/> 
+
+ <p:selectManyCheckbox value="#{sampleBean2.selectedSf}" layout="responsive" columns="6">
+        <f:selectItems value="#{sampleBean2.sfList}"/>
+ </p:selectManyCheckbox>
+
+ 
+ <p:commandButton value="Add"  actionListener="#{sampleBean2.addRelationship}" update=":eca:sampleEditForm2:moreInfo:relationship" > 
+		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
+</p:commandButton>
+   </h:panelGroup>  
+</p:tab>
+</p:accordionPanel>
+
+ </h:form>
+
+
+
+
+
+</ui:composition>
+ 

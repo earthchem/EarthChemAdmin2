@@ -33,7 +33,7 @@ public class GMADB {
 	
 /*	
 Query for stations_new pl part 1:
-select station_num, count(*) ct, array_to_string(array_agg(specimen_num),',') specimen_nums from mv_specimen_summary group by station_num
+select station_num, count(*) ct, array_to_string(array_agg(specimen_num),',') specimen_nums from mv_specimen_summary group by station_num order by station_num
 
 Query for stations_new pl part 2:
 select st.station_num, st.station_code, st.expedition_num, st.station_num, 0 as "samp_technique_num",  mat.material_code, vt.variable_type_code, 0 as "ALTERATION_NUM", rt.taxonomic_classifier_name
@@ -45,7 +45,7 @@ select st.station_num, st.station_code, st.expedition_num, st.station_num, 0 as 
 		 left join (select distinct ss.station_num, tcp.taxonomic_classifier_name 
 		 	 from mv_specimen_summary ss, sampling_feature_taxonomic_classifier ftc, taxonomic_classifier tc,  taxonomic_classifier tcp 
 		 	 where ss.specimen_num = ftc.sampling_feature_num and ftc.taxonomic_classifier_num = tc.taxonomic_classifier_num  
-		 	 and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num ) rt on rt.station_num = st.station_num ;
+		 	 and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num ) rt on rt.station_num = st.station_num order by station_num;
 
 		 	 
 Query for pdb_dataC_new pl:
@@ -131,9 +131,11 @@ order by drs.specimen_num;
 	 	 		" left join (select distinct ss.station_num, array_to_string(array_agg(distinct tcp.taxonomic_classifier_name),',') type_arr " + 
 	 			 	" from mv_specimen_summary ss, sampling_feature_taxonomic_classifier ftc, taxonomic_classifier tc,  taxonomic_classifier tcp " + 
 	 			 	" where ss.specimen_num = ftc.sampling_feature_num and ftc.taxonomic_classifier_num = tc.taxonomic_classifier_num " + 
-	 			 	" and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num group by ss.station_num) rt on rt.station_num = st.station_num";
+	 			 	" and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num group by ss.station_num) rt on rt.station_num = st.station_num "+
+	 				" order by station_num ";
 	 
 	 	 ArrayList<Object[]> list = (ArrayList<Object[]>)list(q);
+	 	 System.out.println("bc-size "+list.size());
 	 	 ArrayList<Object[]> list2 = new ArrayList<Object[]>();
 	 	 int i = 0;
 	 	 for(Object [] a: list) {

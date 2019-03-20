@@ -31,13 +31,14 @@ import org.earthChem.db.AnnotationDB;
 import org.earthChem.db.DBUtil;
 import org.earthChem.db.SampleDB;
 import org.earthChem.db.StationDB;
+import org.earthChem.db.TephraDB;
 import org.earthChem.db.postgresql.hbm.Annotation;
 import org.earthChem.db.postgresql.hbm.FeatureOfInterest;
 import org.earthChem.db.postgresql.hbm.Method;
+import org.earthChem.db.postgresql.hbm.Sample;
 import org.earthChem.db.postgresql.hbm.SamplingFeature;
 import org.earthChem.db.postgresql.hbm.Station;
 import org.earthChem.db.postgresql.hbm.TaxonomicClassifier;
-import org.earthChem.db.postgresql.hbm.Sample;
 import org.earthChem.presentation.jsf.theme.Theme;
 import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
@@ -53,6 +54,8 @@ public class SampleBean implements Serializable {
 			annotation = new Annotation();
 			delAnnotation =  new Annotation();
 			annotationList = new ArrayList<String[]>();
+			taxonomicClassifier = new TaxonomicClassifier();
+			tcList= null;
 	}
 	
 	public void lookup() {	
@@ -68,6 +71,11 @@ public class SampleBean implements Serializable {
 	}
 	
 
+	public SelectItem[] getTcOptions()
+	{
+		return  (new HtmlOptions()).getRockTaxonomicClassifiers();
+	}
+	
 	public void findStation(String code) {		
 		if(code != null && !"".equals(code)) {
 			Station tmp = StationDB.getStation(code);
@@ -86,6 +94,7 @@ public class SampleBean implements Serializable {
 			columns = new ArrayList<ColumnModel>();
 			for(String s: annotationHeads) columns.add(new ColumnModel(s,s));
 		}
+		tcList= TephraDB.getTaxonomicClassifier(sample.getSampleNum(), 7);
 	}
 	
 	public void addAnnotation() {
@@ -116,7 +125,32 @@ public class SampleBean implements Serializable {
 		}	
 	}
 	
+	
+	//----------------- tc ----------------
 	public void deleteTc(Integer bridgeNum) {
+		String status = SampleDB.deleteSamplingTaxonomicClassifier(bridgeNum);
+		if(status == null) {
+			tcList= TephraDB.getTaxonomicClassifier(sample.getSampleNum(), 7);
+			taxonomicClassifier = new TaxonomicClassifier();
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
+		}	
+	}
+	
+	public void addTc() {
+		String status = TephraDB.addTaxonomicClassifier(taxonomicClassifier, sample.getSampleNum());
+		if(status == null) {
+			tcList= TephraDB.getTaxonomicClassifier(sample.getSampleNum(), 7);
+			taxonomicClassifier = new TaxonomicClassifier();
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
+		}	
+	}
+	
+	
+	/*public void deleteTc(Integer bridgeNum) {
 		String status = SampleDB.deleteSamplingTaxonomicClassifier(bridgeNum);
 		if(status == null) {
 			tcList= SampleDB.getTaxonomicClassifier(sample.getSampleNum());
@@ -137,7 +171,7 @@ public class SampleBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
 		}	
 	}
-	
+	*/
 	public void update() {
 		String code = sample.getStationName();
 		if(code != null && !"".equals(code)) {
@@ -178,9 +212,11 @@ public class SampleBean implements Serializable {
 		this.sample = sample;
 	}
 	public List<Sample> getSampleList() {
-
 		String sfCode =(String) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("sfCode");
+		String alias =(String) FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("sfAlias");
 		if(sfCode != null) sampleList = SampleDB.getSampleList(sfCode);
+		else if (alias != null) sampleList = SampleDB.getSampleListByAlias(alias);
+	
 		return sampleList;
 	}
 	public void setSampleList(List<Sample> sampleList) {
@@ -259,7 +295,6 @@ public class SampleBean implements Serializable {
 
 	
 	public List<TaxonomicClassifier> getTcList() {
-		tcList= SampleDB.getTaxonomicClassifier(sample.getSampleNum());
 		return tcList;
 	}
 
@@ -280,7 +315,6 @@ public class SampleBean implements Serializable {
 
 	
 
-
 	public boolean isPetdb() {
 		return isPetdb;
 	}
@@ -289,6 +323,25 @@ public class SampleBean implements Serializable {
 		this.isPetdb = isPetdb;
 	}
 
+	
+
+	public List<Annotation> getEditedAnnList() {
+		return editedAnnList;
+	}
+
+	public void setEditedAnnList(List<Annotation> editedAnnList) {
+		this.editedAnnList = editedAnnList;
+	}
+
+	
+
+	public Integer getCitatioNum() {
+		return citatioNum;
+	}
+
+	public void setCitatioNum(Integer citatioNum) {
+		this.citatioNum = citatioNum;
+	}
 
 
 
@@ -297,12 +350,14 @@ public class SampleBean implements Serializable {
 	private String search;
 	private List<ColumnModel> columns;
 	private List<String[]> annotationList;
+	private List<Annotation> editedAnnList = new ArrayList<Annotation>();
 	private List<String> annotationHeads;
 	private Annotation annotation;
 	private Annotation delAnnotation;
 	private List<TaxonomicClassifier> tcList;
 	private TaxonomicClassifier taxonomicClassifier;
-	private boolean isPetdb= false;
+	private Integer citatioNum;
+	private boolean isPetdb = false;
 	  
 	
 	static public class ColumnModel implements Serializable {

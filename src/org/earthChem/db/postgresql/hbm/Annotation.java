@@ -28,6 +28,19 @@ public class Annotation implements java.io.Serializable {
 	private String annotationName;
 	private String annotationTypeName;
 	
+	
+	public Annotation () {}
+	
+	
+	
+	public Annotation(Integer annotationTypeNum, String annotationTypeName) {
+		super();
+		this.annotationTypeNum = annotationTypeNum;
+		this.annotationTypeName = annotationTypeName;
+	}
+
+
+
 	public Integer getSfAnnotationNum() {
 		return sfAnnotationNum;
 	}
