@@ -57,11 +57,13 @@ public class CitationBean2 implements Serializable {
 		String doi = citation.getDoi();
 				try
 				{
-					System.out.println("bc-doi "+doi);
 					if(new CitationRest().getCitationByDoi(doi) != null) {
-						System.out.println("bc-doi2 "+doi);
 						CitationDB.updateDOI(citation);
 					}
+					
+					FacesContext.getCurrentInstance().addMessage("citationEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "Message", "The data were saved!"));
+					citations = CitationList.getCitationList(dataStatus);
+
 				}
 				catch (InvalidDoiException ie)
 				{
@@ -94,7 +96,6 @@ public class CitationBean2 implements Serializable {
 				try
 				{
 					citation= new CitationRest().getCitationByDoi(doi);
-				//	citation.setCitationNum(cnum);
 					citation.setCitationNum((Integer) DBUtil.uniqueObject("select max(citation_num+1) from citation"));
 				}
 				catch (InvalidDoiException ie)
@@ -200,13 +201,17 @@ public class CitationBean2 implements Serializable {
 	public void updateCitation() {
 		String status = null;
 		if(isNew) {
+		//	System.out.println("bc-u1 "+(Integer) DBUtil.uniqueObject("select max(citation_num+1) from citation"));
+			citation.setCitationNum((Integer) DBUtil.uniqueObject("select max(citation_num+1) from citation"));
 			if(commentTheme != null) {
 				citation.setInternalComment(commentTheme.getDisplayName());		
 			}
+	//		System.out.println("bc-isNew "+citation.getCitationNum());
 			status = CitationDB.saveCitation(citation,true); 
 			isNew = false; //add 12/18/17
 		}
 		else {
+			System.out.println("bc-isNotNew "+citation.getCitationNum());
 			status = CitationDB.saveCitation(citation,false); 
 		}
 		

@@ -82,6 +82,7 @@ public class CitationDB {
 		} else authors = null;
 		String q = null;
 		if(isNew){
+			citationNum = (Integer) DBUtil.uniqueObject("select max(citation_num+1) from citation");
 			q= "INSERT INTO citation (citation_num, title, publisher, publication_year, journal, "+
 					"issue, volume, book_title, book_editor, authors, pages) VALUES "+
 					"("+citationNum+","+title+","+publisher+","+year+","+journal+","+issue+","+volume+","+btitle+","+editor+","+authors+","+pages+")";

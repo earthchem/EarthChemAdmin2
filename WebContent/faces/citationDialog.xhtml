@@ -74,7 +74,7 @@
 
 
 <h:panelGrid columns = "4" border = "0" cellpadding = "2" cellspacing = "2">
-<p:commandButton value="Save"  actionListener="#{citationBean2.updateCitation}" update=":eca:citationEditForm:confirmMsg :eca:citationEditForm:authorListMsg  :eca:citationEditForm:citationAL" oncomplete="PF('citationDialog').hide();"> <!-- :AuthorAP -->
+<p:commandButton value="Save"  actionListener="#{citationBean2.updateCitation}" update=":eca:citationEditForm:confirmMsg :eca:citationEditForm:authorListMsg  :eca:citationEditForm:citationAL"> <!-- :AuthorAP -->
 		<p:confirm header="Confirmation" message="Are you sure you want to save the changes?" icon="ui-icon-alert"/>		  
 	</p:commandButton>	
 <p:commandButton value="Cancel" process="@this" actionListener="#{citationBean2.cancelEdit}" update="citationEditForm"  oncomplete="PF('citationDialog').hide();">

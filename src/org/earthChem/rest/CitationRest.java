@@ -78,9 +78,11 @@ public class CitationRest {
 				result.setIssue(jo.getString(ISSUE));
 			if (jo.has(CONTAINER_TITLE)) {
 				String tt = jo.getString(CONTAINER_TITLE).toUpperCase();
-				tt = tt.substring(2, tt.length()-2);
-				result.setJournal(tt.toUpperCase());
-			//	result.setJournal(jo.getString(CONTAINER_TITLE).toUpperCase());
+				System.out.println("bc-tt "+tt);
+				if(tt.length() > 2) {
+					tt = tt.substring(2, tt.length()-2);
+					result.setJournal(tt.toUpperCase());
+				}
 			}
 			if (jo.has(PUBLISHER))
 				result.setPublisher(jo.getString(PUBLISHER));
