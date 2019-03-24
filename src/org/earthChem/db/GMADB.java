@@ -49,7 +49,7 @@ select st.station_num, st.station_code, st.expedition_num, st.station_num, 0 as 
 
 		 	 
 Query for pdb_dataC_new pl:
-select distinct drs.specimen_num, drs.station_num, drs.specimen_code, rt.taxonomic_classifier_name, mat.material_num,  drs.citation_num, 0 as "DATA_QUALITY_NUM",
+select distinct drs.specimen_num, drs.station_num, drs.specimen_code, rt.taxonomic_classifier_name, mat.material_num,  drs.citation_num, drs.action_num as "DATA_QUALITY_NUM",
 v.variable_code, vt.variable_type_code, drs.unit, drs.value_meas, 'null' as "STDEV"
 from mv_dataset_result_summary drs  
 join variable v on v.variable_num = drs.variable_num 
@@ -60,7 +60,7 @@ left join (select distinct ss.specimen_num, tcp.taxonomic_classifier_name
 		 	 where ss.specimen_num = ftc.sampling_feature_num and ftc.taxonomic_classifier_num = tc.taxonomic_classifier_num  
 		 	 and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num ) rt on rt.specimen_num = drs.specimen_num
 where  drs.specimen_num between 76001 and 80000
-order by drs.specimen_num;
+order by drs.specimen_num, drs.action_num;
 		 	 
 */
 	
@@ -211,7 +211,7 @@ order by drs.specimen_num;
     			 	"  from mv_specimen_summary ss, sampling_feature_taxonomic_classifier ftc, taxonomic_classifier tc,  taxonomic_classifier tcp "+
     				"  where ss.specimen_num = ftc.sampling_feature_num and ftc.taxonomic_classifier_num = tc.taxonomic_classifier_num  "+
     			 	"  and tc.taxonomic_classifier_type_cv = 'Rock Class' and tc.parent_taxonomic_classifier_num = tcp.taxonomic_classifier_num ) rt on rt.specimen_num = drs.specimen_num "+
-    			" where  drs.specimen_num < 50000 "+
+    		//	" where  drs.specimen_num < 50000 "+
     			 	" order by drs.specimen_num";
      	 table.setData((ArrayList<Object[]>) list(q));
       	 return table;
