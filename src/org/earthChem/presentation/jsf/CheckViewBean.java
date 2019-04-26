@@ -49,12 +49,12 @@ import org.primefaces.event.TabCloseEvent;
 @SessionScoped
 public class CheckViewBean implements Serializable {
 
-	/*private List<SamplingFeature> noParentAnalyzed; 
+	private List<SamplingFeature> noParentAnalyzed; 
 	private List<SamplingFeature> noChildStation; 
 	private List<SamplingFeature> noParentSpecimen; 
 	private List<SamplingFeature> noChildSpecimen; 
 	private List<SamplingFeature> dupStation; 
-	*/
+	
 	
 	private void updateMsg(String status) {
 		if(status == null) 
@@ -93,6 +93,13 @@ public class CheckViewBean implements Serializable {
 		DBUtil.update("DELETE FROM sampling_feature WHERE sampling_feature_num="+samplingFeatureNum);
 	}
 */	
+	public void deleteAll(List<SamplingFeature> list) {
+		for(SamplingFeature sf: list) {
+			delete(sf.getSamplingFeatureNum());
+		}
+		
+	}
+	
 	public void deleteDupStation(Integer relatedFeatureNum) {
 		updateMsg(DBUtil.update("DELETE FROM related_feature WHERE related_feature_num="+relatedFeatureNum));
 	}
@@ -100,26 +107,30 @@ public class CheckViewBean implements Serializable {
 	public List<SamplingFeature> getNoParentAnalyzed() {
 		String q = "select vas.sampling_feature_num, vas.sampling_feature_type_num, vas.sampling_feature_code from v_analyzed_samples vas "+
 				" where vas.sampling_feature_num not in (select distinct sampling_feature_num from related_feature rf where rf.relationship_type_num=9) ";
-		return getList(q);
+		noParentAnalyzed = getList(q);
+		return noParentAnalyzed;
 	}
 	
 	
 	public List<SamplingFeature> getNoChildStation() {
 		String q = "select  vas.sampling_feature_num, vas.sampling_feature_type_num, vas.sampling_feature_code from v_stations vas "+
 				" where vas.sampling_feature_num not in (select distinct related_sampling_feature_num from related_feature rf where rf.relationship_type_num=22 )";
-		return getList(q);
+		noChildStation = getList(q);
+		return noChildStation;
 	}
 
 	public List<SamplingFeature> getNoParentSpecimen() {
 		String q = "select  vas.sampling_feature_num, vas.sampling_feature_type_num, vas.sampling_feature_code from v_specimens vas "+
 				" where vas.sampling_feature_num not in (select distinct sampling_feature_num from related_feature rf where rf.relationship_type_num=22)";
-		return getList(q);
+		noParentSpecimen = getList(q);
+		return noParentSpecimen;
 	}
 	
 	public List<SamplingFeature> getNoChildSpecimen() {
 		String q = "select vas.sampling_feature_num, vas.sampling_feature_type_num, vas.sampling_feature_code from v_specimens vas "+
 				" where vas.sampling_feature_num not in (select distinct related_sampling_feature_num from related_feature rf where rf.relationship_type_num=9)";
-		return getList(q);
+		noChildSpecimen = getList(q);
+		return noChildSpecimen;
 	}
 	
 	private List<SamplingFeature> getList(String q) {
