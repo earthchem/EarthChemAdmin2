@@ -27,16 +27,16 @@
 </p:commandButton>
 </h:panelGrid>
 
-<p:dataTable widgetVar="rockclassTableWidgetVar" id="rockclassTable" var="cc" value="#{rockclassBean.rockclassList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
-selectionMode="single" selection="#{rockclassBean.rockclass}" rowKey="#{cc.taxonomicClassifierNum}">  
+<p:dataTable widgetVar="rockclassTableWidgetVar" var="r" value="#{rockclassBean.rockclassList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+selectionMode="single" selection="#{rockclassBean.rockclass}" rowKey="#{r.taxonomicClassifierNum}">  
 
 <p:ajax event="rowSelect" listener="#{rockclassBean.selectRockclass}" update=":eca:rockclassEditForm"  oncomplete="PF('rockclassDialog').show()" /> 
-   	<p:column headerText="Number" sortBy="#{cc.taxonomicClassifierNum}" filterBy="#{cc.taxonomicClassifierNum}" style="width:9%;"> <h:outputText value="#{cc.taxonomicClassifierNum}"/></p:column>
- 		<p:column headerText="Type" sortBy="#{cc.taxonomicClassifierTypeCv}" filterBy="#{cc.taxonomicClassifierTypeCv}" style="width:15%;" >  <h:outputText value="#{cc.taxonomicClassifierTypeCv}"/> </p:column>	
- 		<p:column headerText="Name" sortBy="#{cc.taxonomicClassifierName}" filterBy="#{cc.taxonomicClassifierName}" style="width:20%;" >  <h:outputText value="#{cc.taxonomicClassifierName}"/> </p:column>
- 		<p:column headerText="Common Name" sortBy="#{cc.taxonomicClassifierCommonName}" filterBy="#{cc.taxonomicClassifierCommonName}" style="width:20%;" >  <h:outputText value="#{cc.taxonomicClassifierCommonName}"/> </p:column>
- 		<p:column headerText="Parent Name" sortBy="#{cc.parentTaxonomicClassifierName}" filterBy="#{cc.parentTaxonomicClassifierName}" style="width:20%;" >  <h:outputText value="#{cc.parentTaxonomicClassifierName}"/> </p:column>		
-    	<p:column headerText="Description" sortBy="#{cc.taxonomicClassifierDescription}" style="width:10%;" >  <h:outputText value="#{cc.taxonomicClassifierDescription}"/> </p:column>
+   	<p:column headerText="Number" sortBy="#{r.taxonomicClassifierNum}" filterBy="#{r.taxonomicClassifierNum}" style="width:9%;"> <h:outputText value="#{r.taxonomicClassifierNum}"/></p:column>
+ 		<p:column headerText="Type" sortBy="#{r.taxonomicClassifierTypeCv}" filterBy="#{r.taxonomicClassifierTypeCv}" style="width:15%;" >  <h:outputText value="#{r.taxonomicClassifierTypeCv}"/> </p:column>	
+ 		<p:column headerText="Name" sortBy="#{r.taxonomicClassifierName}" filterBy="#{r.taxonomicClassifierName}" style="width:20%;" >  <h:outputText value="#{r.taxonomicClassifierName}"/> </p:column>
+ 		<p:column headerText="Common Name" sortBy="#{r.taxonomicClassifierCommonName}" filterBy="#{r.taxonomicClassifierCommonName}" style="width:20%;" >  <h:outputText value="#{r.taxonomicClassifierCommonName}"/> </p:column>
+ 		<p:column headerText="Parent Name" sortBy="#{r.parentTaxonomicClassifierName}" filterBy="#{r.parentTaxonomicClassifierName}" style="width:20%;" >  <h:outputText value="#{r.parentTaxonomicClassifierName}"/> </p:column>		
+    	<p:column headerText="Description" sortBy="#{r.taxonomicClassifierDescription}" style="width:10%;" >  <h:outputText value="#{r.taxonomicClassifierDescription}"/> </p:column>
 
 </p:dataTable>	
 </h:panelGroup>

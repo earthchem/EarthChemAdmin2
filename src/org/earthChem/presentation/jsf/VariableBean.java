@@ -69,7 +69,7 @@ public class VariableBean implements Serializable {
 	}
 	public List<Variable> getVariableList() {
 		if(variableList==null) variableList= new ArrayList<Variable>();
-		return variableList;
+ 		return variableList;
 	}
 
 	public void setVariableList(List<Variable> variableList) {

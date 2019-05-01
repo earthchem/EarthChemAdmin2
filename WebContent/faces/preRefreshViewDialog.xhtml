@@ -1,0 +1,15 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<h4>Please check view and correct related issues before refresh view</h4>
+<h:form>
+	<p:commandButton process="@form" value="Check View"  actionListener="#{homeBean.changeTab(15)}" oncomplete="PF('preRefreshView').hide()"/>
+	<p:commandButton process="@form" value="Continue Refresh View" actionListener="#{refreshViewBean.refreshView}"  onstart="PF('statusDialog').show()" update=":eca:statisticsTable" oncomplete="PF('statusDialog').hide()"/>
+</h:form>
+
+</ui:composition>
+ 

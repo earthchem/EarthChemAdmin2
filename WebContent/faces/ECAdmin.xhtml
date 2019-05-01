@@ -30,6 +30,11 @@
     <p:graphicImage name="/ajaxloadingbar.gif" />
 </p:dialog>
 
+<p:dialog header="" widgetVar="preRefreshView" width="500" height="300"  resizable="false"> 
+ <ui:fragment><ui:include src="preRefreshViewDialog.xhtml" /></ui:fragment>
+</p:dialog>
+
+
 
    <table cellspacing="0" cellpadding="0" border= "0" width="95%">
 	<tr><td align="left" width="40%">
@@ -38,18 +43,19 @@
 	<p:button target="_blank" href="#{initParam['Load_Sheet']}" value="Load Sheet" /><p:spacer width="10" />
 	<p:button target="_blank" href="#{initParam['E_Checker']}" value="E-Checker" />
 	<p:spacer width="10" />
-	<p:commandButton process="@form" value="Refresh View" actionListener="#{refreshViewBean.refreshView}"  onstart="PF('statusDialog').show()" update=":eca:statisticsTable" oncomplete="PF('statusDialog').hide()"/></h:form>	
+	  	<p:commandButton process="@form" value="Refresh View"  oncomplete="PF('preRefreshView').show()"/>
+</h:form>	
+	
+<!--	<p:commandButton process="@form" value="Refresh View" actionListener="#{refreshViewBean.refreshView}"  onstart="PF('statusDialog').show()" update=":eca:statisticsTable" oncomplete="PF('statusDialog').hide()"/></h:form>	
+-->
 	</h:panelGroup>
 	</td>	
 	<td  align="center" width="20%"><h4>EarthChem Admin</h4></td>
 	<td align="right" width="40%"><p:commandButton id="logout" value="Logout"  action="#{logoutBean.logout}"/>			
 	</td></tr>	
 	</table>   
- 
- <p:tabView id="eca">
- <!--  
- <p:ajax event="tabChange" listener="#{homeBean.onTabChange}"/> 
- -->
+ <p:tabView id="eca" widgetVar="tabPanel" >
+ <!-- <p:tabView id="eca">  -->
          <p:tab titletip="Home" title="Home">                       
                 <h:outputText value="Welcome to EarthChemDB Admin" />
         </p:tab>

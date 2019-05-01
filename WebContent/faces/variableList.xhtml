@@ -22,17 +22,16 @@
 <p:commandButton value="New">
 		  <p:ajax listener="#{variableBean.createNew}"  update=":eca:variableEditForm"  oncomplete="PF('variableDialog').show()"/>
 </p:commandButton>
-</h:panelGrid>
-<p:dataTable widgetVar="variableTableWidgetVar" id="variableTable" var="cc" value="#{variableBean.variableList}"  scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
-selectionMode="single" selection="#{variableBean.variable}" rowKey="#{cc.variableNum}">  
-
+</h:panelGrid> 
+<p:dataTable widgetVar="variableTableWidgetVar"  value="#{variableBean.variableList}" var="v" scrollable="true" scrollHeight="400"  cellpadding = "0" cellspacing = "0"
+rowKey="#{v.variableNum}" selectionMode="single" selection="#{variableBean.variable}" >  
 <p:ajax event="rowSelect" listener="#{variableBean.selectVariable}" update=":eca:variableEditForm"  oncomplete="PF('variableDialog').show()" /> 
-   	<p:column headerText="Number" sortBy="#{cc.variableNum}" filterBy="#{cc.variableNum}" style="width:9%;"> <h:outputText value="#{cc.variableNum}"/></p:column>
- 		<p:column headerText="Code" sortBy="#{cc.variableCode}" filterBy="#{cc.variableCode}" style="width:15%;" >  <h:outputText value="#{cc.variableCode}"/> </p:column>
- 		<p:column headerText="Name" sortBy="#{cc.variableName}" filterBy="#{cc.variableName}" style="width:15%;" >  <h:outputText value="#{cc.variableName}"/> </p:column>
- 		<p:column headerText="Type" sortBy="#{cc.variableTypeCode}" filterBy="#{cc.variableTypeCode}" style="width:15%;" >  <h:outputText value="#{cc.variableTypeCode}"/> </p:column>	
- 		<p:column headerText="Display Order" sortBy="#{cc.displayOrder}" filterBy="#{cc.displayOrder}" style="width:10%;" >  <h:outputText value="#{cc.displayOrder}"/> </p:column>		
-    	<p:column headerText="Definition" sortBy="#{cc.variableDefinition}" style="width:30%;" >  <h:outputText value="#{cc.variableDefinition}"/> </p:column>
+ 	<p:column headerText="Number" sortBy="#{v.variableNum}" filterBy="#{v.variableNum}" style="width:9%;"> <h:outputText value="#{v.variableNum}"/></p:column>
+ 		<p:column headerText="Code" sortBy="#{v.variableCode}" filterBy="#{v.variableCode}" style="width:15%;" >  <h:outputText value="#{v.variableCode}"/> </p:column>
+ 		<p:column headerText="Name" sortBy="#{v.variableName}" filterBy="#{v.variableName}" style="width:15%;" >  <h:outputText value="#{v.variableName}"/> </p:column>
+ 		<p:column headerText="Type" sortBy="#{v.variableTypeCode}" filterBy="#{v.variableTypeCode}" style="width:15%;" >  <h:outputText value="#{v.variableTypeCode}"/> </p:column>	
+ 		<p:column headerText="Display Order" sortBy="#{v.displayOrder}" filterBy="#{v.displayOrder}" style="width:10%;" >  <h:outputText value="#{v.displayOrder}"/> </p:column>		
+    	<p:column headerText="Definition" sortBy="#{v.variableDefinition}" style="width:30%;" >  <h:outputText value="#{v.variableDefinition}"/> </p:column>
 
 </p:dataTable>	
 </h:panelGroup>

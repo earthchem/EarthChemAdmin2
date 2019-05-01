@@ -50,6 +50,13 @@ import org.primefaces.event.TabCloseEvent;
 @SessionScoped
 public class HomeBean implements Serializable {
 	
+	
+	public void changeTab(Integer tabNum) {
+		PrimeFaces.current().executeScript("PF('tabPanel').select("+tabNum+")");
+		tabNum = null;
+	}
+	
+	
 	public void selectDatabase(AjaxBehaviorEvent event) {
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("database", database);
 	 }
