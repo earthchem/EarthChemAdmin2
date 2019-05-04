@@ -53,7 +53,6 @@ public class HomeBean implements Serializable {
 	
 	public void changeTab(Integer tabNum) {
 		PrimeFaces.current().executeScript("PF('tabPanel').select("+tabNum+")");
-		tabNum = null;
 	}
 	
 	

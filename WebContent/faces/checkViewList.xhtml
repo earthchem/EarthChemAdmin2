@@ -4,7 +4,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://java.sun.com/jsf/facelets"> 
-                
+
 <p:dataTable id="dupStation" var="ct" value="#{checkViewBean.dupStation}"> 
  	<f:facet name="header">Specimen with multiple stations</f:facet>
     	    <p:column headerText="related_feature_num"> <h:outputText value="#{ct.relatedFeatureNum}"/></p:column>     
@@ -51,6 +51,12 @@
     	    <p:column headerText="Type Number"> <h:outputText value="#{ct.samplingFeatureTypeNum}"/></p:column>     
 	       	<p:column headerText="Code">  <h:outputText value="#{ct.samplingFeatureCode}"/> </p:column>
 	   <!--         	<p:column><p:commandButton value="Delete" actionListener="#{checkViewBean.delete(ct.samplingFeatureNum)}"  update="noChildSpecimen"> </p:commandButton></p:column>-->	
+</p:dataTable>		
+<p:dataTable id="citationList" var="ct" value="#{checkViewBean.citationList}"> 
+ 	<f:facet name="header">Citation without authors</f:facet>
+    	    <p:column headerText="Number" style="width:100px;"> <h:outputText value="#{ct.citationNum}"/></p:column>     
+    	    <p:column headerText="Title"> <h:outputText value="#{ct.title}"/></p:column>          
+         	<p:column><p:commandButton value="Add Author" actionListener="#{citationBean2.addCheckViewAuthors(ct)}"  update=":eca:citationEditForm"> </p:commandButton></p:column> 	
 </p:dataTable>		
 
 

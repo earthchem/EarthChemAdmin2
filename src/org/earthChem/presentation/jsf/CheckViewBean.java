@@ -54,6 +54,7 @@ public class CheckViewBean implements Serializable {
 	private List<SamplingFeature> noParentSpecimen; 
 	private List<SamplingFeature> noChildSpecimen; 
 	private List<SamplingFeature> dupStation; 
+	private List<Citation> citationList;
 	
 	
 	private void updateMsg(String status) {
@@ -164,5 +165,23 @@ public class CheckViewBean implements Serializable {
 			list.add(s);
 		}
 		return list;
+	}
+	
+	public List<Citation> getCitationList() {
+		String q = "select c.citation_num, c.title "+
+		" from ec_status_info e, citation c "+
+		" where e.data_status in ('COMPLETED','DATA_LOADED') and e.citation_num = c.citation_num and c.citation_num not in "+
+		" (select c.citation_num "+
+		" from ec_status_info e, citation c, author_list a "+
+		" where e.data_status in ('COMPLETED','DATA_LOADED') and e.citation_num = c.citation_num and e.citation_num = a.citation_num)";
+		List<Citation> list = new ArrayList<Citation>();
+		List<Object[]> olist = DBUtil.getECList(q);
+		for(Object[] i: olist) {
+			Citation c = new Citation((Integer)i[0]);
+			c.setTitle(""+i[1]);
+			list.add(c);
+		}
+		return list;
+		
 	}
 }

@@ -25,6 +25,7 @@ import org.earthChem.rest.InvalidDoiException;
 import org.earthChem.presentation.jsf.theme.CommentService;
 import org.earthChem.presentation.jsf.theme.Theme;
 import org.earthChem.presentation.jsf.theme.ThemeService;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.ReorderEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -130,6 +131,13 @@ public class CitationBean2 implements Serializable {
 		newPerson = null;
 	}
 
+	public void addCheckViewAuthors(Citation c) {
+		citation = c;
+		selectCitation();
+		PrimeFaces.current().executeScript("PF('tabPanel').select(1)");
+		PrimeFaces.current().executeScript("PF('citationDialog').show()");
+	}
+	
 	public void selectStatus() {
 		citations = CitationList.getCitationList(dataStatus);
 
