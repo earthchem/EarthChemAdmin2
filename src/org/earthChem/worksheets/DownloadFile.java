@@ -7,7 +7,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.earthChem.db.DBUtil;
 import org.earthChem.db.GMADB;
 import org.earthChem.db.SampleDownload;
@@ -22,6 +29,8 @@ public class DownloadFile implements Serializable {
 	private String materialType;
 	private String [] selectedVariableTypeCodes;
 	private String query;
+	private Workbook wb;
+	private CellStyle headerCellStyle;
 	
 	public void download_item_codeA_new() {		
 		createFile(GMADB.item_codeA_new(), "item_codeA_new.xlsx"); 
@@ -80,15 +89,42 @@ public class DownloadFile implements Serializable {
 				 materialType = "";
 			 } else {
 				 materialType = " and d.material_code in ('"+materialType+"')";
-			 }
-
-		//	createFile(DBUtil.sampleDownload(materialType, variableType, condition, query), fileName);
-			 
-			 createFile(SampleDownload.getData(materialType, variableType, condition, query), fileName);
+			 }		 
+	//		 createFile(SampleDownload.getData(materialType, variableType, condition, query), fileName);
+			 StringTable table = SampleDownload.getData(materialType, variableType, condition, query);
+			 createWorkbook ();
+			 WorkbookUtil.getData(table, wb.createSheet("Data"), headerCellStyle);
+			 wb.createSheet("References");
+			 createFile(fileName);			 
 	}
 
+	private void createWorkbook () {
+		wb = new XSSFWorkbook();
+		Font headerFont = wb.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 14);
+        headerFont.setColor(IndexedColors.BLACK.getIndex());     
+        headerCellStyle = wb.createCellStyle();
+        headerCellStyle.setFont(headerFont);
+	}
 	
+	private void createFile(String fileName)  {
+		try {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+	    ExternalContext externalContext = facesContext.getExternalContext();
+	    externalContext.setResponseContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");	
+	    externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\""+fileName+"\""); 	 
+	    wb.write(externalContext.getResponseOutputStream());	
+	    facesContext.responseComplete();
+	    wb.close();		    
+		}
+	    catch(Exception e) {
+	        e.printStackTrace();
+	    }
+}
 
+	
+	
 	 private void createFile(StringTable table, String fileName)  {
 		 	Workbook workbook = WorkbookUtil.databaseSheet(table, "database");
 			try {

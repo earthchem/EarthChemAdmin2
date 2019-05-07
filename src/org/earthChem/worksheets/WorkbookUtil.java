@@ -72,4 +72,32 @@ public class WorkbookUtil {
 	      }
 	      return workbook;
 		}  
+	
+	
+	public static void getData(StringTable table, Sheet sheet, CellStyle headerCellStyle)  {
+	//	Workbook workbook = new XSSFWorkbook();  
+//		Sheet sheet = workbook.createSheet(sheetName);
+		String[] columns = table.getHeads();
+		Row headerRow = sheet.createRow(0);
+		 for(int i = 0; i < columns.length; i++) {
+	            Cell cell = headerRow.createCell(i);
+	            cell.setCellValue(columns[i]);
+	            cell.setCellStyle(headerCellStyle);
+		 }
+	     ArrayList<Object[]> list = table.getData();
+	     int r = 1;
+	     for(Object[] a: list) {
+	    	  Row row = sheet.createRow(r++);
+	    	  if(a != null)
+	    	  for(int i = 0; i< a.length; i++) {
+	    		  if(a[i] !=  null) row.createCell(i).setCellValue(""+a[i]);
+	    	  }
+	     }
+	     
+	     // Resize all columns to fit the content size
+	      for(int i = 0; i < columns.length; i++) {
+	            sheet.autoSizeColumn(i);
+	      }
+	   //   return workbook;
+		}  
 }
