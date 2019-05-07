@@ -373,14 +373,22 @@ public class DBUtil {
 	    	return table;
 	 }
 	 
-	 public static StringTable sampleDownload(String materialCode, String variableType, String condition) {	 
-		 String[] heads = {"SAMPLE ID","IGSN","SOURCE","DOI","TITLE","JOURNAL","AUTHOR","EXPEDITION ID","LATITUDE","LONGITUDE","ELEVATION_MIN","ELEVATION_MAX","MIN AGE","AGE","MAX AGE","METHOD","SAMPLE TYPE","ROCK NAME"};
-		
-		 String select = "select d.specimen_code \"SAMPLE ID\", m.igsn \"IGSN\", 'EARTHCHEMDB' \"SOURCE\", c.doi \"DOI\", c.title \"TITLE\",  c.journal \"JOURNAL\", c.authors \"AUTHOR\", d.expedition_code \"EXPEDITION ID\", " + 
+	 public static StringTable sampleDownload(String materialCode, String variableType, String condition, String queryType) {	 
+		 String[] h1 = {"SAMPLE ID","IGSN","DOI","TITLE","JOURNAL","AUTHOR","EXPEDITION ID","LATITUDE","LONGITUDE","ELEVATION_MIN","ELEVATION_MAX","MIN AGE","AGE","MAX AGE","METHOD","SAMPLE TYPE","ROCK NAME"};
+		 String[] h2 = {"SAMPLE ID","IGSN","DOI","TITLE","JOURNAL","AUTHOR","EXPEDITION ID","LATITUDE","LONGITUDE","ELEVATION_MIN","ELEVATION_MAX","MIN AGE","AGE","MAX AGE","METHOD","SAMPLE TYPE","ROCK NAME","HOST MINERAL"};
+		 String[] heads = null;
+		 String hostMineral = "";
+		 if(!"MeltInclusions".equals(queryType)) heads = h1;
+		 else {
+			 heads = h2;
+			 hostMineral = "d.inclusion_host_mineral,";
+		 }
+		 
+		 String select = "select d.specimen_code \"SAMPLE ID\", m.igsn \"IGSN\", c.doi \"DOI\", c.title \"TITLE\",  c.journal \"JOURNAL\", c.authors \"AUTHOR\", case when d.expedition_code ='nr' THEN '' else d.expedition_code end \"EXPEDITION ID\", " + 
 				"split_part( split_part(split_part(split_part(m.geometry_text,'(',2), ' ', 2), ')', 1), ',',1) \"LATITUDE\", split_part(   split_part(m.geometry_text,'(',2), ' ', 1) \"LONGITUDE\",  m.elevation_min, m.elevation_max, " + 
 				" split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',3) \"MIN AGE\", split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',2) \"AGE\", " + 
 				"split_part(split_part(array_to_string(geological_ages,','), '^',1),'|',4) \"MAX AGE\", d.method_code \"METHOD\", d.material_name \"SAMPLE TYPE\",  " + 
-				"split_part(array_to_string(m.taxon,','),'|',2) \"ROCK NAME\", d.variable_code \"VARIABLE\", d.value_meas \"VALUE\", d.specimen_num " ;
+				"split_part(array_to_string(m.taxon,','),'|',2) \"ROCK NAME\", "+ hostMineral+" d.variable_code \"VARIABLE\", d.value_meas \"VALUE\", d.specimen_num " ;
 		 String body = " from mv_dataset_result_summary d, mv_specimen_summary m,  mv_citation_summary c, variable v, variable_type t " + 
 		 			" where d.specimen_num=m.specimen_num " +materialCode+" and d.citation_num = c.citation_num "+
 		 			" and d.variable_num = v.variable_num and v.variable_type_num = t.variable_type_num "+ variableType+

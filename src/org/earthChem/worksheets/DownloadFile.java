@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.earthChem.db.DBUtil;
 import org.earthChem.db.GMADB;
+import org.earthChem.db.SampleDownload;
 import org.earthChem.db.postgresql.hbm.StringTable;
 //import org.earthChem.dal.ds.Query;
 import org.primefaces.event.FileUploadEvent;
@@ -81,7 +82,9 @@ public class DownloadFile implements Serializable {
 				 materialType = " and d.material_code in ('"+materialType+"')";
 			 }
 
-			createFile(DBUtil.sampleDownload(materialType, variableType, condition), fileName);
+		//	createFile(DBUtil.sampleDownload(materialType, variableType, condition, query), fileName);
+			 
+			 createFile(SampleDownload.getData(materialType, variableType, condition, query), fileName);
 	}
 
 	
