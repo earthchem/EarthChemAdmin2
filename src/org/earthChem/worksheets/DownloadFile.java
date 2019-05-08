@@ -94,7 +94,8 @@ public class DownloadFile implements Serializable {
 			 StringTable table = SampleDownload.getData(materialType, variableType, condition, query);
 			 createWorkbook ();
 			 WorkbookUtil.getData(table, wb.createSheet("Data"), headerCellStyle);
-			 wb.createSheet("References");
+			 table = SampleDownload.getMethods(materialType,condition,  query);
+			 WorkbookUtil.getData(table, wb.createSheet("Methods"), headerCellStyle);
 			 createFile(fileName);			 
 	}
 
