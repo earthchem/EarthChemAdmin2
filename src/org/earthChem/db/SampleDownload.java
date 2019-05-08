@@ -27,8 +27,10 @@ import org.earthChem.presentation.jsf.theme.Theme;
 public class SampleDownload {
 	
 	private static DataSource dataSource;
-	private static String[] dataHead = {"Sample_ID","IGSN",	"Material", "Latitude","Longitude","Elevation","Tectonic",	"Rock","Reference",	"Method","Expedition"};
-		//Reference: last name of the first author, year[citation_num]
+//	private static String[] dataHead = {"Sample_ID","IGSN",	"Material", "Latitude","Longitude","Elevation","Tectonic",	"Rock","Reference",	"Method","Expedition"};
+	
+	private static String[] dataHead = {"SAMPLE_ID","IGSN","SAMPLE_TYPE","LATITUDE","LONGITUDE","ELEVATION_MIN","ELEVATION_MAX","TECTONIS_SETTING","ROCK NAME","REFERENCE","METHOD","EXPEDITION ID"};
+	//Reference: last name of the first author, year[citation_num]
 		//Method: method_code[action_num]
 			
 
@@ -46,11 +48,10 @@ public class SampleDownload {
     	 StringTable table = new StringTable();
   
 		 
-		 String select = "select d.specimen_code \"SAMPLE ID\", m.igsn \"IGSN\", d.material_code \"Material\"," +
+		 String select = "select d.specimen_code \"SAMPLE ID\", m.igsn \"IGSN\", d.material_name \"SAMPLE TYPE\"," +		 
 				 "split_part(split_part(split_part(split_part(m.geometry_text,'(',2), ' ', 2), ')', 1), ',',1) \"LATITUDE\","+
-				 "split_part(split_part(m.geometry_text,'(',2), ' ', 1) \"LONGITUDE\", m.elevation_min \"Elevation\","+
-				 "array_to_string(m.tectonic_settings,',') \"Tectonic\","+
-				 "concat(split_part(array_to_string(m.taxon,','),'|',2),', ', split_part(array_to_string(m.taxon,','),'|',1)) \"ROCK\", "+
+				 "split_part(split_part(m.geometry_text,'(',2), ' ', 1) \"LONGITUDE\", m.elevation_min, m.elevation_max," +
+				 "array_to_string(m.tectonic_settings,',') \"Tectonic\", split_part(array_to_string(m.taxon,','),'|',2) \"ROCK NAME\","+
 				 "c.citation_code||'['||c.citation_num||']' \"Reference\", d.method_code||'['||d.action_num||']'  \"METHOD\","+
 				 "case when d.expedition_code ='nr' THEN '' else d.expedition_code end \"EXPEDITION ID\","+
 				 "d.variable_code \"VARIABLE\", d.value_meas \"VALUE\", d.specimen_num" ;
