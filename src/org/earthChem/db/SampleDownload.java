@@ -45,92 +45,31 @@ public class SampleDownload {
         }
     }
     
+    public static StringTable getReferences(String materialCode, String condition, String queryType) {	
+   	    StringTable table = new StringTable();
+   	    String[] refHead = {"Author","Year","Title","Journal","Volume","Book_Title","Pages","Editors","Publishers","doi"};
+	   	String q = "select distinct c.authors, c.publication_year, c.title,  c.journal, c.volume, c.book_title,c.pages,'', c.publisher, c.doi "+
+	   			" from mv_dataset_result_summary d, mv_specimen_summary m,  mv_citation_summary c " + 
+		 		" where d.specimen_num=m.specimen_num " +materialCode+" and d.citation_num = c.citation_num "+condition;
+	    table.setHeads(refHead);	 
+	    System.out.println("download query: "+q);
+	    table.setData(( ArrayList<Object[]> ) DBUtil.list(q));
+   
+		 return table;
+	 }
+    
     
     public static StringTable getMethods(String materialCode, String condition, String queryType) {	
-   	 StringTable table = new StringTable();
-   	 String[] methodHead = {"Method_Code","Name", "Location","Reference","Comment"};
-	
-   	String q = "select distinct d.method_code||'['||d.action_num||']', d.method_name, d.laboratory, c.citation_code||'['||c.citation_num||']', d.method_comment "+
-   			" from mv_dataset_result_summary d, mv_specimen_summary m,  mv_citation_summary c " + 
-	 		" where d.specimen_num=m.specimen_num " +materialCode+" and d.citation_num = c.citation_num "+condition;
-    table.setHeads(methodHead);	 
-    System.out.println("download query: "+q);
-    table.setData(( ArrayList<Object[]> ) DBUtil.list(q));
-    
-    
-    
-    
- 		/*	 		
-				
-		 String body = " from mv_dataset_result_summary d, mv_specimen_summary m,  mv_citation_summary c, variable v, variable_type t " + 
-		 			" where d.specimen_num=m.specimen_num " +materialCode+" and d.citation_num = c.citation_num "+
-		 			" and d.variable_num = v.variable_num and v.variable_type_num = t.variable_type_num "+ variableType+
-		 			condition+variableType;
-	 //create column names with variable
-		 Map<String, Integer> map  =new HashMap <String, Integer>();	
-		 String q = "select d.variable_code, d.variable_order "+body+ " group by d.variable_code, d.variable_order order by d.variable_order";
+	   	 StringTable table = new StringTable();
+	   	 String[] methodHead = {"Method_Code","Name", "Location","Reference","Comment"};
 		
-		 List<Object[]> list = DBUtil.list(q);			
-		 String [] titles = new String[dataHead.length+list.size()]; 
-		 int k=0; 
-		 for(;k < dataHead.length; k++) titles[k] = dataHead[k];
-		 for(Object[] s: list) {
-			 titles[k] = (String)s[0];
-			 map.put((String)s[0], k++);
-		}
-		 
-		 table.setHeads(titles);
-		 ArrayList<Object[]> records=new ArrayList<Object[]>();
-	   	Connection con = null;
-	   	Statement stmt = null;
-	   	ResultSet rs = null;
-	  
-	   	try {
-	   		con = dataSource.getConnection();
-	   		stmt = con.createStatement();
-	   		System.out.println("download query: "+select+body+ " order by d.specimen_code, d.specimen_num");
-	           rs = stmt.executeQuery(select+body+ " order by d.specimen_code, d.specimen_num");	            
-	           ResultSetMetaData metadata = rs.getMetaData();
-	           int cols = metadata.getColumnCount();
-	           int prev= 0;
-	           Object[] arr = null;
-	           while(rs.next()) {
-	           	int current =  (Integer) rs.getObject(dataHead.length+3);
-	       
-	           	if(prev==0 || prev != current) {
-	           		if(prev != 0) records.add(arr);
-	           		arr = new Object[titles.length]; 
-	           		 for(int i=0; i<cols; i++){ 
-	               		 if(i < dataHead.length) arr[i] = rs.getObject(i+1); 
-	               		 if(i==dataHead.length) {
-	               			 Integer index = map.get((String)rs.getObject(i+1));
-	               			 arr[index] = rs.getObject(i+2); 
-	               		 }
-	           		 }
-	           	} else {
-	           		for(int i=0; i<cols; i++){ 
-		               		 if(i==dataHead.length) {
-		               			 Integer index = map.get((String)rs.getObject(i+1));
-		               			 arr[index] = rs.getObject(i+2); 
-		               		 }
-	           		}
-	           	}
-	           	prev =current;
-	           }
-	           	 records.add(arr);
-	   	} catch (SQLException e) { 
-	      	 	System.err.println(e);
-       } finally {
-       	try {
-       		if(rs != null) rs.close();
-       		if(stmt != null) stmt.close();
-       		if(con != null) con.close();   
-       	} catch (SQLException e) {
-       		System.err.println(e);
-       	}
-       }
-   		table.setData(records);
-   		*/
+	   	String q = "select distinct d.method_code||'['||d.action_num||']', d.method_name, d.laboratory, c.citation_code||'['||c.citation_num||']', d.method_comment "+
+	   			" from mv_dataset_result_summary d, mv_specimen_summary m,  mv_citation_summary c " + 
+		 		" where d.specimen_num=m.specimen_num " +materialCode+" and d.citation_num = c.citation_num "+condition;
+	    table.setHeads(methodHead);	 
+	    System.out.println("download query: "+q);
+	    table.setData(( ArrayList<Object[]> ) DBUtil.list(q));
+    
 		 return table;
 	 }
     
