@@ -119,6 +119,9 @@ public class CitationBean2 implements Serializable {
 				isNew = true;
 				citation =  new Citation();
 				citation.setCitationNum((Integer) DBUtil.uniqueObject("select max(citation_num+1) from citation"));
+				List<Integer> list = new ArrayList<Integer>();
+				list.add(1);
+				citation.setCurationEntityNums(list);
 				newPerson = null;
 	}
 	
