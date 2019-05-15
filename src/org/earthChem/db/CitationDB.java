@@ -7,31 +7,8 @@ import javax.faces.model.SelectItem;
 
 import org.earthChem.db.postgresql.hbm.AuthorList;
 import org.earthChem.db.postgresql.hbm.Citation;
-import org.earthChem.presentation.jsf.theme.Theme;
-/*  query to generate table bai_mi
-  
-create table bai_mi as 
-(select distinct m.METHOD_CODE||'-'||d.INSTITUTION_NUM||'-'||b.TABLE_IN_REF_NUM||'-'||decode(d.METHOD_COMMENT, null, 'N/A', d.METHOD_COMMENT) action, s.ITEM_MEASURED_NUM inum
-from standard s, data_quality d, analysis a, METHOD m,  BATCH b 
-where d.DATA_QUALITY_NUM = s.DATA_QUALITY_NUM and a.DATA_QUALITY_NUM = s.DATA_QUALITY_NUM and m.METHOD_NUM = d.METHOD_NUM and b.BATCH_NUM = a.BATCH_NUM 
-union
-select distinct m.METHOD_CODE||'-'||d.INSTITUTION_NUM||'-'||b.TABLE_IN_REF_NUM||'-'||decode(d.METHOD_COMMENT, null, 'N/A', d.METHOD_COMMENT) action, n.ITEM_MEASURED_num inum
-from normalization n, NORMALIZATION_LIST nl, data_quality d, analysis a, BATCH b, method m
-where b.BATCH_NUM = a.BATCH_NUM and m.METHOD_NUM = d.METHOD_NUM and a.DATA_QUALITY_NUM = d.DATA_QUALITY_NUM
-and n.NORMALIZATION_NUM = nl.NORMALIZATION_NUM and d.DATA_QUALITY_NUM = nl.DATA_QUALITY_NUM
-union
-select distinct m.METHOD_CODE||'-'||d.INSTITUTION_NUM||'-'||b.TABLE_IN_REF_NUM||'-'||decode(d.METHOD_COMMENT, null, 'N/A', d.METHOD_COMMENT) action, s.ITEM_MEASURED_num inum
-from method_precis s, data_quality d, analysis a, METHOD m,  BATCH b
-where d.DATA_QUALITY_NUM = s.DATA_QUALITY_NUM and a.DATA_QUALITY_NUM = s.DATA_QUALITY_NUM 
-and m.METHOD_NUM = d.METHOD_NUM and b.BATCH_NUM = a.BATCH_NUM 
-union
-select distinct m.METHOD_CODE||'-'||d.INSTITUTION_NUM||'-'||b.TABLE_IN_REF_NUM||'-'||decode(d.METHOD_COMMENT, null, 'N/A', d.METHOD_COMMENT) action, s.ITEM_MEASURED_num inum
-from fract_correct s, fract_correct_list l, data_quality d, METHOD m, ITEM_MEASURED fi, BATCH b, analysis a 
-where d.DATA_QUALITY_NUM = l.DATA_QUALITY_NUM  and b.BATCH_NUM = a.BATCH_NUM and a.DATA_QUALITY_NUM = d.DATA_QUALITY_NUM 
-and m.METHOD_NUM = d.METHOD_NUM and  s.FRACT_CORRECT_NUM = l.FRACT_CORRECT_NUM 
-and fi.ITEM_MEASURED_NUM = s.ITEM_FCORR_NUM 
-)
-*/
+
+
 
 public class CitationDB {
 
@@ -117,7 +94,10 @@ public class CitationDB {
 				", internal_comment = "+internalComment+" WHERE citation_num = "+citationNum;
 			queries.add(q);	
 		}
-		
+		q = "DELETE FROM citation_curation_entity where citation_num ="+citationNum;
+		queries.add(q);	
+		q ="INSERT INTO citation_curation_entity (citation_num, curation_entity_num) values("+citationNum+","+c.getCurationEntityNum()+")";
+		queries.add(q);	
 		return DBUtil.updateList(queries);
 	}
 	
@@ -239,8 +219,6 @@ public class CitationDB {
 		c.setJournal((String)arr[3]);
 		c.setIssue((String)arr[4]);
 		c.setVolume((String)arr[5]);
-	//	c.setFirstPage((Integer)arr[6]);
-	//	c.setLastPage((Integer)arr[7]);
 		c.setBookTitle((String)arr[6]);
 		c.setBookEditor((String)arr[7]);
 		c.setDoi((String)arr[8]);
@@ -255,9 +233,15 @@ public class CitationDB {
 		} else c.setViewAuthors(authors);	
 		c.setAuthors(authors);
 		c.setPages(""+arr[14]);
-		
+		Integer curationEntityNum = getCurationEntityNum(citationNum);
+		if(curationEntityNum != null) c.setCurationEntityNum(curationEntityNum);
 		return c;
 	}	
+	
+	private static Integer getCurationEntityNum(Integer citationNum) {
+		String q ="select curation_entity_num from citation_curation_entity where citation_num ="+citationNum;
+		return DBUtil.getNumber(q);
+	}
 	
 	public static List<AuthorList> getAuthorList(Integer citationNum) {
 		List<AuthorList> alist = new ArrayList<AuthorList>();

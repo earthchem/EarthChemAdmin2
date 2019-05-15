@@ -43,6 +43,8 @@ public class Citation implements java.io.Serializable {
 	private String viewAuthors;
 	private String pages;
 	private String errorMsg;
+	private Integer curationEntityNum=1;  //PetDB
+	
 
 	public Citation() {
 	}
@@ -332,6 +334,16 @@ public class Citation implements java.io.Serializable {
 
 	public void setPages(String pages) {
 		this.pages = pages;
+	}
+
+
+	public Integer getCurationEntityNum() {
+		return curationEntityNum;
+	}
+
+
+	public void setCurationEntityNum(Integer curationEntityNum) {
+		this.curationEntityNum = curationEntityNum;
 	}
 
 	
