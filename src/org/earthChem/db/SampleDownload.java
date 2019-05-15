@@ -75,7 +75,7 @@ public class SampleDownload {
     
      public static StringTable getData(String materialCode, String variableType, String condition, String queryType) {	
     	 StringTable table = new StringTable();
-    	 String[] dataHead = {"SAMPLE_ID","IGSN","SAMPLE_TYPE","LATITUDE","LONGITUDE","ELEVATION_MIN","ELEVATION_MAX","TECTONIS_SETTING","ROCK NAME","REFERENCE","METHOD","EXPEDITION ID"};
+    	 String[] dataHead = {"SAMPLE_ID","IGSN","SAMPLE_TYPE","LATITUDE","LONGITUDE","ELEVATION_MIN","ELEVATION_MAX","TECTONIC_SETTING","ROCK NAME","REFERENCE","METHOD","EXPEDITION ID"};
 
 		 
     	 String select = "select d.specimen_code \"SAMPLE ID\", m.igsn \"IGSN\", d.material_name \"SAMPLE TYPE\"," +		 
