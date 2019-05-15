@@ -95,9 +95,11 @@ public class CitationDB {
 			queries.add(q);	
 		}
 		q = "DELETE FROM citation_curation_entity where citation_num ="+citationNum;
-		queries.add(q);	
-		q ="INSERT INTO citation_curation_entity (citation_num, curation_entity_num) values("+citationNum+","+c.getCurationEntityNum()+")";
-		queries.add(q);	
+		queries.add(q);	 
+		for(Integer ceNum: c.getCurationEntityNums()) {
+			q ="INSERT INTO citation_curation_entity (citation_num, curation_entity_num) values("+citationNum+","+ceNum+")";
+			queries.add(q);	
+		}
 		return DBUtil.updateList(queries);
 	}
 	
@@ -233,14 +235,14 @@ public class CitationDB {
 		} else c.setViewAuthors(authors);	
 		c.setAuthors(authors);
 		c.setPages(""+arr[14]);
-		Integer curationEntityNum = getCurationEntityNum(citationNum);
-		if(curationEntityNum != null) c.setCurationEntityNum(curationEntityNum);
+		c.setCurationEntityNums(getCurationEntityNums(citationNum));
 		return c;
 	}	
 	
-	private static Integer getCurationEntityNum(Integer citationNum) {
+	
+	private static List<Integer> getCurationEntityNums(Integer citationNum) {
 		String q ="select curation_entity_num from citation_curation_entity where citation_num ="+citationNum;
-		return DBUtil.getNumber(q);
+		return DBUtil.getIntegerList(q);
 	}
 	
 	public static List<AuthorList> getAuthorList(Integer citationNum) {

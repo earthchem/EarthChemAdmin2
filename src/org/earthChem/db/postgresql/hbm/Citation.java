@@ -3,6 +3,7 @@ package org.earthChem.db.postgresql.hbm;
 // Generated Jul 30, 2014 4:07:06 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -43,9 +44,8 @@ public class Citation implements java.io.Serializable {
 	private String viewAuthors;
 	private String pages;
 	private String errorMsg;
-	private Integer curationEntityNum=1;  //PetDB
+	private List<Integer>  curationEntityNums;  
 	
-
 	public Citation() {
 	}
 	
@@ -337,13 +337,13 @@ public class Citation implements java.io.Serializable {
 	}
 
 
-	public Integer getCurationEntityNum() {
-		return curationEntityNum;
+	public List<Integer> getCurationEntityNums() {
+		return curationEntityNums;
 	}
 
 
-	public void setCurationEntityNum(Integer curationEntityNum) {
-		this.curationEntityNum = curationEntityNum;
+	public void setCurationEntityNums(List<Integer> curationEntityNums) {
+		this.curationEntityNums = curationEntityNums;
 	}
 
 	

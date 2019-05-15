@@ -30,11 +30,16 @@
       <p:inputText  value="#{citationBean2.citation.publicationYear}" style = "width:400px;"/><h:panelGroup/> 
  
  <p:outputLabel value="Curation Entity*: "/>  
+ <p:selectManyCheckbox converter="javax.faces.Integer" value="#{citationBean2.citation.curationEntityNums}">
+        <f:selectItem itemLabel="PetDB" itemValue="1" />  
+        <f:selectItem itemLabel="Tephra" itemValue="2" /> 
+  </p:selectManyCheckbox><h:panelGroup/>   
+ <!--  
  <p:selectOneMenu value="#{citationBean2.citation.curationEntityNum}">        
                <f:selectItem itemLabel="PetDB" itemValue="1" />  
                <f:selectItem itemLabel="Tephra" itemValue="2" /> 
 </p:selectOneMenu> 	<h:panelGroup/>   
-      
+ -->     
    <p:outputLabel value="Data Status*: "/> 
 	      <p:selectOneMenu value="#{citationBean2.citation.dataStatus}" style = "width:100px;">  
 		      <f:selectItem itemLabel="IN_QUEUE" itemValue="IN_QUEUE" />
