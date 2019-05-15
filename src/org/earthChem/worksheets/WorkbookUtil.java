@@ -25,6 +25,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.SheetUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.earthChem.db.DBUtil;
@@ -75,8 +76,6 @@ public class WorkbookUtil {
 	
 	
 	public static void getData(StringTable table, Sheet sheet, CellStyle headerCellStyle)  {
-	//	Workbook workbook = new XSSFWorkbook();  
-//		Sheet sheet = workbook.createSheet(sheetName);
 		String[] columns = table.getHeads();
 		Row headerRow = sheet.createRow(0);
 		 for(int i = 0; i < columns.length; i++) {
@@ -99,5 +98,55 @@ public class WorkbookUtil {
 	            sheet.autoSizeColumn(i);
 	      }
 	   //   return workbook;
+		}  
+	
+	
+	public static void getDataMetadata(Sheet sheet, CellStyle headerCellStyle)  {
+		Row row = sheet.createRow(0); // row 1
+		Cell cell = row.createCell(0); // A1
+		cell.setCellValue("Data Source Information");
+		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 1));
+		row = sheet.createRow(2); // row 3
+		cell = row.createCell(0); // A3
+		cell.setCellValue("TITLE");
+		cell = row.createCell(1); // B3
+		cell.setCellValue("descriptive title of the dataset");
+		
+		row = sheet.createRow(3); 
+		cell = row.createCell(0); 
+		cell.setCellValue("ABSTRACT");
+		cell = row.createCell(1); 
+		cell.setCellValue("descriptive title of the dataset");
+		
+		row = sheet.createRow(4); 
+		cell = row.createCell(0); 
+		cell.setCellValue("AUTHOR");
+		cell = row.createCell(1); 
+		cell.setCellValue("name of the author(s) of the dataset (Last, First)");
+		
+		row = sheet.createRow(5); 
+		cell = row.createCell(0); 
+		cell.setCellValue("Institution");
+		cell = row.createCell(1); 
+		cell.setCellValue("institution of the author");
+		
+		row = sheet.createRow(6); 
+		cell = row.createCell(0); 
+		cell.setCellValue("Release Date");
+		cell = row.createCell(1); 
+		cell.setCellValue("date when the data is available to the public (if left blank, available now)");
+		
+		row = sheet.createRow(7); 
+		cell = row.createCell(0); 
+		cell.setCellValue("Creator");
+		cell = row.createCell(1); 
+		cell.setCellValue("person who fills out this template");
+
+		row = sheet.createRow(8); 
+		cell = row.createCell(0); 
+		cell.setCellValue("CONTACT INFO");
+		cell = row.createCell(1); 
+		cell.setCellValue("contact email for the creator of the template");
+		
 		}  
 }

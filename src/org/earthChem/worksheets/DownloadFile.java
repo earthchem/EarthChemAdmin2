@@ -90,7 +90,6 @@ public class DownloadFile implements Serializable {
 			 } else {
 				 materialType = " and d.material_code in ('"+materialType+"')";
 			 }		 
-	//		 createFile(SampleDownload.getData(materialType, variableType, condition, query), fileName);
 			 StringTable table = SampleDownload.getData(materialType, variableType, condition, query);
 			 createWorkbook ();
 			 WorkbookUtil.getData(table, wb.createSheet("Data"), headerCellStyle);
@@ -98,6 +97,7 @@ public class DownloadFile implements Serializable {
 			 WorkbookUtil.getData(table, wb.createSheet("Methods"), headerCellStyle);
 			 table = SampleDownload.getReferences(materialType,condition,  query);
 			 WorkbookUtil.getData(table, wb.createSheet("References"), headerCellStyle);
+			 WorkbookUtil.getDataMetadata(wb.createSheet("Data Metadata"), headerCellStyle);
 			 createFile(fileName);			 
 	}
 
