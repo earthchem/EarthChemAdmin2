@@ -75,10 +75,10 @@ public class SampleDownload {
     
      public static StringTable getData(String materialCode, String variableType, String condition, String queryType) {	
     	 StringTable table = new StringTable();
-    	 String[] dataHead = {"SAMPLE_ID","IGSN","SAMPLE_TYPE","LATITUDE","LONGITUDE","ELEVATION_MIN","ELEVATION_MAX","TECTONIC_SETTING","ROCK NAME","REFERENCE","METHOD","EXPEDITION ID"};
+    	 String[] dataHead = {"SAMPLE_ID","SAMPLE_NAME","IGSN","SAMPLE_TYPE","LATITUDE","LONGITUDE","ELEVATION_MIN","ELEVATION_MAX","TECTONIC_SETTING","ROCK NAME","REFERENCE","METHOD","EXPEDITION ID"};
 
 		 
-    	 String select = "select d.specimen_code \"SAMPLE ID\", m.igsn \"IGSN\", d.material_name \"SAMPLE TYPE\"," +		 
+    	 String select = "select d.specimen_code \"SAMPLE ID\",d.specimen_name, m.igsn \"IGSN\", d.material_name \"SAMPLE TYPE\"," +		 
 				 "split_part(split_part(split_part(split_part(m.geometry_text,'(',2), ' ', 2), ')', 1), ',',1) \"LATITUDE\","+
 				 "split_part(split_part(m.geometry_text,'(',2), ' ', 1) \"LONGITUDE\", m.elevation_min, m.elevation_max," +
 				 "array_to_string(m.tectonic_settings,',') \"Tectonic\", split_part(array_to_string(m.taxon,','),'|',2) \"ROCK NAME\","+
