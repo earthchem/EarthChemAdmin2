@@ -1,4 +1,12 @@
-
+<!-- 
+Dataset download document
+The download includes 5 files:
+1.	WebContent\faces\downloadSheet.xhtml is a user interface file, user selects a dataset and sends the request to download() method of DownloadFile.java;
+2.	src\org\earthChem\db\postgresql\hbm\StringTable.java is data model file.  This file contains two fields, heads (spreadsheet column heads) and data, which help to create spreadsheet.
+3.	src\org\earthChem\worksheets\DownloadFile.java is control file.   Based on the selection of dataset, first, dynamic condition for SQL queries will be created.  Second, the download data with StringTable model will be received by invoking getData() method of SampleDownload.java using the dynamic condition.   Then, spreadsheet will be generated with the download data by invoking getData() method of WorkbookUtil.java.  Finally the download file will send to user by invoking createFile() of DownloadFile.java.
+4.	src\org\earthChem\db\SampleDownload.java received the download request with dynamic condition and retrieve data from database.  The getData() method contains two parts.  The first part creates dynamic spreadsheet column heads based on selecting variable type and variable_order of variable table of database.   The second part creates download data.
+5.	src\org\earthChem\worksheets\WorkbookUtil.java is used to generated a spreadsheet using org.apache.poi software with StringTable data model.
+ -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
