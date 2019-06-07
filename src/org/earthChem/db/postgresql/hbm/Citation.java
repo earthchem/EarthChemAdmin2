@@ -45,6 +45,7 @@ public class Citation implements java.io.Serializable {
 	private String pages;
 	private String errorMsg;
 	private List<Integer>  curationEntityNums;  
+	private String bibcode;
 	
 	public Citation() {
 	}
@@ -344,6 +345,16 @@ public class Citation implements java.io.Serializable {
 
 	public void setCurationEntityNums(List<Integer> curationEntityNums) {
 		this.curationEntityNums = curationEntityNums;
+	}
+
+
+	public String getBibcode() {
+		return bibcode;
+	}
+
+
+	public void setBibcode(String bibcode) {
+		this.bibcode = bibcode;
 	}
 
 	

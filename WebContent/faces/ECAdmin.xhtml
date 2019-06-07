@@ -121,6 +121,9 @@
       <p:tab titletip="Download Sheet" title="Download" rendered="#{!(facesContext.externalContext.isUserInRole('Tephra'))}">
           <ui:fragment><ui:include src="downloadSheet.xhtml" /></ui:fragment>     
         </p:tab> 
+         <p:tab titletip="Bibcode Search" title="Bibcode Search">
+          <ui:fragment><ui:include src="bibcodeOrcid.xhtml" /></ui:fragment>     
+        </p:tab> 
     </p:tabView>
  
         <p:confirmDialog global="true">

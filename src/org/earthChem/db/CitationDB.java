@@ -11,6 +11,45 @@ import org.earthChem.db.postgresql.hbm.Citation;
 
 
 public class CitationDB {
+	
+	public static List<Citation> getDoiList() {
+		// citation 596 1104 2078 fail 502 error  
+		// citation 55 empty
+		// finished citation 3875
+		List<Citation> list = new ArrayList<Citation>();
+		   String q =	"select c.citation_num, i.citation_external_identifier from citation c, citation_external_identifier i "+
+					" where c.citation_num = i.citation_num and c.citation_num not in "+
+					" (select citation_num from bibcode) order by c.citation_num";			
+		List<Object[]> olist = DBUtil.getECList(q);
+		for(Object[] arr: olist) {
+			Citation c = new Citation();
+			c.setCitationNum((Integer)arr[0]);
+			c.setDoi((String)arr[1]);
+			list.add(c);
+		}
+
+		return list;
+	}
+	
+	public static List<Citation> getAllDoiList() {
+		// citation 596 1104 2078 fail 502 error  
+		// citation 55 empty
+		// finished citation 3875
+		List<Citation> list = new ArrayList<Citation>();
+		   String q =	"select e.citation_num, e.citation_external_identifier e from citation_external_identifier e " + 
+		   		" where e.citation_num not in (55) order by e.citation_num ";			
+		List<Object[]> olist = DBUtil.getECList(q);
+		for(Object[] arr: olist) {
+			Citation c = new Citation();
+			c.setCitationNum((Integer)arr[0]);
+			c.setDoi((String)arr[1]);
+			list.add(c);
+		}
+
+		return list;
+	}
+	
+	
 
 	public static List<Citation> getCitationsWithStatus(String status) {
 		List<Citation> list = new ArrayList<Citation>();
