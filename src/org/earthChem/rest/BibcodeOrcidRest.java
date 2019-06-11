@@ -122,7 +122,7 @@ public class BibcodeOrcidRest {
 			String doi= reformatDoi(c.getDoi());
 			String json=this.getDataFromServer( DOI_SERVER2,doi);
 			String type = null;
-			System.out.println("bc-json:: "+json);
+			System.out.println("bc-json:: "+c.getCitationNum()+":"+json);
 			try
 			{
 				JSONObject jo = null;
@@ -140,17 +140,20 @@ public class BibcodeOrcidRest {
 						
 						    JSONObject jsonobject = jsonarray.getJSONObject(i);
 						    String orcid = null;
-								if(jsonobject.has("ORCID")) {					 
+								if(jsonobject.has("ORCID")) {	
 									orcid = jsonobject.getString("ORCID");
-									//System.out.println("bc-o:: "+orcid);
+									System.out.println("bc-o:: "+orcid);
 								}
 								    String family = jsonobject.getString("familyName");
 								//	System.out.println("bc-f:: "+family);
-								    String given = jsonobject.getString("givenName");
+								    String given = null;
+								    if(jsonobject.has("givenName")) {
+								    	given = jsonobject.getString("givenName");
 								//	System.out.println("bc-g:: "+given);
+								    }
 									Integer order = jsonobject.getInt("sequence");
 								//	System.out.println("bc-s:: "+sequence);
-								if(orcid != null) {
+								if(orcid != null && given != null) {
 									String q = ""+ c.getCitationNum()+","+DBUtil.StringValue(family)+","+DBUtil.StringValue(given)+","+DBUtil.StringValue(orcid)+","+order;
 									DBUtil.update("INSERT INTO orcid (citation_num, family_name, given_name, orcid, author_order) values ("+q+")");
 								}

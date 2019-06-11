@@ -32,12 +32,14 @@ public class CitationDB {
 	}
 	
 	public static List<Citation> getAllDoiList() {
-		// citation 596 1104 2078 fail 502 error  
-		// citation 55 empty
-		// finished citation 3875
+		// citation   Invalid DOI error  
+		// citation 55, empty
+		// citation 80 867 no given name
+	
 		List<Citation> list = new ArrayList<Citation>();
+		//String q =	"select e.citation_num, e.citation_external_identifier e from citation_external_identifier e where e.citation_external_identifier = '10.1016/j.gca.2019.02.025'";
 		   String q =	"select e.citation_num, e.citation_external_identifier e from citation_external_identifier e " + 
-		   		" where e.citation_num not in (55) order by e.citation_num ";			
+		   		" where e.citation_num not in (14, 40, 55, 471, 477, 744, 816, 867, 872, 975, 1243, 1244,1378,1494, 1513, 1549, 1672,3197, 3302, 3309,3386,3399) and  e.citation_num > 816 order by e.citation_num ";			
 		List<Object[]> olist = DBUtil.getECList(q);
 		for(Object[] arr: olist) {
 			Citation c = new Citation();
@@ -49,6 +51,23 @@ public class CitationDB {
 		return list;
 	}
 	
+/*	
+	16:39:26,077 INFO  [stdout] (default task-41) bc-o:: 0000-0002-2734-8790
+
+	16:39:26,123 ERROR [stderr] (default task-41) org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique constraint "orcid_pkey"
+	16:39:26,123 ERROR [stderr] (default task-41)   Detail: Key (citation_num)=(3301) already exists.
+
+	16:39:26,126 INFO  [stdout] (default task-41) bc-o:: 0000-0002-0930-7274
+
+	16:39:26,173 ERROR [stderr] (default task-41) org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique constraint "orcid_pkey"
+	16:39:26,173 ERROR [stderr] (default task-41)   Detail: Key (citation_num)=(3301) already exists.
+
+	16:39:26,189 INFO  [stdout] (default task-41) bc-o:: 0000-0003-2356-1153
+
+	16:39:26,220 ERROR [stderr] (default task-41) org.postgresql.util.PSQLException: ERROR: duplicate key value violates unique constraint "orcid_pkey"
+	16:39:26,220 ERROR [stderr] (default task-41)   Detail: Key (citation_num)=(3301) already exists.
+
+*/	
 	
 
 	public static List<Citation> getCitationsWithStatus(String status) {
