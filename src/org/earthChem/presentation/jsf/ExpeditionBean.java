@@ -81,8 +81,10 @@ public class ExpeditionBean implements Serializable {
 	}
 
 	public void createNew() {
+		expedition = null;
 		expedition = new Expedition();
-		expedition.setActionNum(((Long) DBUtil.uniqueObject("SELECT nextval('action_action_num_seq')")).intValue());
+	//	expedition.setActionNum(((Long) DBUtil.uniqueObject("SELECT nextval('action_action_num_seq')")).intValue());
+		System.out.println("bc-cn "+expedition.getActionNum());
 		isNew = true;
 		isNewOrg = true;
 		isNewEq = true;
@@ -100,6 +102,7 @@ public class ExpeditionBean implements Serializable {
 		} else {
 			expedition.setErrorMsg("ERROR: "+status);
 		}
+
 	}
 
 	public void cancelEditExpediton() {

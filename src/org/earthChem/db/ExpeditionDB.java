@@ -84,6 +84,7 @@ public class ExpeditionDB {
 
 	public static String saveExpedition(Expedition ex, boolean isNew) {
 		String error = null;
+		if(isNew) ex.setActionNum(((Long) DBUtil.uniqueObject("SELECT nextval('action_action_num_seq')")).intValue());
 		Integer actionNum = ex.getActionNum();
 		Integer actionTypeNum = ex.getActionTypeNum();
 		Integer orgNum = ex.getOrganizationNum();
@@ -102,6 +103,7 @@ public class ExpeditionDB {
         }
 		String q = null;
 		if(isNew) {
+			
 			q = "INSERT INTO action (action_num, action_type_num, method_num, begin_date_time,"+
 					" end_date_time, action_description, organization_num, action_name, dataset_num) "+
 			" VALUES ("+actionNum+","+actionTypeNum+",1,"+ beginDate+","+endDate +","+desc+","+
