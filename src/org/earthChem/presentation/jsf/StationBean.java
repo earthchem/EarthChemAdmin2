@@ -127,7 +127,7 @@ public class StationBean implements Serializable {
 			if(status == null) {
 				station = new Station();
 				PrimeFaces.current().executeScript("PF('stationDialog').hide()");
-				PrimeFaces.current().executeScript("PF('stationTableWidgetVar').filter()");
+			//	PrimeFaces.current().executeScript("PF('stationTableWidgetVar').filter()");
 			} else {
 				FacesContext.getCurrentInstance().addMessage("stationEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
 			}	

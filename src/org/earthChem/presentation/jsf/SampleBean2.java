@@ -73,6 +73,7 @@ public class SampleBean2 implements Serializable {
 		if(status == null) {
 			getTcOptions();
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, "", "The data were saved!"));
+			//PrimeFaces.current().executeScript("PF('stationTableWidgetVar').filter()");
 		} else {
 			FacesContext.getCurrentInstance().addMessage("sampleEditMsg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", status));
 		}	
